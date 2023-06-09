@@ -11,7 +11,7 @@
 #include "stack.h"
 #include "hashMap.h"
 #include "heap.h"
-
+#define TEST printf("this is a test be alert\n")
 //strucs
 
 typedef struct{
@@ -67,6 +67,8 @@ int main(){
 
     pantallainesesariadecarga();
     mainmenu();
+    List *listajugadores;
+    CrearPerfil(listajugadores);
 
     return 0;
 }
@@ -163,5 +165,5 @@ void mainmenu(){
 }
 
 void CrearPerfil(List *lista){
-    
+    TEST;
 }
