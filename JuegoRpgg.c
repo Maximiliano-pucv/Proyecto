@@ -21,7 +21,7 @@ typedef struct{
 
 typedef struct{
     
-    char *nombre;
+    char nombre[100];
     int HP;
     int ATK;
     int DEF;
@@ -39,7 +39,7 @@ typedef struct{
 typedef struct{
     coordenadas pos;
     Info *datos;
-    char *clase;
+    char clase[20];
     int nivel;
     List *inventario;
     List *ataques;
@@ -59,9 +59,10 @@ void mainmenu();
 
 //protoripo de funciones
 void CrearPerfil(List *lista);
-
-//probando (fran)
-
+void selccionarclase(Jugador *usuario);
+void estadisticasDeclase(Jugador *usuario);
+//funciones solo developers (fran)
+void mostrar_perfiles (List *lista);
 //main
 int main(){
 
@@ -69,10 +70,29 @@ int main(){
     mainmenu();
     List *listajugadores;
     CrearPerfil(listajugadores);
-
+    mostrar_perfiles(listajugadores);
     return 0;
 }
-
+void mostrar_perfiles (List *lista){
+   Jugador *usuario= firstList(lista);
+   printf("\n");
+   while(usuario != NULL){
+    printf("Nombre = %s\n",usuario ->datos->nombre);
+    printf("Clase = %s",usuario->clase);
+    printf("Estadisticas:\n");
+    printf("  -Ataque = %i",usuario ->datos->ATK);
+    printf("  -Defensa = %i",usuario ->datos->DEF);
+    printf("  -Puntos de vida = %i", usuario -> datos ->HP);
+    printf("  -Nivel = %i",usuario->nivel);
+    usuario = nextList(lista);
+    printf("\n");
+   }
+   while(true){
+    if(GetAsyncKeyState(0x1B)){
+        break;
+    }
+   }
+}
 void gotoxy (int x, int y){
     HANDLE consola= GetStdHandle(STD_OUTPUT_HANDLE);
     COORD posicion;
@@ -81,20 +101,7 @@ void gotoxy (int x, int y){
     SetConsoleCursorPosition(consola,posicion);
 }
 
-void pantallainesesariadecarga(){
-    gotoxy(50, 10);
-    printf("HELLO WORLD LEt'S GO");
-    int i=0;
-    char porciento ='%';
-    while (true)
-    {
-        /* code */
-        Sleep(100);
-        gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
-        i++;
-        if(i>100) break;
-    }
-}
+
 
 void mainmenu(){
     gotoxy(50,0) ; printf("                 s");
@@ -165,5 +172,77 @@ void mainmenu(){
 }
 
 void CrearPerfil(List *lista){
-    TEST;
+    Jugador *usuario = malloc(sizeof(Jugador));
+    printf("ingresa nombre\n");
+    scanf("%99[^\n]s",usuario ->datos->nombre);
+    getchar();
+    selccionarclase(usuario);
+    estadisticasDeclase(usuario);
+    //faltan el quipamiento , el inventario y los 4 ataques
+    pushBack(lista,usuario);
+}
+void estadisticasDeclase(Jugador *usuario){
+    if(strcmp("Espadachin",usuario->clase)==0){
+        //estadisticas Espadachin
+        usuario ->datos->ATK= 20;
+        usuario -> datos ->DEF = 10;
+        usuario -> datos ->HP = 10;
+        usuario ->nivel = 1;
+
+    }else if(strcmp("Mago",usuario->clase)==0){
+        //estadisticas Mago
+        usuario ->datos->ATK= 10;
+        usuario -> datos ->DEF = 15;
+        usuario -> datos ->HP = 15;
+        usuario ->nivel = 1;
+    }else if(strcmp("Ladron",usuario->clase)==0){
+        //estadisticas Ladron
+        usuario ->datos->ATK= 15;
+        usuario -> datos ->DEF = 20;
+        usuario -> datos ->HP = 10;
+        usuario ->nivel = 1;
+    }else{
+        //estadisticas Chef
+        usuario ->datos->ATK= 10;
+        usuario -> datos ->DEF = 15;
+        usuario -> datos ->HP = 20;
+        usuario ->nivel = 1;
+    }
+}
+void selccionarclase(Jugador *usuario){
+    int clase;
+    printf("ingresa la clase a eleccion\n 1.-Espadachin\n2.-Mago\n3.-Ladron\n4.-Chef");
+    scanf("%i", &clase);
+    switch (clase)
+    {
+    case 1:
+        strcpy(usuario ->clase,"Espadachin");
+        break;
+    case 2:
+        strcpy(usuario ->clase,"Mago");
+        break;
+    case 3:
+        strcpy(usuario ->clase,"Ladron");
+        break;
+    case 4:
+        strcpy(usuario ->clase,"Chef");
+        break;
+    default:
+        break;
+    }
+}
+
+void pantallainesesariadecarga(){
+    gotoxy(50, 10);
+    printf("HELLO WORLD LEt'S GO");
+    int i=0;
+    char porciento ='%';
+    while (true)
+    {
+        /* code */
+        Sleep(100);
+        gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
+        i++;
+        if(i>100) break;
+    }
 }
