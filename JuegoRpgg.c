@@ -61,7 +61,7 @@ void mainmenu();
 void CrearPerfil(List *lista);
 void selccionarclase(Jugador *usuario);
 void estadisticasDeclase(Jugador *usuario);
-void establecermapa();
+void limpiarpantalla();
 
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
@@ -73,19 +73,19 @@ int main(){
     List *listajugadores;
     CrearPerfil(listajugadores);
     //mostrar_perfiles(listajugadores);
-    establecermapa();
+    limpiarpantalla();
     pantallainesesariadecarga();
 
     return 0;
 }
 
-void establecermapa(){
-    for(int i=0; i<=80; i++){
-        gotoxy(i,7);printf("-");
+void limpiarpantalla(){
+    for(int i=0; i<=64; i++){
+        gotoxy(0,i);printf("                                                                                                           ");
     }
-    for(int i=0; i<=80; i++){
+    /*for(int i=0; i<=80; i++){
         gotoxy(i,17);printf("-");
-    }
+    }*/
 }
 
 void mostrar_perfiles (List *lista){
@@ -253,6 +253,7 @@ void selccionarclase(Jugador *usuario){
 }
 
 void pantallainesesariadecarga(){
+    printf("");
     gotoxy(50, 10);
     printf("HELLO WORLD LEt'S GO");
     int i=0;
@@ -263,6 +264,6 @@ void pantallainesesariadecarga(){
         Sleep(100);
         gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
         i++;
-        if(i>15) break;
+        if(i>100) break;
     }
 }
