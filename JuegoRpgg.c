@@ -61,6 +61,7 @@ void mainmenu();
 void CrearPerfil(List *lista);
 void selccionarclase(Jugador *usuario);
 void estadisticasDeclase(Jugador *usuario);
+void borrarpantalla();
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -71,14 +72,22 @@ int main(){
     List *listajugadores;
     CrearPerfil(listajugadores);
     mostrar_perfiles(listajugadores);
+    borrarpantalla();
     return 0;
 }
+
+void borrarpantalla(){
+    for(int i=0 ; i<=40;i++){
+        gotoxy(1,i); printf("\n");
+    }
+}
+
 void mostrar_perfiles (List *lista){
    Jugador *usuario= firstList(lista);
    printf("\n");
    while(usuario != NULL){
     printf("Nombre = %s\n",usuario ->datos->nombre);
-    printf("Clase = %s",usuario->clase);
+    printf("Clase = %s\n",usuario->clase);
     printf("Estadisticas:\n");
     printf("  -Ataque = %i",usuario ->datos->ATK);
     printf("  -Defensa = %i",usuario ->datos->DEF);
@@ -86,12 +95,9 @@ void mostrar_perfiles (List *lista){
     printf("  -Nivel = %i",usuario->nivel);
     usuario = nextList(lista);
     printf("\n");
+    TEST;
    }
-   while(true){
-    if(GetAsyncKeyState(0x1B)){
-        break;
-    }
-   }
+   
 }
 void gotoxy (int x, int y){
     HANDLE consola= GetStdHandle(STD_OUTPUT_HANDLE);
@@ -149,7 +155,8 @@ void mainmenu(){
             printf("xd");
             printf("%i",seleccion);
             if(seleccion == 1){
-              printf("aca comienza el juego");
+              printf("aca comienza el juego\n");
+              Beep(16,3);
               return;
             } 
             else if(seleccion ==2){
@@ -179,8 +186,9 @@ void CrearPerfil(List *lista){
     //getchar();
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
+
     //faltan el quipamiento , el inventario y los 4 ataques
-    pushBack(lista,usuario);
+    pushFront(lista,usuario);
 }
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
@@ -248,6 +256,6 @@ void pantallainesesariadecarga(){
         Sleep(100);
         gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
         i++;
-        if(i>100) break;
+        if(i>10) break;
     }
 }
