@@ -176,7 +176,7 @@ void CrearPerfil(List *lista){
     usuario ->datos = malloc(sizeof(Info));
     printf("ingresa nombre\n");
     scanf("%99[^\n]s",usuario ->datos->nombre);
-    getchar();
+    //getchar();
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
     //faltan el quipamiento , el inventario y los 4 ataques
