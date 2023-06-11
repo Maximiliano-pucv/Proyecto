@@ -35,6 +35,12 @@ typedef struct{
 
 }TipoEquipamiento;//estadisticas del objeto en cuestion
 
+typedef struct{
+    char nombre[15];
+    char descripicion[100];
+    
+
+}Opcion;
 
 typedef struct{
     coordenadas pos;
@@ -42,7 +48,7 @@ typedef struct{
     char *clase;
     int nivel;
     List *inventario;
-    List *ataques;
+    Opcion ataques[4];
     HashMap *equipamiento;
 }Jugador;
 
@@ -61,8 +67,10 @@ void mainmenu();
 void CrearPerfil(List *lista);
 void selccionarclase(Jugador *usuario);
 void estadisticasDeclase(Jugador *usuario);
+void inventarionuevo(Jugador *usuario);
+void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
-
+void establecermapa();
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -70,13 +78,25 @@ int main(){
 
     pantallainesesariadecarga();
     mainmenu();
-    List *listajugadores;
+    List *listajugadores = createList();
     CrearPerfil(listajugadores);
     //mostrar_perfiles(listajugadores);
     limpiarpantalla();
     pantallainesesariadecarga();
-
+    establecermapa();
+    mostrar_perfiles(listajugadores);
     return 0;
+}
+
+void establecermapa(){//0,8
+    sala *habitacion = malloc(sizeof(sala));
+    habitacion->largo = 100;
+    habitacion ->ancho =30;
+    habitacion ->pos.x =0;
+    habitacion ->pos.y =8;
+    gotoxy(0,habitacion ->pos.x); printf("-----------------------------------------------------------------------------");
+    gotoxy(1,habitacion->largo ); printf("-----------------------------------------------------------------------------");
+    
 }
 
 void limpiarpantalla(){
@@ -98,7 +118,9 @@ void mostrar_perfiles (List *lista){
     printf("  -Ataque = %i",usuario ->datos->ATK);
     printf("  -Defensa = %i",usuario ->datos->DEF);
     printf("  -Puntos de vida = %i", usuario -> datos ->HP);
-    printf("  -Nivel = %i",usuario->nivel);
+    printf("  -Nivel = %i\n",usuario->nivel);
+    printf("Opciones de batalla\n");
+    printf("%s\n%s\n%s\n%s\n",usuario ->ataques[0].nombre,usuario ->ataques[1].nombre,usuario ->ataques[2].nombre,usuario ->ataques[3].nombre);
     usuario = nextList(lista);
     printf("\n");
     
@@ -193,10 +215,29 @@ void CrearPerfil(List *lista){
     getchar();
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
-
-    //faltan el quipamiento , el inventario y los 4 ataques
+    inventarionuevo(usuario);
+    OpcionesBatalla(usuario);
+    //faltan el quipamiento 
     pushBack(lista,usuario);
 }
+
+void OpcionesBatalla(Jugador *usuario){
+    strcpy(usuario->ataques[0].nombre,"ATACAR");
+    strcpy(usuario->ataques[1].nombre,"DEFENDER");
+    strcpy(usuario->ataques[2].nombre,"ITEMS");
+    strcpy(usuario->ataques[3].nombre,"HUIR");
+    
+    strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle daño al enemigo");
+    strcpy(usuario->ataques[1].descripicion,"Si nesesitas Pensar o no pudes hacer nada, Defiendete para recivir menos daño");
+    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar?, que esperas?, solo hay una forma de saber que hacer");
+    strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :(, HUYE ANTES QUE TE MATEN");
+
+}
+
+void inventarionuevo(Jugador *usuario){
+    usuario ->inventario = createList();
+}
+
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
         //estadisticas Espadachin
