@@ -39,7 +39,7 @@ typedef struct{
 typedef struct{
     coordenadas pos;
     Info *datos;
-    char clase[20];
+    char *clase;
     int nivel;
     List *inventario;
     List *ataques;
@@ -173,6 +173,7 @@ void mainmenu(){
 
 void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
+    usuario ->datos = malloc(sizeof(Info));
     printf("ingresa nombre\n");
     scanf("%99[^\n]s",usuario ->datos->nombre);
     getchar();
@@ -213,22 +214,26 @@ void selccionarclase(Jugador *usuario){
     int clase;
     printf("ingresa la clase a eleccion\n 1.-Espadachin\n2.-Mago\n3.-Ladron\n4.-Chef");
     scanf("%i", &clase);
-    switch (clase)
-    {
-    case 1:
-        strcpy(usuario ->clase,"Espadachin");
-        break;
-    case 2:
-        strcpy(usuario ->clase,"Mago");
-        break;
-    case 3:
-        strcpy(usuario ->clase,"Ladron");
-        break;
-    case 4:
-        strcpy(usuario ->clase,"Chef");
-        break;
-    default:
-        break;
+    switch (clase){
+      case 1:
+            usuario->clase = malloc(sizeof(char) * (strlen("Espadachin") + 1));
+            strcpy(usuario->clase, "Espadachin");
+            break;
+        case 2:
+            usuario->clase = malloc(sizeof(char) * (strlen("Mago") + 1));
+            strcpy(usuario->clase, "Mago");
+            break;
+        case 3:
+            usuario->clase = malloc(sizeof(char) * (strlen("Ladron") + 1));
+            strcpy(usuario->clase, "Ladron");
+            break;
+        case 4:
+            usuario->clase = malloc(sizeof(char) * (strlen("Chef") + 1));
+            strcpy(usuario->clase, "Chef");
+            break;
+        default:
+            break;
+      
     }
 }
 
