@@ -61,7 +61,8 @@ void mainmenu();
 void CrearPerfil(List *lista);
 void selccionarclase(Jugador *usuario);
 void estadisticasDeclase(Jugador *usuario);
-void borrarpantalla();
+void establecermapa();
+
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -71,14 +72,19 @@ int main(){
     mainmenu();
     List *listajugadores;
     CrearPerfil(listajugadores);
-    mostrar_perfiles(listajugadores);
-    borrarpantalla();
+    //mostrar_perfiles(listajugadores);
+    establecermapa();
+    pantallainesesariadecarga();
+
     return 0;
 }
 
-void borrarpantalla(){
-    for(int i=0 ; i<=40;i++){
-        gotoxy(1,i); printf("\n");
+void establecermapa(){
+    for(int i=0; i<=80; i++){
+        gotoxy(i,7);printf("-");
+    }
+    for(int i=0; i<=80; i++){
+        gotoxy(i,17);printf("-");
     }
 }
 
@@ -95,7 +101,7 @@ void mostrar_perfiles (List *lista){
     printf("  -Nivel = %i",usuario->nivel);
     usuario = nextList(lista);
     printf("\n");
-    TEST;
+    
    }
    
 }
@@ -182,13 +188,14 @@ void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
     usuario ->datos = malloc(sizeof(Info));
     printf("ingresa nombre\n");
+    
     scanf("%99[^\n]s",usuario ->datos->nombre);
-    //getchar();
+    getchar();
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
 
     //faltan el quipamiento , el inventario y los 4 ataques
-    pushFront(lista,usuario);
+    pushBack(lista,usuario);
 }
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
@@ -220,7 +227,7 @@ void estadisticasDeclase(Jugador *usuario){
 }
 void selccionarclase(Jugador *usuario){
     int clase;
-    printf("ingresa la clase a eleccion\n 1.-Espadachin\n2.-Mago\n3.-Ladron\n4.-Chef");
+    printf("ingresa la clase a eleccion\n1.-Espadachin\n2.-Mago\n3.-Ladron\n4.-Chef\n");
     scanf("%i", &clase);
     switch (clase){
       case 1:
@@ -256,6 +263,6 @@ void pantallainesesariadecarga(){
         Sleep(100);
         gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
         i++;
-        if(i>10) break;
+        if(i>15) break;
     }
 }
