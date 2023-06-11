@@ -181,7 +181,7 @@ void mainmenu(){
         Sleep(100);
         
         if(GetAsyncKeyState(0x1B)){
-            printf("xd");
+            
             printf("%i",seleccion);
             if(seleccion == 1){
               printf("aca comienza el juego\n");
@@ -190,7 +190,7 @@ void mainmenu(){
             } 
             else if(seleccion ==2){
                 //deberia sacarnos del juego
-                return;
+                exit(0);
             }
         }
         if(GetAsyncKeyState(0x26)){
@@ -202,16 +202,17 @@ void mainmenu(){
             gotoxy(60,34) ;printf("o Nueva Partida");
             gotoxy(60 ,35) ;printf("+ Salir del Juego");
             seleccion=2;
+            
         }
 
-        
+        gotoxy(78,32);printf("%i", seleccion);
     }
 }
 
 void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
     usuario ->datos = malloc(sizeof(Info));
-    printf("ingresa nombre\n");
+    printf("\ningresa nombre\n");
     
     scanf("%99[^\n]s",usuario ->datos->nombre);
     getchar();
