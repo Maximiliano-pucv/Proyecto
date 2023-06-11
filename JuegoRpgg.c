@@ -70,6 +70,7 @@ int main(){
 
     pantallainesesariadecarga();
     mainmenu();
+    //problemas con el main menu
     List *listajugadores;
     CrearPerfil(listajugadores);
     //mostrar_perfiles(listajugadores);
@@ -166,6 +167,7 @@ void mainmenu(){
               return;
             } 
             else if(seleccion ==2){
+                //deberia sacarnos del juego
                 return;
             }
         }
