@@ -13,7 +13,11 @@
 #include "heap.h"
 #define TEST printf("this is a test be alert\n")
 //strucs
-
+/* MORADO printf("\033[0;35m")
+ AMARILLO printf("\033[0;33m")
+ ROJO printf("\033[0;31m")
+  VERDE printf("\033[0;32m")
+AZUL printf("\033[0;34m")*/
 typedef struct{
     int x;
     int y;
@@ -94,6 +98,7 @@ int main(){
 
 void generarmapa()
 {
+    printf("\033[0;32m");
     gotoxy(0,0);printf("-----------------------------------------------------------------------------------------------------");
     gotoxy(0,40);printf("-----------------------------------------------------------------------------------------------------");
     //101 largo 40 ancho
@@ -101,6 +106,9 @@ void generarmapa()
     {
         gotoxy(0,i);printf("|                                                                                                    |");
     }
+
+    printf("\033[0;0m");
+    printf("\033[0;35m");
     int x=10 ,y=10;
     while(true)
     {
