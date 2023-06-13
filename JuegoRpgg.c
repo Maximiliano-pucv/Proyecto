@@ -69,7 +69,6 @@ void estadisticasDeclase(Jugador *usuario);
 void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
-void establecermapa();
 void generarmapa();
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
@@ -84,28 +83,20 @@ int main(){
     limpiarpantalla();
     pantallainesesariadecarga();
     limpiarpantalla();
-    //establecermapa();
+    
     generarmapa();
     //mostrar_perfiles(listajugadores);
     return 0;
 }
 
-void establecermapa(){//0,8
-    sala *habitacion = malloc(sizeof(sala));
-    habitacion->largo = 100;
-    habitacion ->ancho =30;
-    habitacion ->pos.x =0;
-    habitacion ->pos.y =8;
-    gotoxy(0,habitacion ->pos.x); printf("-----------------------------------------------------------------------------");
-    gotoxy(0,habitacion->largo ); printf("-----------------------------------------------------------------------------");
-    
-}
+
 
 
 void generarmapa()
 {
     gotoxy(0,0);printf("-----------------------------------------------------------------------------------------------------");
     gotoxy(0,40);printf("-----------------------------------------------------------------------------------------------------");
+    //101 largo 40 ancho
     for(int i = 1; i< 40; i++)
     {
         gotoxy(0,i);printf("|                                                                                                    |");
@@ -364,6 +355,6 @@ void pantallainesesariadecarga(){
         Sleep(100);
         gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
         i++;
-        if(i>100) break;
+        if(i>10) break;
     }
 }
