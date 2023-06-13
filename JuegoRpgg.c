@@ -111,14 +111,14 @@ void generarmapa()
         {
             gotoxy(x,y); printf(" ");
             x--;
-            gotoxy(x,y); printf("\033[0;35m");printf("o");
+            gotoxy(x,y); printf("O");
         }
         //derecha
         if(GetAsyncKeyState(0x27))
         {
             gotoxy(x,y); printf(" ");
             x++;
-            gotoxy(x,y); printf("\033[0;35m");printf("o");
+            gotoxy(x,y); printf("O");
         }
 
         //abajo
@@ -126,14 +126,14 @@ void generarmapa()
         {
             gotoxy(x,y); printf(" ");
             y++;
-            gotoxy(x,y); printf("\033[0;35m");printf("o");
+            gotoxy(x,y); printf("O");
         }
         //arriba
         if(GetAsyncKeyState(0x26))
         {
             gotoxy(x,y); printf(" ");
             y--;
-            gotoxy(x,y); printf("\033[0;35m");printf("o");
+            gotoxy(x,y); printf("O");
         }
     }
 }
