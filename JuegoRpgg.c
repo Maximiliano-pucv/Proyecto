@@ -205,7 +205,7 @@ void mainmenu(){
             
         }
 
-        gotoxy(78,32);printf("%i", seleccion);
+        //gotoxy(78,32);printf("%i", seleccion);
     }
 }
 
@@ -221,7 +221,7 @@ void CrearPerfil(List *lista){
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     //faltan el quipamiento 
-    pushBack(lista,usuario);
+    pushBack(lista ,usuario);
 }
 
 void OpcionesBatalla(Jugador *usuario){
