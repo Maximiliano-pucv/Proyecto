@@ -38,7 +38,6 @@ typedef struct{
 typedef struct{
     char nombre[15];
     char descripicion[100];
-    
 
 }Opcion;
 
@@ -71,6 +70,7 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void establecermapa();
+void generarmapa();
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -78,14 +78,15 @@ int main(){
 
     pantallainesesariadecarga();
     mainmenu();
-    //problemas con el main menu
     List *listajugadores = createList();
     CrearPerfil(listajugadores);
     //mostrar_perfiles(listajugadores);
     limpiarpantalla();
     pantallainesesariadecarga();
-    establecermapa();
-    mostrar_perfiles(listajugadores);
+    limpiarpantalla();
+    //establecermapa();
+    generarmapa();
+    //mostrar_perfiles(listajugadores);
     return 0;
 }
 
@@ -96,9 +97,61 @@ void establecermapa(){//0,8
     habitacion ->pos.x =0;
     habitacion ->pos.y =8;
     gotoxy(0,habitacion ->pos.x); printf("-----------------------------------------------------------------------------");
-    gotoxy(1,habitacion->largo ); printf("-----------------------------------------------------------------------------");
+    gotoxy(0,habitacion->largo ); printf("-----------------------------------------------------------------------------");
     
 }
+
+
+void generarmapa()
+{
+    gotoxy(0,0);printf("-----------------------------------------------------------------------------------------------------");
+    gotoxy(0,40);printf("-----------------------------------------------------------------------------------------------------");
+    for(int i = 1; i< 40; i++)
+    {
+        gotoxy(0,i);printf("|                                                                                                    |");
+    }
+    int x=10 ,y=10;
+    while(true)
+    {
+        Sleep(100);
+
+        //Moverse a la izquierda
+        if(GetAsyncKeyState(0x25))
+        {
+            gotoxy(x,y); printf(" ");
+            x--;
+            gotoxy(x,y); printf("O");
+        }
+        //derecha
+        if(GetAsyncKeyState(0x27))
+        {
+            gotoxy(x,y); printf(" ");
+            x++;
+            gotoxy(x,y); printf("O");
+        }
+
+        //abajo
+        if(GetAsyncKeyState(0x28))
+        {
+            gotoxy(x,y); printf(" ");
+            y++;
+            gotoxy(x,y); printf("O");
+        }
+        //arriba
+        if(GetAsyncKeyState(0x26))
+        {
+            gotoxy(x,y); printf(" ");
+            y--;
+            gotoxy(x,y); printf("O");
+        }
+    }
+}
+
+
+
+
+
+
 
 void limpiarpantalla(){
     for(int i=0; i<=64; i++){
@@ -139,6 +192,7 @@ void gotoxy (int x, int y){
 
 
 void mainmenu(){
+
     gotoxy(50,0) ; printf("                 s");
     gotoxy(50,1) ; printf("                sss");
     gotoxy(50,2) ; printf("                sss");
@@ -184,18 +238,19 @@ void mainmenu(){
             
             printf("%i",seleccion);
             if(seleccion == 1){
-              printf("aca comienza el juego\n");
-              Beep(16,3);
-              return;
+                limpiarpantalla();
+                printf("Hora de comenzar una nueva aventura\n");
+                Beep(16,3);
+                return;
             } 
             else if(seleccion ==2){
-                //deberia sacarnos del juego
                 exit(0);
             }
         }
         if(GetAsyncKeyState(0x26)){
-            gotoxy(60,35) ;printf("o Salir del Juego");
+
             gotoxy(60,34); printf("+ Nueva Partida");
+            gotoxy(60,35) ;printf("o Salir del Juego");
             seleccion=1;
         }
         if(GetAsyncKeyState(0x28)){
@@ -207,6 +262,7 @@ void mainmenu(){
 
         //gotoxy(78,32);printf("%i", seleccion);
     }
+
 }
 
 void CrearPerfil(List *lista){
@@ -214,7 +270,7 @@ void CrearPerfil(List *lista){
     usuario ->datos = malloc(sizeof(Info));
     printf("\ningresa nombre\n");
     
-    scanf("%99[^\n]s",usuario ->datos->nombre);
+    scanf("%99[^\n]s",usuario->datos->nombre);
     getchar();
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
@@ -231,9 +287,9 @@ void OpcionesBatalla(Jugador *usuario){
     strcpy(usuario->ataques[3].nombre,"HUIR");
     
     strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle daño al enemigo");
-    strcpy(usuario->ataques[1].descripicion,"Si nesesitas Pensar o no pudes hacer nada, Defiendete para recivir menos daño");
+    strcpy(usuario->ataques[1].descripicion,"Si nesesitas Pensar o no pudes hacer nada, Defiendete para recibir menos daño");
     strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar?, que esperas?, solo hay una forma de saber que hacer");
-    strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :(, HUYE ANTES QUE TE MATEN");
+    strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :(, HUYE ANTES QUE TE MATEN, o te da flojera pelear, vete");
 
 }
 
@@ -242,20 +298,20 @@ void inventarionuevo(Jugador *usuario){
 }
 
 void estadisticasDeclase(Jugador *usuario){
-    if(strcmp("Espadachin",usuario->clase)==0){
+    if(strcmp("Espadachin",usuario->clase)==0 || strcmp("espadachin",usuario->clase) == 0){
         //estadisticas Espadachin
         usuario ->datos->ATK= 20;
         usuario -> datos ->DEF = 10;
         usuario -> datos ->HP = 10;
         usuario ->nivel = 1;
 
-    }else if(strcmp("Mago",usuario->clase)==0){
+    }else if(strcmp("Mago",usuario->clase)==0 || strcmp("mago",usuario->clase) == 0){
         //estadisticas Mago
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 15;
         usuario -> datos ->HP = 15;
         usuario ->nivel = 1;
-    }else if(strcmp("Ladron",usuario->clase)==0){
+    }else if(strcmp("Ladron",usuario->clase)==0 || strcmp("ladron",usuario->clase) == 0){
         //estadisticas Ladron
         usuario ->datos->ATK= 15;
         usuario -> datos ->DEF = 20;
@@ -299,7 +355,7 @@ void selccionarclase(Jugador *usuario){
 void pantallainesesariadecarga(){
     printf("");
     gotoxy(50, 10);
-    printf("HELLO WORLD LEt'S GO");
+    //printf("Bienvenido, porfavor espere");
     int i=0;
     char porciento ='%';
     while (true)
