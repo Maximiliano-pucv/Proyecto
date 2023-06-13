@@ -145,12 +145,15 @@ void generarmapa()
 
 
 void limpiarpantalla(){
+    
     for(int i=0; i<=64; i++){
-        gotoxy(0,i);printf("                                                                                                           ");
+        gotoxy(0,i);  
+        printf("\033[2J\033[H");                                                                                                         
     }
-    /*for(int i=0; i<=80; i++){
-        gotoxy(i,17);printf("-");
-    }*/
+
+    for(int i=0; i<=80; i++){
+        gotoxy(i,17); printf("\033[2J\033[H");
+    }
 }
 
 void mostrar_perfiles (List *lista){
