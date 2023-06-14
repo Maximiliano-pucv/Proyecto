@@ -46,6 +46,7 @@ typedef struct{
 }Opcion;
 
 typedef struct{
+    
     coordenadas pos;
     Info *datos;
     char *clase;
@@ -74,6 +75,7 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
+void faseDElanzamiento(List *lista);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -89,11 +91,52 @@ int main(){
     limpiarpantalla();
     
     generarmapa();
+    faseDElanzamiento(listajugadores);
+    
     //mostrar_perfiles(listajugadores);
     return 0;
 }
 
 
+//△
+void faseDElanzamiento(List *listaJugadores){
+    Jugador *mainPlayer = firstList(listaJugadores);
+    printf("\033[0;35m");
+    while(true)
+    {
+        Sleep(100);
+
+        //Moverse a la izquierda
+        if((GetAsyncKeyState(0x25))&&(mainPlayer->pos.x>=2))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+            mainPlayer->pos.x--;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+        //derecha
+        if((GetAsyncKeyState(0x27))&&(mainPlayer->pos.x<=99))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+            mainPlayer->pos.x++;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (mainPlayer->pos.y<=38))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y);printf(" ");
+            mainPlayer->pos.y++;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (mainPlayer->pos.y>=2))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf(" ");
+            mainPlayer->pos.y--;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf("O");
+        }
+    }
+}
 
 
 void generarmapa()
@@ -108,42 +151,7 @@ void generarmapa()
     }
 
     printf("\033[0;0m");
-    printf("\033[0;35m");
-    int x=10 ,y=10;
-    while(true)
-    {
-        Sleep(100);
-
-        //Moverse a la izquierda
-        if(GetAsyncKeyState(0x25))
-        {
-            gotoxy(x,y); printf(" ");
-            x--;
-            gotoxy(x,y); printf("O");
-        }
-        //derecha
-        if(GetAsyncKeyState(0x27))
-        {
-            gotoxy(x,y); printf(" ");
-            x++;
-            gotoxy(x,y); printf("O");
-        }
-
-        //abajo
-        if(GetAsyncKeyState(0x28))
-        {
-            gotoxy(x,y); printf(" ");
-            y++;
-            gotoxy(x,y); printf("O");
-        }
-        //arriba
-        if(GetAsyncKeyState(0x26))
-        {
-            gotoxy(x,y); printf(" ");
-            y--;
-            gotoxy(x,y); printf("O");
-        }
-    }
+    
 }
 
 
@@ -278,6 +286,8 @@ void CrearPerfil(List *lista){
     estadisticasDeclase(usuario);
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
+    usuario ->pos.x=10;
+    usuario ->pos.y=10;
     //faltan el quipamiento 
     pushBack(lista ,usuario);
 }
