@@ -108,8 +108,9 @@ void Submenu(){
     }
     printf("\033[0;0m");
     gotoxy(113,2); printf("------MENU------");
-    gotoxy(106,3); printf("O Stats                O Inventario");
-    gotoxy(106,4); printf("O salir                O Ajustes");
+    gotoxy(106,3); printf("O Stats-*-*-*-*-*-*-*-*O Inventario");
+    gotoxy(106,4); printf("O salir-*-*-*-*-*-*-*-*O Ajustes");
+    
 }
 
 //△
