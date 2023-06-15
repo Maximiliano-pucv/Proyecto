@@ -22,7 +22,8 @@ typedef struct{
 typedef struct{
     
     char nombre[100];
-    int HP;
+    int HPMAX; //vida maxima
+    int HPA; //vida actual
     int ATK;
     int DEF;
     char *descripcion;
@@ -31,7 +32,9 @@ typedef struct{
 typedef struct{
 
     char *tipo; //si es arma, armadura, consumible
+    char *tipoArmadura; //si es casco, pechera o pantalones (SOLO USAR PARA LAS ARMADURAS)
     Info *stats;
+    bool equipado;
 
 }TipoEquipamiento;//estadisticas del objeto en cuestion
 
@@ -46,6 +49,7 @@ typedef struct{
     Info *datos;
     char *clase;
     int nivel;
+    int PH;
     List *inventario;
     Opcion ataques[4];
     HashMap *equipamiento;
@@ -71,6 +75,14 @@ void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void establecermapa();
 void generarmapa();
+
+/*equipamiento po clase*/
+void equipamientoBase(Jugador *usuario);
+void equipobaseE(Jugador *usuario);
+void equipobaseM(Jugador *usuario);
+void equipobaseL(Jugador *usuario);
+void equipobaseC(Jugador *usuario);
+
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 //main
@@ -171,7 +183,7 @@ void mostrar_perfiles (List *lista){
     printf("Estadisticas:\n");
     printf("  -Ataque = %i",usuario ->datos->ATK);
     printf("  -Defensa = %i",usuario ->datos->DEF);
-    printf("  -Puntos de vida = %i", usuario -> datos ->HP);
+    printf("  -Puntos de vida = %i", usuario -> datos ->HPMAX);
     printf("  -Nivel = %i\n",usuario->nivel);
     printf("Opciones de batalla\n");
     printf("%s\n%s\n%s\n%s\n",usuario ->ataques[0].nombre,usuario ->ataques[1].nombre,usuario ->ataques[2].nombre,usuario ->ataques[3].nombre);
@@ -239,7 +251,7 @@ void mainmenu(){
             printf("%i",seleccion);
             if(seleccion == 1){
                 limpiarpantalla();
-                printf("Hora de comenzar una nueva aventura\n");
+                gotoxy(50,15); printf("Hora de comenzar una nueva aventura\n");
                 Beep(16,3);
                 return;
             } 
@@ -268,10 +280,14 @@ void mainmenu(){
 void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
     usuario ->datos = malloc(sizeof(Info));
-    printf("\ningresa nombre\n");
-    
+    Sleep(100);
+    gotoxy(50,17); printf("Pero primero, Debes decirme tu nombre\n");
+    gotoxy(50,18);
     scanf("%99[^\n]s",usuario->datos->nombre);
     getchar();
+    limpiarpantalla();
+    gotoxy(50,17); printf("Asi que tu nombre es %s",usuario->datos->nombre);
+    gotoxy(50,18); printf("Muy bien, pues ahora veamos que es lo que quieres ser");
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
     inventarionuevo(usuario);
@@ -295,39 +311,365 @@ void OpcionesBatalla(Jugador *usuario){
 
 void inventarionuevo(Jugador *usuario){
     usuario ->inventario = createList();
+    equipamientoBase(usuario);
 }
 
-void estadisticasDeclase(Jugador *usuario){
-    if(strcmp("Espadachin",usuario->clase)==0 || strcmp("espadachin",usuario->clase) == 0){
-        //estadisticas Espadachin
-        usuario ->datos->ATK= 20;
-        usuario -> datos ->DEF = 10;
-        usuario -> datos ->HP = 10;
-        usuario ->nivel = 1;
 
-    }else if(strcmp("Mago",usuario->clase)==0 || strcmp("mago",usuario->clase) == 0){
-        //estadisticas Mago
+/* chantarle el equipamiento base a las clases*/
+
+void equipamientoBase(Jugador *usuario)
+{
+    if(strcmp("Espadachin",usuario->clase) == 0)
+    {
+        equipobaseE(usuario);
+    }
+}
+
+void equipobaseE(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseM(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseL(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseC(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+
+
+
+
+
+
+/*fin de chantarle equipamiento a las clases*/
+
+
+void estadisticasDeclase(Jugador *usuario){
+    if(strcmp("Espadachin",usuario->clase)==0){
+        //estadisticas Espadachin
         usuario ->datos->ATK= 10;
-        usuario -> datos ->DEF = 15;
-        usuario -> datos ->HP = 15;
+        usuario -> datos ->DEF = 10;
+        usuario -> datos ->HPMAX = 20;
+        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
-    }else if(strcmp("Ladron",usuario->clase)==0 || strcmp("ladron",usuario->clase) == 0){
+        usuario ->PH = 0;
+
+    }else if(strcmp("Mago",usuario->clase)==0){
+        //estadisticas Mago
+        usuario ->datos->ATK= 20;
+        usuario -> datos ->DEF = 5;
+        usuario -> datos ->HPMAX = 10;
+        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario ->nivel = 1;
+        usuario ->PH = 0;
+    }else if(strcmp("Ladron",usuario->clase)==0){
         //estadisticas Ladron
-        usuario ->datos->ATK= 15;
-        usuario -> datos ->DEF = 20;
-        usuario -> datos ->HP = 10;
+        usuario ->datos->ATK= 17;
+        usuario -> datos ->DEF = 7;
+        usuario -> datos ->HPMAX = 15;
+        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
+        usuario ->PH = 0;
     }else{
         //estadisticas Chef
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 15;
-        usuario -> datos ->HP = 20;
+        usuario -> datos ->HPMAX = 20;
+        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
+        usuario ->PH = 0;
     }
 }
 void selccionarclase(Jugador *usuario){
     int clase;
-    printf("ingresa la clase a eleccion\n1.-Espadachin\n2.-Mago\n3.-Ladron\n4.-Chef\n");
+    gotoxy(50,19); printf("Ingresa la clase a eleccion");
+    gotoxy(52,20); printf("1.-Espadachin");
+    gotoxy(52,21); printf("2.-Mago");
+    gotoxy(52,22); printf("3.-Ladron");
+    gotoxy(52,23); printf("4.-Chef"); 
+    gotoxy(52,24);
     scanf("%i", &clase);
     switch (clase){
       case 1:
