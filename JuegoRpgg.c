@@ -110,6 +110,49 @@ void Submenu(){
     gotoxy(113,2); printf("------MENU------");
     gotoxy(106,3); printf("O Stats-*-*-*-*-*-*-*-*O Inventario");
     gotoxy(106,4); printf("O salir-*-*-*-*-*-*-*-*O Ajustes");
+    coordenadas cursor;
+    cursor.x = 106;
+    cursor.y = 3;
+    gotoxy(cursor.x,cursor.y); printf("#");
+    while (true)
+    {
+        
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (cursor.y<=3))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y++;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (cursor.y>=4))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y--;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        //derecha131
+        if((GetAsyncKeyState(0x27)) && (cursor.x<=131))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=129;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        if((GetAsyncKeyState(0x25)) && (cursor.x>=106))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=106;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        if(GetAsyncKeyState(0x1B)){
+            for(int i = 0; i< 9; i++)
+            {
+                gotoxy(103,i);printf("                                       ");
+            }
+            return;
+        }
+        //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
+    }
     
 }
 
