@@ -385,7 +385,7 @@ void inventarionuevo(Jugador *usuario){
 }
 
 
-void equipamientoBase(Jugador *usuario);
+void equipamientoBase(Jugador *usuario)
 {
     if(strcmp("Espadachin",usuario->clase) == 0)
     {
