@@ -78,6 +78,7 @@ void generarmapa();
 void faseDElanzamiento(List *lista);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
+void Submenu();
 //main
 int main(){
 
@@ -97,15 +98,28 @@ int main(){
     return 0;
 }
 
+void Submenu(){
+    printf("\033[0;33m");
+    gotoxy(104,0); printf("--------------------------------------");
+    gotoxy(104,8); printf("--------------------------------------");
+    for(int i = 1; i< 8; i++)
+    {
+        gotoxy(103,i);printf("|*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*|");
+    }
+    printf("\033[0;0m");
+    gotoxy(113,2); printf("------MENU------");
+    gotoxy(106,3); printf("O Stats                O Inventario");
+    gotoxy(106,4); printf("O salir                O Ajustes");
+}
 
 //△
 void faseDElanzamiento(List *listaJugadores){
     Jugador *mainPlayer = firstList(listaJugadores);
-    printf("\033[0;35m");
+    
     while(true)
     {
         Sleep(100);
-
+        printf("\033[0;35m");
         //Moverse a la izquierda
         if((GetAsyncKeyState(0x25))&&(mainPlayer->pos.x>=2))
         {
@@ -135,6 +149,10 @@ void faseDElanzamiento(List *listaJugadores){
             mainPlayer->pos.y--;
             gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf("O");
         }
+
+        if(GetAsyncKeyState(0x1B)){
+            Submenu();
+        }
     }
 }
 
@@ -153,11 +171,6 @@ void generarmapa()
     printf("\033[0;0m");
     
 }
-
-
-
-
-
 
 
 void limpiarpantalla(){
@@ -288,6 +301,7 @@ void CrearPerfil(List *lista){
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
     usuario ->pos.y=10;
+
     //faltan el quipamiento 
     pushBack(lista ,usuario);
 }
@@ -307,6 +321,7 @@ void OpcionesBatalla(Jugador *usuario){
 
 void inventarionuevo(Jugador *usuario){
     usuario ->inventario = createList();
+
 }
 
 void estadisticasDeclase(Jugador *usuario){
