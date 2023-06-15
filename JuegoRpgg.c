@@ -13,7 +13,11 @@
 #include "heap.h"
 #define TEST printf("this is a test be alert\n")
 //strucs
-
+/* MORADO printf("\033[0;35m")
+ AMARILLO printf("\033[0;33m")
+ ROJO printf("\033[0;31m")
+  VERDE printf("\033[0;32m")
+AZUL printf("\033[0;34m")*/
 typedef struct{
     int x;
     int y;
@@ -45,6 +49,7 @@ typedef struct{
 }Opcion;
 
 typedef struct{
+    
     coordenadas pos;
     Info *datos;
     char *clase;
@@ -73,7 +78,6 @@ void estadisticasDeclase(Jugador *usuario);
 void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
-void establecermapa();
 void generarmapa();
 
 /*equipamiento po clase*/
@@ -83,8 +87,10 @@ void equipobaseM(Jugador *usuario);
 void equipobaseL(Jugador *usuario);
 void equipobaseC(Jugador *usuario);
 
+void faseDElanzamiento(List *lista);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
+void Submenu();
 //main
 int main(){
 
@@ -96,82 +102,143 @@ int main(){
     limpiarpantalla();
     pantallainesesariadecarga();
     limpiarpantalla();
-    //establecermapa();
+    
     generarmapa();
+    faseDElanzamiento(listajugadores);
+    
     //mostrar_perfiles(listajugadores);
     return 0;
 }
 
-void establecermapa(){//0,8
-    sala *habitacion = malloc(sizeof(sala));
-    habitacion->largo = 100;
-    habitacion ->ancho =30;
-    habitacion ->pos.x =0;
-    habitacion ->pos.y =8;
-    gotoxy(0,habitacion ->pos.x); printf("-----------------------------------------------------------------------------");
-    gotoxy(0,habitacion->largo ); printf("-----------------------------------------------------------------------------");
+void Submenu(){
+    printf("\033[0;33m");
+    gotoxy(104,0); printf("--------------------------------------");
+    gotoxy(104,8); printf("--------------------------------------");
+    for(int i = 1; i< 8; i++)
+    {
+        gotoxy(103,i);printf("|*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*|");
+    }
+    printf("\033[0;0m");
+    gotoxy(113,2); printf("------MENU------");
+    gotoxy(106,3); printf("O Stats-*-*-*-*-*-*-*-*O Inventario");
+    gotoxy(106,4); printf("O salir-*-*-*-*-*-*-*-*O Ajustes");
+    coordenadas cursor;
+    cursor.x = 106;
+    cursor.y = 3;
+    gotoxy(cursor.x,cursor.y); printf("#");
+    while (true)
+    {
+        
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (cursor.y<=3))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y++;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (cursor.y>=4))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y--;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        //derecha131
+        if((GetAsyncKeyState(0x27)) && (cursor.x<=131))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=129;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        if((GetAsyncKeyState(0x25)) && (cursor.x>=106))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=106;
+            gotoxy(cursor.x,cursor.y); printf("#");
+        }
+        if(GetAsyncKeyState(0x1B)){
+            for(int i = 0; i< 9; i++)
+            {
+                gotoxy(103,i);printf("                                       ");
+            }
+            return;
+        }
+        //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
+    }
     
+}
+
+//△
+void faseDElanzamiento(List *listaJugadores){
+    Jugador *mainPlayer = firstList(listaJugadores);
+    
+    while(true)
+    {
+        Sleep(100);
+        printf("\033[0;35m");
+        //Moverse a la izquierda
+        if((GetAsyncKeyState(0x25))&&(mainPlayer->pos.x>=2))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+            mainPlayer->pos.x--;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+        //derecha
+        if((GetAsyncKeyState(0x27))&&(mainPlayer->pos.x<=99))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+            mainPlayer->pos.x++;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (mainPlayer->pos.y<=38))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y);printf(" ");
+            mainPlayer->pos.y++;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (mainPlayer->pos.y>=2))
+        {
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf(" ");
+            mainPlayer->pos.y--;
+            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf("O");
+        }
+
+        if(GetAsyncKeyState(0x1B)){
+            Submenu();
+        }
+    }
 }
 
 
 void generarmapa()
 {
+    printf("\033[0;32m");
     gotoxy(0,0);printf("-----------------------------------------------------------------------------------------------------");
     gotoxy(0,40);printf("-----------------------------------------------------------------------------------------------------");
+    //101 largo 40 ancho
     for(int i = 1; i< 40; i++)
     {
         gotoxy(0,i);printf("|                                                                                                    |");
     }
-    int x=10 ,y=10;
-    while(true)
-    {
-        Sleep(100);
 
-        //Moverse a la izquierda
-        if(GetAsyncKeyState(0x25))
-        {
-            gotoxy(x,y); printf(" ");
-            x--;
-            gotoxy(x,y); printf("O");
-        }
-        //derecha
-        if(GetAsyncKeyState(0x27))
-        {
-            gotoxy(x,y); printf(" ");
-            x++;
-            gotoxy(x,y); printf("O");
-        }
-
-        //abajo
-        if(GetAsyncKeyState(0x28))
-        {
-            gotoxy(x,y); printf(" ");
-            y++;
-            gotoxy(x,y); printf("O");
-        }
-        //arriba
-        if(GetAsyncKeyState(0x26))
-        {
-            gotoxy(x,y); printf(" ");
-            y--;
-            gotoxy(x,y); printf("O");
-        }
-    }
+    printf("\033[0;0m");
+    
 }
 
 
-
-
-
-
-
 void limpiarpantalla(){
+    
     for(int i=0; i<=64; i++){
-        gotoxy(0,i);printf("                                                                                                           ");
+        gotoxy(0,i);  
+        printf("\033[2J\033[H");                                                                                                         
     }
-    /*for(int i=0; i<=80; i++){
-        gotoxy(i,17);printf("-");
-    }*/
+
+    for(int i=0; i<=80; i++){
+        gotoxy(i,17); printf("\033[2J\033[H");
+    }
 }
 
 void mostrar_perfiles (List *lista){
@@ -292,6 +359,9 @@ void CrearPerfil(List *lista){
     estadisticasDeclase(usuario);
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
+    usuario ->pos.x=10;
+    usuario ->pos.y=10;
+
     //faltan el quipamiento 
     pushBack(lista ,usuario);
 }
@@ -311,310 +381,6 @@ void OpcionesBatalla(Jugador *usuario){
 
 void inventarionuevo(Jugador *usuario){
     usuario ->inventario = createList();
-    equipamientoBase(usuario);
-}
-
-
-/* chantarle el equipamiento base a las clases*/
-
-void equipamientoBase(Jugador *usuario)
-{
-    if(strcmp("Espadachin",usuario->clase) == 0)
-    {
-        equipobaseE(usuario);
-    }
-}
-
-void equipobaseE(Jugador *usuario)
-{
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-}
-
-void equipobaseM(Jugador *usuario)
-{
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-}
-
-void equipobaseL(Jugador *usuario)
-{
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-}
-
-void equipobaseC(Jugador *usuario)
-{
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Armadura");
-    strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-
-    strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
-    equipoBase->equipado = true;
-
-
-    pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
 }
 
 
@@ -706,6 +472,6 @@ void pantallainesesariadecarga(){
         Sleep(100);
         gotoxy(50, 11);printf("Cargando ...%i%c",i,porciento);
         i++;
-        if(i>100) break;
+        if(i>10) break;
     }
 }
