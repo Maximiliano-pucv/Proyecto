@@ -27,7 +27,7 @@ typedef struct{
     
     char nombre[100];
     int HPMAX; //vida maxima
-    int HPA; //vida actual
+    int HP; //vida actual
     int ATK;
     int DEF;
     char *descripcion;
@@ -357,7 +357,7 @@ void CrearPerfil(List *lista){
     gotoxy(50,18); printf("Muy bien, pues ahora veamos que es lo que quieres ser");
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
-    inventarionuevo(usuario);
+    //inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
     usuario ->pos.y=10;
@@ -716,7 +716,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 10;
         usuario -> datos ->HPMAX = 20;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
 
@@ -725,7 +725,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 20;
         usuario -> datos ->DEF = 5;
         usuario -> datos ->HPMAX = 10;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }else if(strcmp("Ladron",usuario->clase)==0){
@@ -733,7 +733,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 17;
         usuario -> datos ->DEF = 7;
         usuario -> datos ->HPMAX = 15;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }else{
@@ -741,7 +741,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 15;
         usuario -> datos ->HPMAX = 20;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }
