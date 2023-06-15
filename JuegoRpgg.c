@@ -381,8 +381,326 @@ void OpcionesBatalla(Jugador *usuario){
 
 void inventarionuevo(Jugador *usuario){
     usuario ->inventario = createList();
+    equipamientoBase(usuario);
 }
 
+
+void equipamientoBase(Jugador *usuario);
+{
+    if(strcmp("Espadachin",usuario->clase) == 0)
+    {
+        equipobaseE(usuario);
+        return;
+    }
+    if(strcmp("Mago",usuario->clase) == 0)
+    {
+        equipobaseM(usuario);
+        return;
+    }
+    if(strcmp("Ladron",usuario->clase) == 0)
+    {
+        equipobaseL(usuario);
+        return;
+    }
+    if(strcmp("Chef",usuario->clase) == 0)
+    {
+        equipobaseC(usuario);
+        return;
+    }
+
+}
+
+void equipobaseE(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseM(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseL(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
+
+void equipobaseC(Jugador *usuario)
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Casco");
+    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Pecho");
+    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Piernas");
+    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Armadura");
+    strcpy(equipoBase->tipoArmadura,"Botas");
+    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->HPMAX = 5;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+
+    strcpy(equipoBase->tipo,"Arma");
+    strcpy(equipoBase->stats->nombre,"Espada larga");
+    equipoBase->stats->ATK = 5;
+    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->equipado = true;
+
+
+    pushBack(usuario->inventario,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+}
 
 
 
