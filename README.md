@@ -1,8 +1,6 @@
 # Proyecto
 
-
-
-2 y 2 son 4 4 y 2 son 6 y 2 son8
-
-
-push pull commit
+En el siguiente archivo README, se especificará: 
+1. Cómo compilar y ejecutar la aplicación
+2. Las funciones que se ejecutan correctamente y los posibles errores
+3. Explicación en relación a como se desarrolla la aplicación
