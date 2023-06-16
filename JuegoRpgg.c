@@ -412,7 +412,7 @@ void equipamientoBase(Jugador *usuario)
 
 void equipobaseE(Jugador *usuario)
 {
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+   /* TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -479,13 +479,13 @@ void equipobaseE(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
 void equipobaseM(Jugador *usuario)
 {
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    /*TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -552,13 +552,13 @@ void equipobaseM(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
 void equipobaseL(Jugador *usuario)
 {
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    /*TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -625,13 +625,13 @@ void equipobaseL(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
 void equipobaseC(Jugador *usuario)
 {
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    /*TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -698,7 +698,7 @@ void equipobaseC(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
