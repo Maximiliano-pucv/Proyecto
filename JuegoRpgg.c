@@ -12,6 +12,8 @@
 #include "hashMap.h"
 #include "heap.h"
 #define TEST printf("this is a test be alert\n")
+#define FILAS 41
+#define COLUMNAS 100
 //strucs
 /* MORADO printf("\033[0;35m")
  AMARILLO printf("\033[0;33m")
@@ -61,10 +63,7 @@ typedef struct{
 }Jugador;
 
 typedef struct{
-    coordenadas pos;
-    int largo;
-    int ancho;
-    
+    char tamano[FILAS][COLUMNAS];
 }sala;
 //prototipos de ubicaciones
 void gotoxy(int x, int y);
@@ -79,6 +78,8 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
+void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
+bool validarmov(sala * sandbox, int x, int y);
 
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
@@ -87,7 +88,7 @@ void equipobaseM(Jugador *usuario);
 void equipobaseL(Jugador *usuario);
 void equipobaseC(Jugador *usuario);
 
-void faseDElanzamiento(List *lista);
+void faseDElanzamiento(List *listaJugadores,sala *sandbox);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 void Submenu();
@@ -107,9 +108,9 @@ int main(){
     limpiarpantalla();
     pantallainesesariadecarga();
     limpiarpantalla();
-    
-    generarmapa();
-    faseDElanzamiento(listajugadores);
+    sala *sandbox = (sala*)malloc(sizeof(sala));
+    generarmapa(sandbox);
+    faseDElanzamiento(listajugadores,sandbox);
     
     //mostrar_perfiles(listajugadores);
     return 0;
@@ -330,10 +331,14 @@ void mostrarDescrip(){
    
 }
 
-
+bool validarmov(sala *sandbox, int x, int y)
+{
+    if(sandbox->tamano[y][x] == ' ' || isalpha(sandbox->tamano[y][x])) return true;
+    return false;
+}
 
 //△
-void faseDElanzamiento(List *listaJugadores){
+void faseDElanzamiento(List *listaJugadores,sala *sandbox){
     Jugador *mainPlayer = firstList(listaJugadores);
     
     while(true)
@@ -341,33 +346,50 @@ void faseDElanzamiento(List *listaJugadores){
         Sleep(100);
         printf("\033[0;35m");
         //Moverse a la izquierda
-        if((GetAsyncKeyState(0x25))&&(mainPlayer->pos.x>=2))
+        if((GetAsyncKeyState(0x25)))
         {
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-            mainPlayer->pos.x--;
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y) == true)
+            {
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.x--;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else continue;
+
         }
         //derecha
-        if((GetAsyncKeyState(0x27))&&(mainPlayer->pos.x<=99))
+        if((GetAsyncKeyState(0x27)))
         {
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-            mainPlayer->pos.x++;
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y) == true)
+            {
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.x++;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else continue;
         }
 
         //abajo
-        if((GetAsyncKeyState(0x28)) && (mainPlayer->pos.y<=38))
+        if((GetAsyncKeyState(0x28)))
         {
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y);printf(" ");
-            mainPlayer->pos.y++;
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1) == true)
+            {
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.y++;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else continue;
         }
         //arriba
-        if((GetAsyncKeyState(0x26)) && (mainPlayer->pos.y>=2))
+        if((GetAsyncKeyState(0x26)))
         {
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf(" ");
-            mainPlayer->pos.y--;
-            gotoxy(mainPlayer->pos.x,mainPlayer->pos.y) ;printf("O");
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == true)
+            {
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.y--;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else continue;
         }
 
         if(GetAsyncKeyState(0x1B)){
@@ -377,19 +399,94 @@ void faseDElanzamiento(List *listaJugadores){
 }
 
 
-void generarmapa()
+void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter)
 {
-    printf("\033[0;32m");
-    gotoxy(0,0);printf("-----------------------------------------------------------------------------------------------------");
-    gotoxy(0,40);printf("-----------------------------------------------------------------------------------------------------");
-    //101 largo 40 ancho
-    for(int i = 1; i< 40; i++)
+    if(largo >0)
     {
-        gotoxy(0,i);printf("|                                                                                                    |");
+        for(size_t j = 0; j< largo; j++)
+        {
+            if(caracter == '-')
+            {
+                
+                sandbox->tamano[posfila][j+poscolum] = caracter;
+                gotoxy(j+poscolum,posfila);printf("%c",sandbox->tamano[posfila][j+poscolum]);
+            }
+            else if(caracter == '|')
+            {
+                sandbox->tamano[j+posfila][poscolum] = caracter;
+                gotoxy(poscolum,j+posfila);printf("%c",sandbox->tamano[j+posfila][poscolum]);
+            }
+        }
+    }   
+}
+
+void generarmapa(sala *sandbox)
+{
+    srand(time(NULL));
+    int variable = 1;
+    for(size_t i = 0; i<FILAS ; i++)
+    {
+        for(size_t j = 0; j<COLUMNAS ; j++)
+        {
+            sandbox->tamano[i][j] = ' ';
+            if(i == 0 || i == FILAS -1)
+            {
+                sandbox->tamano[i][j] = '-';
+            }
+            if( i != 0 && i != FILAS-1 && (j == 0 || j == COLUMNAS -1))
+            {
+                sandbox->tamano[i][j] = '|';
+            }
+            
+            
+        }
+    }
+    int salas[7] ={0}; //arreglo para evitar la repeticion de las salas
+    printf("\033[0;32m");
+
+    for(size_t i = 0; i<FILAS; i++)
+    {
+        for(size_t j = 0; j< COLUMNAS; j++)
+        {
+            gotoxy(j,i);
+            printf("%c",sandbox->tamano[i][j]);
+        }
     }
 
+    if (variable == 1)
+    {
+        rellenarmapa(sandbox,15,1,7,'-');
+
+        gotoxy(1,21); printf("-------");
+    }
+    else if(variable == 2)
+    {
+        gotoxy(1,20); printf("---------");
+        gotoxy(1,23); printf("---------");
+    }
+    else if (variable == 3)
+    {
+        gotoxy(20,8); printf("---");
+        gotoxy(23,9); printf("C");
+    }
+    else if(variable == 4)
+    {
+        gotoxy(2,1); printf("|");
+    }
+    else if(variable == 5)
+    {
+        gotoxy(60,25); printf("---");
+    }
+    else if(variable == 6)
+    {
+        gotoxy(50,20); printf("A");
+    }
+    else
+    {
+        gotoxy(51,25); printf("B");
+    }
     printf("\033[0;0m");
-    
+
 }
 
 
