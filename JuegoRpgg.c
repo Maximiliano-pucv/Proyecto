@@ -27,7 +27,7 @@ typedef struct{
     
     char nombre[100];
     int HPMAX; //vida maxima
-    int HPA; //vida actual
+    int HP; //vida actual
     int ATK;
     int DEF;
     char *descripcion;
@@ -183,6 +183,125 @@ void Submenu(){
     }
 
 }
+
+void submenu_Inventario(){
+    printf("\033[0;35m");
+    gotoxy(104, 12); printf("-------------------------------------");
+    gotoxy(104, 38); printf("-------------------------------------");
+    for(int i = 13; i < 38; i++){
+        gotoxy(104, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
+    gotoxy(113, 13); printf("     Inventario     ");
+    mostrarInventario();
+
+    coordenadas mov;
+    mov.x = 106;
+    mov.y = 15;
+    gotoxy(mov.x, mov.y); printf("-");
+    int opcion;
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x26) && mov.y >= 16){
+            gotoxy(mov.x, mov.y);printf("+");
+            mov.y--;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 1;
+        }
+
+        if(GetAsyncKeyState(0x28) && mov.y <= 34){
+            gotoxy(mov.x, mov.y);printf("+");
+            mov.y++;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 2;
+        }
+
+        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
+            submenu_opciones();
+        }
+    }
+}
+
+
+void mostrarInventario(){
+    
+    Jugador *item = (Jugador *) malloc(sizeof(Jugador ));
+
+    for(int i = 15; i < 36; i++){
+        gotoxy(106, i); printf("  -%s ", item->datos->nombre);
+    }
+
+}
+
+void submenu_opciones(){
+    printf("\033[0;34m");
+    gotoxy(144, 12); printf("-------------------------------------");
+    gotoxy(144, 20); printf("-------------------------------------");
+    for(int i = 13; i < 20; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
+    coordenadas mov;
+    mov.x = 146;
+    mov.y = 15;
+
+    gotoxy(149, 13); printf("      OPTIONS");
+    gotoxy(146, 15); printf("  1. Use");
+    gotoxy(146, 16); printf("  2. Assign");
+    gotoxy(146, 17); printf("  3. Drop");
+    gotoxy(146, 18); printf("  4. Description");
+
+    int opcion = 0;
+    while(true){
+        Sleep(100);
+        //flecha arriba
+        if(GetAsyncKeyState(0x26) && mov.y >= 16){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y--;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 1;
+        }
+
+        //flecha abajo
+        if(GetAsyncKeyState(0x28) && mov.y <= 17){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y++;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 2;
+        }
+        /*
+        if(GetAsyncKeyState(0x5A)){
+            //return;
+        }*/
+
+        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
+           mostrarDescrip();
+        }
+
+        if(GetAsyncKeyState(0x5A)){
+            return;
+        }
+        //cerrar la pestaña (falta)
+
+    }
+}
+
+void mostrarDescrip(){
+    
+    printf("\033[0;34m");
+    gotoxy(144, 26); printf("-------------------------------------");
+    gotoxy(144, 36); printf("-------------------------------------");
+    for(int i = 27; i < 36; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+    
+    Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
+   
+}
+
 
 
 //△
@@ -374,7 +493,7 @@ void CrearPerfil(List *lista){
     gotoxy(50,18); printf("Muy bien, pues ahora veamos que es lo que quieres ser");
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
-    inventarionuevo(usuario);
+    //inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
     usuario ->pos.y=10;
@@ -499,6 +618,8 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
     */
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
+
 }
 
 void equipobaseM(Jugador *usuario)
@@ -572,6 +693,8 @@ void equipobaseM(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 */
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
+
 }
 
 void equipobaseL(Jugador *usuario)
@@ -651,6 +774,13 @@ void equipobaseL(Jugador *usuario)
 void equipobaseC(Jugador *usuario)
 {/*
     TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
+
+}
+
+void equipobaseC(Jugador *usuario)
+{
+    /*TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -719,6 +849,8 @@ void equipobaseC(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 */
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
+
 }
 
 
@@ -735,7 +867,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 10;
         usuario -> datos ->HPMAX = 20;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
 
@@ -744,7 +876,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 20;
         usuario -> datos ->DEF = 5;
         usuario -> datos ->HPMAX = 10;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }else if(strcmp("Ladron",usuario->clase)==0){
@@ -752,7 +884,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 17;
         usuario -> datos ->DEF = 7;
         usuario -> datos ->HPMAX = 15;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }else{
@@ -760,7 +892,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->datos->ATK= 10;
         usuario -> datos ->DEF = 15;
         usuario -> datos ->HPMAX = 20;
-        usuario -> datos ->HPA = usuario -> datos ->HPMAX;
+        usuario -> datos ->HP = usuario -> datos ->HPMAX;
         usuario ->nivel = 1;
         usuario ->PH = 0;
     }
