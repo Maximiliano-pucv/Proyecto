@@ -71,7 +71,7 @@ void gotoxy(int x, int y);
 void pantallainesesariadecarga();
 void mainmenu();
 
-//protoripo de funciones
+//prototipo de funciones
 void CrearPerfil(List *lista);
 void selccionarclase(Jugador *usuario);
 void estadisticasDeclase(Jugador *usuario);
@@ -80,7 +80,7 @@ void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
 
-/*equipamiento po clase*/
+/*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
 void equipobaseE(Jugador *usuario);
 void equipobaseM(Jugador *usuario);
@@ -91,6 +91,11 @@ void faseDElanzamiento(List *lista);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
 void Submenu();
+void submenu_Inventario();
+void mostrarInventario();
+void submenu_opciones();
+void mostrarDescrip();
+
 //main
 int main(){
 
@@ -126,15 +131,17 @@ void Submenu(){
     cursor.x = 106;
     cursor.y = 3;
     gotoxy(cursor.x,cursor.y); printf("#");
+    int selecc = 0;
     while (true)
     {
-        
+        Sleep(100);
         //abajo
         if((GetAsyncKeyState(0x28)) && (cursor.y<=3))
         {
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.y++;
             gotoxy(cursor.x,cursor.y); printf("#");
+            selecc = 1;
         }
         //arriba
         if((GetAsyncKeyState(0x26)) && (cursor.y>=4))
@@ -142,6 +149,7 @@ void Submenu(){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.y--;
             gotoxy(cursor.x,cursor.y); printf("#");
+            selecc = 2;
         }
         //derecha131
         if((GetAsyncKeyState(0x27)) && (cursor.x<=131))
@@ -149,12 +157,15 @@ void Submenu(){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.x=129;
             gotoxy(cursor.x,cursor.y); printf("#");
+            selecc = 3;
         }
+
         if((GetAsyncKeyState(0x25)) && (cursor.x>=106))
         {
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.x=106;
             gotoxy(cursor.x,cursor.y); printf("#");
+            selecc = 4;
         }
         if(GetAsyncKeyState(0x1B)){
             for(int i = 0; i< 9; i++)
@@ -163,10 +174,134 @@ void Submenu(){
             }
             return;
         }
+
+        if(GetAsyncKeyState(0x0D) && selecc == 3){
+            submenu_Inventario();
+        }
         //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
+
     }
-    
+
 }
+
+void submenu_Inventario(){
+    printf("\033[0;35m");
+    gotoxy(104, 12); printf("-------------------------------------");
+    gotoxy(104, 38); printf("-------------------------------------");
+    for(int i = 13; i < 38; i++){
+        gotoxy(104, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
+    gotoxy(113, 13); printf("     Inventario     ");
+    mostrarInventario();
+
+    coordenadas mov;
+    mov.x = 106;
+    mov.y = 15;
+    gotoxy(mov.x, mov.y); printf("-");
+    int opcion;
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x26) && mov.y >= 16){
+            gotoxy(mov.x, mov.y);printf("+");
+            mov.y--;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 1;
+        }
+
+        if(GetAsyncKeyState(0x28) && mov.y <= 34){
+            gotoxy(mov.x, mov.y);printf("+");
+            mov.y++;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 2;
+        }
+
+        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
+            submenu_opciones();
+        }
+    }
+}
+
+
+void mostrarInventario(){
+    
+    Jugador *item = (Jugador *) malloc(sizeof(Jugador ));
+
+    for(int i = 15; i < 36; i++){
+        gotoxy(106, i); printf("  -%s ", item->datos->nombre);
+    }
+
+}
+
+void submenu_opciones(){
+    printf("\033[0;34m");
+    gotoxy(144, 12); printf("-------------------------------------");
+    gotoxy(144, 20); printf("-------------------------------------");
+    for(int i = 13; i < 20; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
+    coordenadas mov;
+    mov.x = 146;
+    mov.y = 15;
+
+    gotoxy(149, 13); printf("      OPTIONS");
+    gotoxy(146, 15); printf("  1. Use");
+    gotoxy(146, 16); printf("  2. Assign");
+    gotoxy(146, 17); printf("  3. Drop");
+    gotoxy(146, 18); printf("  4. Description");
+
+    int opcion = 0;
+    while(true){
+        Sleep(100);
+        //flecha arriba
+        if(GetAsyncKeyState(0x26) && mov.y >= 16){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y--;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 1;
+        }
+
+        //flecha abajo
+        if(GetAsyncKeyState(0x28) && mov.y <= 17){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y++;
+            gotoxy(mov.x, mov.y); printf(">");
+            opcion = 2;
+        }
+        /*
+        if(GetAsyncKeyState(0x5A)){
+            //return;
+        }*/
+
+        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
+           mostrarDescrip();
+        }
+
+        if(GetAsyncKeyState(0x5A)){
+            return;
+        }
+        //cerrar la pestaña (falta)
+
+    }
+}
+
+void mostrarDescrip(){
+    
+    printf("\033[0;34m");
+    gotoxy(144, 26); printf("-------------------------------------");
+    gotoxy(144, 36); printf("-------------------------------------");
+    for(int i = 27; i < 36; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+    
+    Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
+   
+}
+
 
 //△
 void faseDElanzamiento(List *listaJugadores){
@@ -348,7 +483,7 @@ void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
     usuario ->datos = malloc(sizeof(Info));
     Sleep(100);
-    gotoxy(50,17); printf("Pero primero, Debes decirme tu nombre\n");
+    gotoxy(50,17); printf("Pero primero, debes decirme tu nombre\n");
     gotoxy(50,18);
     scanf("%99[^\n]s",usuario->datos->nombre);
     getchar();
@@ -373,9 +508,9 @@ void OpcionesBatalla(Jugador *usuario){
     strcpy(usuario->ataques[3].nombre,"HUIR");
     
     strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle daño al enemigo");
-    strcpy(usuario->ataques[1].descripicion,"Si nesesitas Pensar o no pudes hacer nada, Defiendete para recibir menos daño");
-    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar?, que esperas?, solo hay una forma de saber que hacer");
-    strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :(, HUYE ANTES QUE TE MATEN, o te da flojera pelear, vete");
+    strcpy(usuario->ataques[1].descripicion,"Si nesesitas pensar o no pudes hacer nada, defiendete para recibir menos daño");
+    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar? Que esperas? solo hay una forma de saber que hacer");
+    strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :( HUYE ANTES QUE TE MATEN, o te da flojera pelear? vete");
 
 }
 
@@ -385,7 +520,7 @@ void inventarionuevo(Jugador *usuario){
 }
 
 
-void equipamientoBase(Jugador *usuario);
+void equipamientoBase(Jugador *usuario)
 {
     if(strcmp("Espadachin",usuario->clase) == 0)
     {
@@ -412,6 +547,7 @@ void equipamientoBase(Jugador *usuario);
 
 void equipobaseE(Jugador *usuario)
 {
+    /*
     TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
@@ -480,12 +616,12 @@ void equipobaseE(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    */
 }
 
 void equipobaseM(Jugador *usuario)
 {
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+   /* TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
     equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
@@ -553,11 +689,12 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+*/
 }
 
 void equipobaseL(Jugador *usuario)
 {
+    /*
     TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
@@ -626,11 +763,11 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    */
 }
 
 void equipobaseC(Jugador *usuario)
-{
+{/*
     TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
     equipoBase->stats = (Info*)malloc(sizeof(Info));
     equipoBase->tipo = (char*)malloc(sizeof(char));
@@ -699,7 +836,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+*/
 }
 
 
