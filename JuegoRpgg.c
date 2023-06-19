@@ -297,7 +297,35 @@ void mostrarDescrip(){
         gotoxy(144, i); printf("|                                   |");
     }  
     printf("\033[0;0m");
-    
+
+    //gotoxy(148, 36); printf(" ");
+
+    coordenadas mov;
+    mov.x = 148;
+    mov.y = 28;
+
+     while(true){
+        Sleep(100);
+        //flecha arriba
+        if(GetAsyncKeyState(0x26) && mov.y >= 27){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y--;
+            gotoxy(mov.x, mov.y); printf(">");
+            //opcion = 1;
+        }
+
+        //flecha abajo
+        if(GetAsyncKeyState(0x28) && mov.y <= 30){
+            gotoxy(mov.x, mov.y);printf(" ");
+            mov.y++;
+            gotoxy(mov.x, mov.y); printf(">");
+           // opcion = 2;
+        }
+
+        if(GetAsyncKeyState(0x1B)){
+            return;
+        }
+    }
     Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
    
 }
@@ -617,7 +645,7 @@ void equipobaseE(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-    */
+    
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
@@ -692,7 +720,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-*/
+
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
@@ -771,12 +799,12 @@ void equipobaseL(Jugador *usuario)
     */
 }
 
-void equipobaseC(Jugador *usuario)
-{/*
+/*void equipobaseC(Jugador *usuario)
+{
     TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
+    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
-}
+}*/
 
 void equipobaseC(Jugador *usuario)
 {
@@ -848,7 +876,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-*/
+
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
