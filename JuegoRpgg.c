@@ -308,7 +308,7 @@ void mostrarDescrip(){
      while(true){
         Sleep(100);
         //flecha arriba
-        if(GetAsyncKeyState(0x26) && mov.y >= 27){
+        if(GetAsyncKeyState(0x26) && mov.y >= 28){
             gotoxy(mov.x, mov.y);printf(" ");
             mov.y--;
             gotoxy(mov.x, mov.y); printf(">");
@@ -316,7 +316,7 @@ void mostrarDescrip(){
         }
 
         //flecha abajo
-        if(GetAsyncKeyState(0x28) && mov.y <= 30){
+        if(GetAsyncKeyState(0x28) && mov.y <= 34){
             gotoxy(mov.x, mov.y);printf(" ");
             mov.y++;
             gotoxy(mov.x, mov.y); printf(">");
