@@ -623,7 +623,7 @@ void CrearPerfil(List *lista){
     //inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
-    usuario ->pos.y=10;
+    usuario ->pos.y=18;
 
     //faltan el quipamiento 
     pushBack(lista ,usuario);
