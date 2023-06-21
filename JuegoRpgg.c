@@ -99,6 +99,8 @@ void mostrarDescrip();
 
 //main
 int main(){
+    time_t t;
+    srand((unsigned) time(&t));
 
     pantallainesesariadecarga();
     mainmenu();
@@ -422,7 +424,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 
 void generarmapa(sala *sandbox)
 {
-    srand(time(NULL));
+    
     int variable = 1;
     for(size_t i = 0; i<FILAS ; i++)
     {
