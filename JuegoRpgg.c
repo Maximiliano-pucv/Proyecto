@@ -401,7 +401,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox){
 
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter)
 {
-    if(largo >0)
+    if(largo >1)
     {
         for(size_t j = 0; j< largo; j++)
         {
@@ -411,13 +411,18 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
                 sandbox->tamano[posfila][j+poscolum] = caracter;
                 gotoxy(j+poscolum,posfila);printf("%c",sandbox->tamano[posfila][j+poscolum]);
             }
-            else if(caracter == '|')
+            else if(caracter == '|' || caracter == '>')
             {
                 sandbox->tamano[j+posfila][poscolum] = caracter;
                 gotoxy(poscolum,j+posfila);printf("%c",sandbox->tamano[j+posfila][poscolum]);
             }
         }
-    }   
+    }
+    else
+    {
+        sandbox->tamano[posfila][poscolum] = caracter;
+        gotoxy(poscolum,posfila); printf("%c",sandbox->tamano[posfila][poscolum]);
+    }
 }
 
 void generarmapa(sala *sandbox)
