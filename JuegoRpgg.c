@@ -99,6 +99,8 @@ void mostrarDescrip();
 
 //main
 int main(){
+    time_t t;
+    srand((unsigned) time(&t));
 
     pantallainesesariadecarga();
     mainmenu();
@@ -308,7 +310,7 @@ void mostrarDescrip(){
      while(true){
         Sleep(100);
         //flecha arriba
-        if(GetAsyncKeyState(0x26) && mov.y >= 27){
+        if(GetAsyncKeyState(0x26) && mov.y >= 28){
             gotoxy(mov.x, mov.y);printf(" ");
             mov.y--;
             gotoxy(mov.x, mov.y); printf(">");
@@ -316,7 +318,7 @@ void mostrarDescrip(){
         }
 
         //flecha abajo
-        if(GetAsyncKeyState(0x28) && mov.y <= 30){
+        if(GetAsyncKeyState(0x28) && mov.y <= 34){
             gotoxy(mov.x, mov.y);printf(" ");
             mov.y++;
             gotoxy(mov.x, mov.y); printf(">");
@@ -427,7 +429,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 
 void generarmapa(sala *sandbox)
 {
-    srand(time(NULL));
+    
     int variable = 1;
     for(size_t i = 0; i<FILAS ; i++)
     {
@@ -626,7 +628,7 @@ void CrearPerfil(List *lista){
     //inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
-    usuario ->pos.y=10;
+    usuario ->pos.y=18;
 
     //faltan el quipamiento 
     pushBack(lista ,usuario);
