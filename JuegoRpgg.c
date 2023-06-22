@@ -32,6 +32,7 @@ typedef struct{
     int HP; //vida actual
     int ATK;
     int DEF;
+    int PH;
     char *descripcion;
 }Info;//Hace referencia a las estadisiticas
 
@@ -78,6 +79,8 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
+HashMap* almacenarmounstruos();
+/*const*/ char *get_csv_field (char * tmp, int k);
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
 bool validarmov(sala * sandbox, int x, int y);
 
@@ -88,8 +91,9 @@ void equipobaseM(Jugador *usuario);
 void equipobaseL(Jugador *usuario);
 void equipobaseC(Jugador *usuario);
 
-void faseDElanzamiento(List *listaJugadores,sala *sandbox);
+void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster);
 //funciones solo developers (fran)
+void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
 void mostrar_perfiles (List *lista);
 void Submenu(List *lista);
 void submenu_Inventario(List *lista);
@@ -106,17 +110,24 @@ int main(){
     pantallainesesariadecarga();
     mainmenu();
     List *listajugadores = createList();
+    HashMap *mapamonster = almacenarmounstruos();
+
     CrearPerfil(listajugadores);
+    
     //mostrar_perfiles(listajugadores);
     limpiarpantalla();
     pantallainesesariadecarga();
     limpiarpantalla();
     sala *sandbox = (sala*)malloc(sizeof(sala));
     generarmapa(sandbox);
-    faseDElanzamiento(listajugadores,sandbox);
+    faseDElanzamiento(listajugadores,sandbox,mapamonster);
     
     //mostrar_perfiles(listajugadores);
     return 0;
+}
+
+void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
+    gotoxy(0,42); TEST;
 }
 
 void Submenu(List *listaJugadores){
@@ -189,6 +200,9 @@ void Submenu(List *listaJugadores){
         gotoxy(104,0); printf("%i",selecc);
         if(GetAsyncKeyState(0x0D) && selecc == 3){
             submenu_Inventario(listaJugadores);
+        }
+        if(GetAsyncKeyState(0x0D) && selecc == 2){
+            exit(0);
         }
         //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
 
@@ -392,7 +406,7 @@ bool validarmov(sala *sandbox, int x, int y)
 }
 
 //△
-void faseDElanzamiento(List *listaJugadores,sala *sandbox){
+void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster){
     Jugador *mainPlayer = firstList(listaJugadores);
     
     while(true)
@@ -448,6 +462,9 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox){
 
         if(GetAsyncKeyState(0x1B)){
             Submenu(listaJugadores);
+        }
+        if(GetAsyncKeyState(0x54)){
+            developerfunctions(listaJugadores,Mapamonster);
         }
     }
 }
@@ -665,6 +682,94 @@ void mainmenu(){
 
 }
 
+/*const */char *get_csv_field (char * tmp, int k) {
+    int open_mark = 0;
+    char* ret=(char*) malloc (100*sizeof(char));
+    int ini_i=0, i=0;
+    int j=0;
+    while(tmp[i+1]!='\0'){
+        if(tmp[i]== '\"'){
+            open_mark = 1-open_mark;
+            if(open_mark) ini_i = i+1;
+            i++;
+            continue;
+        }
+
+        if(open_mark || tmp[i]!= ','){
+            if(k==j) ret[i-ini_i] = tmp[i];
+            i++;
+            continue;
+        }
+
+        if(tmp[i]== ','){
+            if(k==j) {
+               ret[i-ini_i] = 0;
+               return ret;
+            }
+            j++; ini_i = i+1;
+        }
+
+        i++;
+    }
+    if(k==j) {
+       ret[i-ini_i] = 0;
+       return ret;
+    }
+    return NULL;
+}
+
+HashMap* almacenarmounstruos(){
+  HashMap *mapaaux = createMap(12);
+  FILE *fp = fopen ("Bestiario.txt", "r");
+  if(fp == NULL){
+    printf("el archivo no existe\n");
+    return NULL; 
+  } 
+  char linea[1024];
+  int i;
+  int cant =0;
+  fgets (linea, 1023, fp);
+  while (fgets (linea, 1023, fp) != NULL) { // Se lee la linea
+    Info *datos = malloc(sizeof(Info));
+    for(i = 0;i < 13;i++){
+      char *aux = get_csv_field(linea, i); // Se obtiene el nombre
+      
+      if(aux != NULL){
+        if(i == 0)
+        {
+          strcpy(datos->nombre, aux);
+        }
+        if(i == 1)
+        {
+          datos ->ATK = atoi(aux);
+        }
+        if(i == 2){
+          datos ->DEF = atoi(aux);
+        }
+        if(i == 3){
+          datos ->HP = atoi(aux);
+        }
+        if(i == 4){
+          datos ->HPMAX = atoi(aux);
+        }
+        if(i == 5){
+          datos ->PH =atoi(aux);
+        }
+        if(i==5){
+          datos ->descripcion = malloc(sizeof(char)*(strlen(aux)+1));
+          strcpy(datos ->descripcion, aux );
+        }
+      }  
+    }
+    
+    char *ubicacion = malloc(sizeof(char)*2);
+    sprintf(ubicacion,"%i",cant);
+    insertMap(mapaaux, ubicacion, datos);
+    cant++;
+  }
+  return mapaaux; 
+}
+
 void CrearPerfil(List *lista){
     Jugador *usuario = malloc(sizeof(Jugador));
     usuario ->datos = malloc(sizeof(Info));
@@ -682,7 +787,7 @@ void CrearPerfil(List *lista){
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
     usuario ->pos.y=18;
-
+    usuario ->datos->PH = 0;
     //faltan el quipamiento 
     pushBack(lista ,usuario);
 }
