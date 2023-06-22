@@ -613,10 +613,10 @@ void mainmenu(){
     gotoxy(50,18) ;printf("             sssssssss");
     gotoxy(50,19) ;printf("             sssssssss");
     gotoxy(50,20) ;printf("             sssssssss");
-    gotoxy(50,21) ;printf("      sss    sssssssss    sss");
-    gotoxy(50,21) ;printf("     sss     sssssssss     sss");
-    gotoxy(50,22) ;printf("   ssss     ssssssssss     ssss");
-    gotoxy(50,23) ;printf("    sssssssssssssssssssssssss");
+    gotoxy(50,21) ;printf("             sssssssss    \033[0;32m  ssss");
+    gotoxy(50,21) ;printf("     sss    \033[0;0m sssssssss\033[0;32m     sss");
+    gotoxy(50,22) ;printf("   ssss    \033[0;0m ssssssssss\033[0;32m     ssss");
+    gotoxy(50,23) ;printf("    sssssssssssssssssssssssss");printf("\033[0;32m");
     gotoxy(50,24) ;printf("              ssssssss");
     gotoxy(50,25) ;printf("               ssssss");
     gotoxy(50,26) ;printf("               ssssss");
@@ -625,7 +625,8 @@ void mainmenu(){
     gotoxy(50,29) ;printf("             ssssssss");
     gotoxy(50,30) ;printf("                sssss");
     gotoxy(50,31) ;printf("             sssssssss");
-    gotoxy(50,32) ;printf("               ssssss");
+    gotoxy(50,32) ;printf("               ssssss");printf("\033[0;0m");
+    printf("\033[0;34m");
     gotoxy(60,34) ;printf("o Nueva Partida");
     gotoxy(60,35) ;printf("o Salir del Juego");
 
