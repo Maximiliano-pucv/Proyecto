@@ -1,0 +1,11 @@
+nombre,ataque,defensa,hp,hpmax,Ph,descripcion
+Slime,10,3,30,30,2,Una baba solida, se ve tierna, pero puede ser peligroso
+lobo,10,5,30,30,3,Rapido y feroz, ten mucha atencion a sus movimientos
+Esqueleto,12,7,35,35,5,Huesos andates, golpes contundentes
+Armadura viviente,10,10,40,40,5,Nadie sabe como se mueve, pero sabemos que se mueve para matarte
+Bandido,15,10,45,45,7,Una escoria, peligroso y con una afilada percepcion
+Zombie,7,5,60,60,6,Lentos, tontos, hediondos, pero aguantan muchos golpes
+Death khight,20,15,60,60,10,Agil, fuerte y duro, no lo subestimes
+Ogro,20,20,65,65,15,No se sabe mucho de ellos, solamente que debes correr de ellos, a no ser de que seas valiente
+Mimico,15,10,55,55,20,No se sabe si se tiene suerte o no si te encuentras con este especimen
+Trasgo,10,5,20,20,40,Un mounstro muy raro, matalo para obtener sus recompensas!
