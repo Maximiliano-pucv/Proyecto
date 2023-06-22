@@ -86,6 +86,7 @@ bool validarmov(sala * sandbox, int x, int y);
 
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
+TipoEquipamiento *createEquipoBase();
 void equipobaseE(Jugador *usuario);
 void equipobaseM(Jugador *usuario);
 void equipobaseL(Jugador *usuario);
@@ -835,16 +836,21 @@ void equipamientoBase(Jugador *usuario)
     }
 
 }
+TipoEquipamiento *createEquipoBase()
+{
+    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipoBase->stats = (Info*)malloc(sizeof(Info));
+    equipoBase->tipo = (char*)malloc(sizeof(char)*(strlen("Consumible")+1));
+    equipoBase->tipoArmadura = (char*)malloc(sizeof(char)*(strlen("Piernas")+1));
+    equipoBase->stats->descripcion = (char*)malloc(sizeof(char)*70);
+    return equipoBase;
+}
+
 
 void equipobaseE(Jugador *usuario)
 {
-    /*
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
+    
+    TipoEquipamiento *equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
@@ -857,6 +863,8 @@ void equipobaseE(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+
+    equipoBase = createEquipoBase();
 
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -872,6 +880,9 @@ void equipobaseE(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
     strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
@@ -884,6 +895,8 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
@@ -898,6 +911,9 @@ void equipobaseE(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Arma");
     strcpy(equipoBase->stats->nombre,"Espada larga");
     equipoBase->stats->ATK = 5;
@@ -906,20 +922,14 @@ void equipobaseE(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
     
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
 void equipobaseM(Jugador *usuario)
 {
-   /* TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
+    TipoEquipamiento *equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
@@ -934,6 +944,8 @@ void equipobaseM(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
     strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
@@ -946,6 +958,8 @@ void equipobaseM(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
@@ -960,6 +974,8 @@ void equipobaseM(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
     strcpy(equipoBase->stats->nombre,"Botas de guerrero");
@@ -973,6 +989,8 @@ void equipobaseM(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Arma");
     strcpy(equipoBase->stats->nombre,"Espada larga");
     equipoBase->stats->ATK = 5;
@@ -981,21 +999,14 @@ void equipobaseM(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
 
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
 void equipobaseL(Jugador *usuario)
 {
-    /*
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
-
+    TipoEquipamiento *equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
@@ -1010,6 +1021,8 @@ void equipobaseL(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
     strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
@@ -1022,6 +1035,7 @@ void equipobaseL(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
@@ -1035,6 +1049,7 @@ void equipobaseL(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
@@ -1048,6 +1063,7 @@ void equipobaseL(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Arma");
     strcpy(equipoBase->stats->nombre,"Espada larga");
@@ -1057,25 +1073,15 @@ void equipobaseL(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-    */
+    insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+    
 }
 
-/*void equipobaseC(Jugador *usuario)
-{
-    TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
-}*/
 
 void equipobaseC(Jugador *usuario)
 {
-    /*TipoEquipamiento *equipoBase = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
-    equipoBase->stats = (Info*)malloc(sizeof(Info));
-    equipoBase->tipo = (char*)malloc(sizeof(char));
-    equipoBase->tipoArmadura = (char*)malloc(sizeof(char));
-    equipoBase->stats->descripcion = (char*)malloc(sizeof(char));
 
+    TipoEquipamiento *equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
@@ -1089,6 +1095,7 @@ void equipobaseC(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
@@ -1102,6 +1109,7 @@ void equipobaseC(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
@@ -1116,6 +1124,8 @@ void equipobaseC(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
     strcpy(equipoBase->stats->nombre,"Botas de guerrero");
@@ -1129,6 +1139,8 @@ void equipobaseC(Jugador *usuario)
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
 
+    equipoBase = createEquipoBase();
+
     strcpy(equipoBase->tipo,"Arma");
     strcpy(equipoBase->stats->nombre,"Espada larga");
     equipoBase->stats->ATK = 5;
@@ -1137,9 +1149,8 @@ void equipobaseC(Jugador *usuario)
 
 
     pushBack(usuario->inventario,equipoBase);
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
 
-    insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);*/
 
 }
 
