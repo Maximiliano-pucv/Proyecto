@@ -135,7 +135,7 @@ void Submenu(List *listaJugadores){
     cursor.x = 106;
     cursor.y = 3;
     gotoxy(cursor.x,cursor.y); printf("#");
-    int selecc = 0;
+    int selecc = 1;
     while (true)
     {
         Sleep(100);
@@ -145,7 +145,8 @@ void Submenu(List *listaJugadores){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.y++;
             gotoxy(cursor.x,cursor.y); printf("#");
-            selecc = 1;
+            
+            
         }
         //arriba
         if((GetAsyncKeyState(0x26)) && (cursor.y>=4))
@@ -153,7 +154,7 @@ void Submenu(List *listaJugadores){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.y--;
             gotoxy(cursor.x,cursor.y); printf("#");
-            selecc = 2;
+            
         }
         //derecha131
         if((GetAsyncKeyState(0x27)) && (cursor.x<=131))
@@ -161,7 +162,8 @@ void Submenu(List *listaJugadores){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.x=129;
             gotoxy(cursor.x,cursor.y); printf("#");
-            selecc = 3;
+            
+            
         }
 
         if((GetAsyncKeyState(0x25)) && (cursor.x>=106))
@@ -169,7 +171,7 @@ void Submenu(List *listaJugadores){
             gotoxy(cursor.x,cursor.y);printf("O");
             cursor.x=106;
             gotoxy(cursor.x,cursor.y); printf("#");
-            selecc = 4;
+            
         }
         if(GetAsyncKeyState(0x1B)){
             for(int i = 0; i< 9; i++)
@@ -179,6 +181,12 @@ void Submenu(List *listaJugadores){
             return;
         }
 
+        if((cursor.x==106)&&(cursor.y==3)) selecc = 1;
+        if((cursor.x==106)&&(cursor.y==4)) selecc = 2;
+        if((cursor.x==129)&&(cursor.y==3)) selecc = 3;
+        if((cursor.x==129)&&(cursor.y==4)) selecc = 4;
+        
+        gotoxy(104,0); printf("%i",selecc);
         if(GetAsyncKeyState(0x0D) && selecc == 3){
             submenu_Inventario(listaJugadores);
         }
@@ -233,6 +241,14 @@ void submenu_Inventario(List *lista){
             submenu_opciones();
         }
 
+        if(GetAsyncKeyState(0x5A)){
+            gotoxy(104, 12); printf("                                     ");
+            gotoxy(104, 38); printf("                                     ");
+            for(int i = 13; i < 38; i++){
+                gotoxy(104, i); printf("                                     ");
+            }  
+            return;
+        }
     }
 }
 
@@ -299,6 +315,11 @@ void submenu_opciones(){
         }
 
         if(GetAsyncKeyState(0x5A)){
+            gotoxy(144, 12); printf("                                     ");
+            gotoxy(144, 20); printf("                                     ");
+            for(int i = 13; i < 20; i++){
+                gotoxy(144, i); printf("                                     ");
+            }  
             return;
         }
         //cerrar la pestaña (falta)
