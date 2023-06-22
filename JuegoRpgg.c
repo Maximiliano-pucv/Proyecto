@@ -95,7 +95,8 @@ void Submenu();
 void submenu_Inventario();
 void mostrarInventario();
 void submenu_opciones();
-void mostrarDescrip();
+void mostrarDescrip( );
+void mostrar_msg();
 
 //main
 int main(){
@@ -229,10 +230,9 @@ void submenu_Inventario(){
 
 void mostrarInventario(){
     
-    Jugador *item = (Jugador *) malloc(sizeof(Jugador ));
-
+    Info *item = (Info *) malloc(sizeof(Info));
     for(int i = 15; i < 36; i++){
-        gotoxy(106, i); printf("  -%s ", item->datos->nombre);
+        gotoxy(106, i); printf("  -%s ", item->nombre);
     }
 
 }
@@ -274,13 +274,13 @@ void submenu_opciones(){
             gotoxy(mov.x, mov.y); printf(">");
             opcion = 2;
         }
-        /*
-        if(GetAsyncKeyState(0x5A)){
-            //return;
-        }*/
-
-        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
+        
+        if(GetAsyncKeyState(0x0D) && mov.y > 17){
            mostrarDescrip();
+        }
+
+        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && mov.y <= 17){
+            mostrar_msg();
         }
 
         if(GetAsyncKeyState(0x5A)){
@@ -289,6 +289,18 @@ void submenu_opciones(){
         //cerrar la pestaña (falta)
 
     }
+}
+
+void mostrar_msg(){
+
+    printf("\033[1;35m");
+    gotoxy(144, 26); printf("-------------------------------------");
+    gotoxy(144, 32); printf("-------------------------------------");
+    for(int i = 27; i < 32; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
 }
 
 void mostrarDescrip(){
@@ -332,6 +344,7 @@ void mostrarDescrip(){
     Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
    
 }
+
 
 bool validarmov(sala *sandbox, int x, int y)
 {
