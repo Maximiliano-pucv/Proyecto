@@ -91,9 +91,9 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox);
 //funciones solo developers (fran)
 void mostrar_perfiles (List *lista);
-void Submenu();
-void submenu_Inventario();
-void mostrarInventario();
+void Submenu(List *lista);
+void submenu_Inventario(List *lista);
+void mostrarInventario(List *lista);
 void submenu_opciones();
 void mostrarDescrip( );
 void mostrar_msg();
@@ -119,7 +119,7 @@ int main(){
     return 0;
 }
 
-void Submenu(){
+void Submenu(List *listaJugadores){
     printf("\033[0;33m");
     gotoxy(104,0); printf("--------------------------------------");
     gotoxy(104,8); printf("--------------------------------------");
@@ -180,7 +180,7 @@ void Submenu(){
         }
 
         if(GetAsyncKeyState(0x0D) && selecc == 3){
-            submenu_Inventario();
+            submenu_Inventario(listaJugadores);
         }
         //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
 
@@ -188,7 +188,7 @@ void Submenu(){
 
 }
 
-void submenu_Inventario(){
+void submenu_Inventario(List *lista){
     printf("\033[0;35m");
     gotoxy(104, 12); printf("-------------------------------------");
     gotoxy(104, 38); printf("-------------------------------------");
@@ -198,7 +198,7 @@ void submenu_Inventario(){
     printf("\033[0;0m");
 
     gotoxy(113, 13); printf("     Inventario     ");
-    mostrarInventario();
+    mostrarInventario(lista);
 
     coordenadas mov;
     mov.x = 106;
@@ -228,11 +228,14 @@ void submenu_Inventario(){
 }
 
 
-void mostrarInventario(){
+void mostrarInventario(List *lista){
     
-    Info *item = (Info *) malloc(sizeof(Info));
+    TipoEquipamiento *item = (TipoEquipamiento *) malloc(sizeof(TipoEquipamiento));
+    item->stats = (Info *)malloc(sizeof(Info));
+    item->stats = firstList(lista);
+    
     for(int i = 15; i < 36; i++){
-        gotoxy(106, i); printf("  -%s ", item->nombre);
+        gotoxy(106, i); printf("  -%s ", item->stats->nombre);
     }
 
 }
@@ -408,7 +411,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox){
         }
 
         if(GetAsyncKeyState(0x1B)){
-            Submenu();
+            Submenu(listaJugadores);
         }
     }
 }
