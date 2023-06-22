@@ -357,7 +357,10 @@ void mostrarDescrip(){
         }
     }
     Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
-   
+
+    for(int i = 27; i < 36; i++){
+        gotoxy(144, i); printf("%s", descrip->datos->descripcion);
+    } 
 }
 
 
