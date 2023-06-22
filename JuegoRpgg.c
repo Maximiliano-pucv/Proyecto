@@ -221,9 +221,18 @@ void submenu_Inventario(List *lista){
             opcion = 2;
         }
 
+        /*if(GetAsyncKeyState(0x38)){
+            for(int i = 0; i < 39; i++){
+                gotoxy(103, i);printf("                                       ");
+            }
+            return;
+        }*/
+
+
         if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
             submenu_opciones();
         }
+
     }
 }
 
@@ -234,8 +243,11 @@ void mostrarInventario(List *lista){
     item->stats = (Info *)malloc(sizeof(Info));
     item->stats = firstList(lista);
     
-    for(int i = 15; i < 36; i++){
-        gotoxy(106, i); printf("  -%s ", item->stats->nombre);
+    while(item->stats){
+        for(int i = 15; i < 36; i++){
+            gotoxy(106, i); printf("  -%s ", item->stats->nombre);
+        }
+        item->stats = nextList(lista);
     }
 
 }
