@@ -95,6 +95,8 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
+
+
 void mostrar_perfiles (List *lista);
 void Submenu(List *lista);
 void submenu_Inventario(List *lista);
@@ -102,6 +104,10 @@ void mostrarInventario(List *lista);
 void submenu_opciones();
 void mostrarDescrip( );
 void mostrar_msg();
+
+//funciones para batallas
+void pantalla_batalla();
+
 
 //main
 int main(){
@@ -127,8 +133,23 @@ int main(){
     return 0;
 }
 
+void pantalla_batalla(){
+    /*gotoxy(104,0); printf("--------------------------------------------------------------------------------------------");
+    for(int i =1; i<41; i++){
+        if(i == 32){
+            gotoxy(104,i); printf("|------------------------------------------------------------------------------------------|");
+        }else{
+            gotoxy(104,i); printf("|                                                                                          |");
+        }
+    }
+    gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");*/
+}
+
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
-    gotoxy(0,42); TEST;
+     
+    gotoxy(0,42); printf(" Test funcionamiento de Batalla");
+    pantalla_batalla();
+    
 }
 
 void Submenu(List *listaJugadores){
@@ -464,7 +485,9 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster){
         if(GetAsyncKeyState(0x1B)){
             Submenu(listaJugadores);
         }
-        if(GetAsyncKeyState(0x54)){
+
+
+        if(GetAsyncKeyState(0x08)){
             developerfunctions(listaJugadores,Mapamonster);
         }
     }
@@ -778,7 +801,7 @@ void CrearPerfil(List *lista){
     gotoxy(50,17); printf("Pero primero, debes decirme tu nombre\n");
     gotoxy(50,18);
     scanf("%99[^\n]s",usuario->datos->nombre);
-    getchar();
+    //getchar();
     limpiarpantalla();
     gotoxy(50,17); printf("Asi que tu nombre es %s",usuario->datos->nombre);
     gotoxy(50,18); printf("Muy bien, pues ahora veamos que es lo que quieres ser");
