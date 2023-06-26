@@ -92,13 +92,13 @@ void equipobaseM(Jugador *usuario);
 void equipobaseL(Jugador *usuario);
 void equipobaseC(Jugador *usuario);
 
-void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster);
+void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
 
 
 void mostrar_perfiles (List *lista);
-void Submenu(List *lista);
+bool Submenu(List *lista);
 void submenu_Inventario(List *lista);
 void mostrarInventario(List *lista);
 void submenu_opciones();
@@ -113,22 +113,27 @@ void pantalla_batalla();
 int main(){
     time_t t;
     srand((unsigned) time(&t));
-
-    pantallainesesariadecarga();
-    mainmenu();
+    char *estado = (char *)malloc(sizeof(char)* 6);
+    strcpy(estado, "dead");
     List *listajugadores = createList();
     HashMap *mapamonster = almacenarmounstruos();
 
-    CrearPerfil(listajugadores);
-    
-    //mostrar_perfiles(listajugadores);
-    limpiarpantalla();
-    pantallainesesariadecarga();
-    limpiarpantalla();
-    sala *sandbox = (sala*)malloc(sizeof(sala));
-    generarmapa(sandbox);
-    faseDElanzamiento(listajugadores,sandbox,mapamonster);
-    
+    do{
+        if(strcmp(estado, "dead") == 0){
+            pantallainesesariadecarga();
+            mainmenu();
+        }
+        
+        CrearPerfil(listajugadores);
+         //mostrar_perfiles(listajugadores);
+        limpiarpantalla();
+        pantallainesesariadecarga();
+        limpiarpantalla();
+        sala *sandbox = (sala*)malloc(sizeof(sala));
+        generarmapa(sandbox);
+        faseDElanzamiento(listajugadores,sandbox,mapamonster,estado);
+
+    }while(strcmp(estado, "win") != 0);
     //mostrar_perfiles(listajugadores);
     return 0;
 }
@@ -152,7 +157,7 @@ void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
     
 }
 
-void Submenu(List *listaJugadores){
+bool Submenu(List *listaJugadores){
     printf("\033[0;33m");
     gotoxy(104,0); printf("--------------------------------------");
     gotoxy(104,8); printf("--------------------------------------");
@@ -211,7 +216,7 @@ void Submenu(List *listaJugadores){
             {
                 gotoxy(103,i);printf("                                       ");
             }
-            return;
+            return false;
         }
 
         if((cursor.x==106)&&(cursor.y==3)) selecc = 1;
@@ -227,16 +232,17 @@ void Submenu(List *listaJugadores){
             exit(0);
         }
         //gotoxy(0,0);("%i%i",cursor.x,cursor.y);
-
+        if(GetAsyncKeyState(0x0D) && selecc == 4){
+            return true;
+        }
     }
-
 }
 
 void submenu_Inventario(List *lista){
     printf("\033[0;35m");
     gotoxy(104, 12); printf("-------------------------------------");
-    gotoxy(104, 38); printf("-------------------------------------");
-    for(int i = 13; i < 38; i++){
+    gotoxy(104, 20); printf("-------------------------------------");
+    for(int i = 13; i < 20; i++){
         gotoxy(104, i); printf("|                                   |");
     }  
     printf("\033[0;0m");
@@ -258,7 +264,7 @@ void submenu_Inventario(List *lista){
             opcion = 1;
         }
 
-        if(GetAsyncKeyState(0x28) && mov.y <= 34){
+        if(GetAsyncKeyState(0x28) && mov.y <= 18){
             gotoxy(mov.x, mov.y);printf("+");
             mov.y++;
             gotoxy(mov.x, mov.y); printf(">");
@@ -279,8 +285,8 @@ void submenu_Inventario(List *lista){
 
         if(GetAsyncKeyState(0x5A)){
             gotoxy(104, 12); printf("                                     ");
-            gotoxy(104, 38); printf("                                     ");
-            for(int i = 13; i < 38; i++){
+            gotoxy(104, 20); printf("                                     ");
+            for(int i = 13; i < 20; i++){
                 gotoxy(104, i); printf("                                     ");
             }  
             return;
@@ -291,15 +297,18 @@ void submenu_Inventario(List *lista){
 
 void mostrarInventario(List *lista){
     
-    TipoEquipamiento *item = (TipoEquipamiento *) malloc(sizeof(TipoEquipamiento));
-    item->stats = (Info *)malloc(sizeof(Info));
-    item->stats = firstList(lista);
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+    int i = 15;
     
-    while(item->stats){
-        for(int i = 15; i < 36; i++){
-            gotoxy(106, i); printf("  -%s ", item->stats->nombre);
-        }
-        item->stats = nextList(lista);
+    /*gotoxy(106, 15); printf("  -%s ", item->nombre);
+    gotoxy(106, 17); printf("  -%i ", item->ATK);
+    gotoxy(106, 18); printf("  -%i ", item->DEF);*/
+
+    while(item != NULL){
+        gotoxy(106, i); printf("  -%s ", item->stats->nombre);
+        item = nextList(inventario);
+        i++;
     }
 
 }
@@ -371,6 +380,7 @@ void mostrar_msg(){
     for(int i = 27; i < 32; i++){
         gotoxy(144, i); printf("|                                   |");
     }  
+    
     printf("\033[0;0m");
 
 }
@@ -413,11 +423,7 @@ void mostrarDescrip(){
             return;
         }
     }
-    Jugador *descrip = (Jugador *) malloc(sizeof(Jugador));
 
-    for(int i = 27; i < 36; i++){
-        gotoxy(144, i); printf("%s", descrip->datos->descripcion);
-    } 
 }
 
 
@@ -428,7 +434,7 @@ bool validarmov(sala *sandbox, int x, int y)
 }
 
 //△
-void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster){
+void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
     
     while(true)
@@ -483,9 +489,11 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster){
         }
 
         if(GetAsyncKeyState(0x1B)){
-            Submenu(listaJugadores);
+            if(Submenu(listaJugadores)){
+                strcpy(estado, "reset");
+                return;
+            }
         }
-
 
         if(GetAsyncKeyState(0x08)){
             developerfunctions(listaJugadores,Mapamonster);
@@ -807,7 +815,7 @@ void CrearPerfil(List *lista){
     gotoxy(50,18); printf("Muy bien, pues ahora veamos que es lo que quieres ser");
     selccionarclase(usuario);
     estadisticasDeclase(usuario);
-    //inventarionuevo(usuario);
+    inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=10;
     usuario ->pos.y=18;
@@ -831,6 +839,7 @@ void OpcionesBatalla(Jugador *usuario){
 
 void inventarionuevo(Jugador *usuario){
     usuario ->inventario = createList();
+    usuario ->equipamiento = createMap(6);
     equipamientoBase(usuario);
 }
 
@@ -1177,13 +1186,7 @@ void equipobaseC(Jugador *usuario)
 
 }
 
-
-
-
-
-
 /*fin de chantarle equipamiento a las clases*/
-
 
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
@@ -1221,6 +1224,7 @@ void estadisticasDeclase(Jugador *usuario){
         usuario ->PH = 0;
     }
 }
+
 void selccionarclase(Jugador *usuario){
     int clase;
     gotoxy(50,19); printf("Ingresa la clase a eleccion");
