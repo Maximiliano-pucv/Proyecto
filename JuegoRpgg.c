@@ -82,7 +82,7 @@ void generarmapa();
 HashMap* almacenarmounstruos();
 /*const*/ char *get_csv_field (char * tmp, int k);
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
-bool validarmov(sala * sandbox, int x, int y);
+int validarmov(sala * sandbox, int x, int y);
 
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
@@ -452,10 +452,21 @@ void mostrarDescrip(){
 }
 
 
-bool validarmov(sala *sandbox, int x, int y)
+int validarmov(sala *sandbox, int x, int y)
 {
-    if(sandbox->tamano[y][x] == ' ' || isalpha(sandbox->tamano[y][x])) return true;
-    return false;
+    if(sandbox->tamano[y][x] == ' ') return 0;
+    if(sandbox->tamano[y][x]=='>')
+    {
+        limpiarpantalla();
+        generarmapa(sandbox);
+        return 1;
+    }
+    if(sandbox->tamano[y][x] == '@')
+    {
+        return 2;
+    }
+
+    return 1;
 }
 
 //△
@@ -469,11 +480,15 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //Moverse a la izquierda
         if((GetAsyncKeyState(0x25)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            {
+                /* code */
             }
             else continue;
 
@@ -481,11 +496,15 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //derecha
         if((GetAsyncKeyState(0x27)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            {
+                /* code */
             }
             else continue;
         }
@@ -493,22 +512,30 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //abajo
         if((GetAsyncKeyState(0x28)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            {
+                /* code */
             }
             else continue;
         }
         //arriba
         if((GetAsyncKeyState(0x26)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            {
+                /* code */
             }
             else continue;
         }
