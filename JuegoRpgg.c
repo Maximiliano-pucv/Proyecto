@@ -95,7 +95,8 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
-
+void empezarbatalla(List *listaJugadores,Info *Enemigo);
+Info *seleccionarenemigo(HashMap *Mapa,int numero);
 
 void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
@@ -139,7 +140,7 @@ int main(){
 }
 
 void pantalla_batalla(){
-    /*gotoxy(104,0); printf("--------------------------------------------------------------------------------------------");
+    gotoxy(104,0); printf("--------------------------------------------------------------------------------------------");
     for(int i =1; i<41; i++){
         if(i == 32){
             gotoxy(104,i); printf("|------------------------------------------------------------------------------------------|");
@@ -147,13 +148,29 @@ void pantalla_batalla(){
             gotoxy(104,i); printf("|                                                                                          |");
         }
     }
-    gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");*/
+    gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");
+}
+
+
+void empezarbatalla(List *listaJugadores,Info *Enemigo){
+    gotoxy(105,1);printf("o no aparecio un %s", Enemigo->nombre);
+}
+
+Info *seleccionarenemigo(HashMap *Mapa,int numero){
+    char *cadena = malloc(sizeof(char)*2);
+    sprintf(cadena,"%i",numero);
+    Pair *dato = searchMap(Mapa,cadena);
+    return dato ->value;
 }
 
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
      
     gotoxy(0,42); printf(" Test funcionamiento de Batalla");
+    // de aca en adelante es solo para testear batallas
     pantalla_batalla();
+    
+    empezarbatalla(listaJugadores,seleccionarenemigo(Mapamonster, rand()%10));
+
     
 }
 
@@ -496,6 +513,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         }
 
         if(GetAsyncKeyState(0x08)){
+            TEST;
             developerfunctions(listaJugadores,Mapamonster);
         }
     }
