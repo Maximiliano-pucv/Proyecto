@@ -19,6 +19,7 @@
  AMARILLO printf("\033[0;33m")
  ROJO printf("\033[0;31m")
   VERDE printf("\033[0;32m")
+  CYAN printf("\033[0;36m")
 AZUL printf("\033[0;34m")*/
 typedef struct{
     int x;
@@ -97,6 +98,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, 
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
 void empezarbatalla(Jugador *jugador,Info *Enemigo);
 Info *seleccionarenemigo(HashMap *Mapa,int numero);
+int comandoBatalla(Opcion *comandos);
+bool Huir();
+int Atacar(Info * atacante, Info * atacado, bool defensa);
+void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
 
 void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
@@ -151,17 +156,183 @@ void pantalla_batalla(){
     gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");
 }
 
+bool Huir(){
+    int numero = rand()%3;
+
+    switch (numero)
+    {
+    case 0:
+    case 1:
+        return false;
+        break;
+    case 2:
+        return true;
+        break;
+
+    default:
+        return false;
+        break;
+    }
+}
+
+int comandoBatalla(Opcion *comandos){
+    gotoxy(105,34); printf("O %s                     # %s",comandos[0].nombre,comandos[1].nombre);
+    gotoxy(105,36); printf("# %s                      # %s",comandos[2].nombre,comandos[3].nombre);
+    int seleccion =0;
+    coordenadas cursor;
+    cursor.x = 105;
+    cursor.y =34;
+
+    while (true)
+    {
+        Sleep(100);
+        
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (cursor.y<=34))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y+=2;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+            
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (cursor.y>=36))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y-=2;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+        }
+        //derecha131
+        if((GetAsyncKeyState(0x27)) && (cursor.x<=134))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=134;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+            
+        }
+
+        if((GetAsyncKeyState(0x25)) && (cursor.x>=105))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=105;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+        }
+        if((cursor.x==105)&&(cursor.y==34)&&(seleccion!=1)){
+           seleccion = 1; 
+           gotoxy(105,38); printf("                                                                                          ");
+           gotoxy(105,38); printf("* %s", comandos[0].descripicion);
+        } 
+        if((cursor.x==134)&&(cursor.y==34)&&(seleccion!=2)){
+            seleccion = 2;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[1].descripicion);
+        } 
+        if((cursor.x==105)&&(cursor.y==36)&&(seleccion!=3)){
+            seleccion = 3;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[2].descripicion);
+        } 
+        if((cursor.x==134)&&(cursor.y==36)&&(seleccion!=4)){
+            seleccion = 4;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[3].descripicion);
+        } 
+        if(GetAsyncKeyState(0x0D)){
+            return seleccion;
+        }
+      
+    }
+    return 1;
+}
+
+int Atacar(Info * atacante, Info * atacado, bool defensa){
+    int Dano;
+    if(defensa == false){
+        Dano = (atacante->ATK)/2;
+        atacado ->HP -= Dano;
+    }else{
+        Dano = (int)log((atacante->ATK)/2);
+        atacado ->HP -= Dano;
+    }
+    
+    return Dano;
+}
+
+void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE){
+    int E_select = rand()%2;
+    switch (E_select)
+    {
+    case 0:
+        gotoxy(105,*ptri); printf("%s Decidio atacar", Enemigo ->nombre);
+        gotoxy(105,*ptri); printf("%s Logro Infringir %i de dano", Enemigo->nombre, Atacar(Enemigo,Jugador ->datos, *defensaJ));
+        *defensaJ = false;
+        break;
+    case 1:
+        gotoxy(105,*ptri); printf("%s se defiende ante el siguiente ataque", Enemigo->nombre);
+        (*defensaE) = true;
+        break;
+    }
+    (*ptri)++;
+}
 
 void empezarbatalla(Jugador *jugador,Info *Enemigo){
     gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
+    printf("\033[0;36m");
+    gotoxy(105,33); printf("-------------------------------------Elige una opcion-------------------------------------");
+    bool Def_enemigo = false , Def_jugador = false;
     int i=2;
     while ((Enemigo ->HP>0)&&(jugador->datos->HP>0))
     {
-       gotoxy(105,39); printf("elige una opcion");
-       
+        Sleep(500);
+        gotoxy(105,39); printf(".%s - %i ",jugador ->datos->nombre,  jugador ->datos ->HP);
+        gotoxy(105,40); printf(".%s - %i ",Enemigo ->nombre, Enemigo ->HP);
+        switch (comandoBatalla(jugador->ataques))
+        {
+        case 1:
+            gotoxy(105,i); printf("%s Decidio atacar", jugador->datos->nombre);
+            gotoxy(105,i); printf("%s Logro Infringir %i de dano", jugador->datos, Atacar(jugador->datos,Enemigo,Def_enemigo));
+            Def_enemigo =false;
+            break;
+        case 2:
+            gotoxy(105,i); printf("%s se defiende ante el siguiente ataque", jugador->datos->nombre);
+            Def_jugador =  true;
+            break;
+        case 3:
+            gotoxy(105,i); printf("%s Decide utilizar un objeto", jugador->datos->nombre);
+            break;
+        case 4:
+            gotoxy(105,i); printf("%s intenta huir", jugador->datos->nombre);
+            if((Huir())==true){
+               i++;
+                gotoxy(105,i); printf("%s Logro huir con exito", jugador->datos->nombre);
+                Enemigo ->HP = Enemigo ->HPMAX;
+                return;
+            }
+            else{
+                i++;
+                gotoxy(105,i); printf("%s No pudo huir, vuelve a internarlo o lucha", jugador->datos->nombre);
+            }  
+            break;
+        }
+        i++;
+        TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
+
+        
+        
+        
+        
     }
-    
-    
+    if(Enemigo ->HP<=0){
+        Enemigo ->HP = Enemigo ->HPMAX;
+        gotoxy(105,33); printf("VICTORIA");
+    } 
+    else{
+        gotoxy(105,33); printf("DERROTA");
+    }
 }
 
 Info *seleccionarenemigo(HashMap *Mapa,int numero){
@@ -883,9 +1054,9 @@ void OpcionesBatalla(Jugador *usuario){
     strcpy(usuario->ataques[2].nombre,"ITEMS");
     strcpy(usuario->ataques[3].nombre,"HUIR");
     
-    strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle daño al enemigo");
-    strcpy(usuario->ataques[1].descripicion,"Si nesesitas pensar o no pudes hacer nada, defiendete para recibir menos daño");
-    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar? Que esperas? solo hay una forma de saber que hacer");
+    strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle dano al enemigo");
+    strcpy(usuario->ataques[1].descripicion,"Si nesesitas pensar o no pudes hacer nada, defiendete para recibir menos dano");
+    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar? Que esperas? USALO!!!!");
     strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :( HUYE ANTES QUE TE MATEN, o te da flojera pelear? vete");
 
 }
