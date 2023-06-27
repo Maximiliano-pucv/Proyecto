@@ -95,7 +95,7 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
-void empezarbatalla(List *listaJugadores,Info *Enemigo);
+void empezarbatalla(Jugador *jugador,Info *Enemigo);
 Info *seleccionarenemigo(HashMap *Mapa,int numero);
 
 void mostrar_perfiles (List *lista);
@@ -152,8 +152,16 @@ void pantalla_batalla(){
 }
 
 
-void empezarbatalla(List *listaJugadores,Info *Enemigo){
-    gotoxy(105,1);printf("o no aparecio un %s", Enemigo->nombre);
+void empezarbatalla(Jugador *jugador,Info *Enemigo){
+    gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
+    int i=2;
+    while ((Enemigo ->HP>0)&&(jugador->datos->HP>0))
+    {
+       gotoxy(105,39); printf("elige una opcion");
+       
+    }
+    
+    
 }
 
 Info *seleccionarenemigo(HashMap *Mapa,int numero){
@@ -169,7 +177,7 @@ void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
     // de aca en adelante es solo para testear batallas
     pantalla_batalla();
     
-    empezarbatalla(listaJugadores,seleccionarenemigo(Mapamonster, rand()%10));
+    empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10));
 
     
 }
