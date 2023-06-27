@@ -96,12 +96,7 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
-void empezarbatalla(Jugador *jugador,Info *Enemigo);
-Info *seleccionarenemigo(HashMap *Mapa,int numero);
-int comandoBatalla(Opcion *comandos);
-bool Huir();
-int Atacar(Info * atacante, Info * atacado, bool defensa);
-void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
+
 
 void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
@@ -113,7 +108,13 @@ void mostrar_msg();
 
 //funciones para batallas
 void pantalla_batalla();
-
+void batalla_final_limpiar();
+void empezarbatalla(Jugador *jugador,Info *Enemigo);
+Info *seleccionarenemigo(HashMap *Mapa,int numero);
+int comandoBatalla(Opcion *comandos);
+bool Huir();
+int Atacar(Info * atacante, Info * atacado, bool defensa);
+void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
 
 //main
 int main(){
@@ -155,7 +156,14 @@ void pantalla_batalla(){
     }
     gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");
 }
-
+void batalla_final_limpiar(){
+    gotoxy(104,0); printf("                                                                                            ");
+    for(int i =1; i<41; i++){
+        gotoxy(104,i); printf("                                                                                            ");
+        
+    }
+    gotoxy(104,41); printf("                                                                                            ");
+}
 bool Huir(){
     int numero = rand()%3;
 
@@ -176,8 +184,8 @@ bool Huir(){
 }
 
 int comandoBatalla(Opcion *comandos){
-    gotoxy(105,34); printf("O %s                     # %s",comandos[0].nombre,comandos[1].nombre);
-    gotoxy(105,36); printf("# %s                      # %s",comandos[2].nombre,comandos[3].nombre);
+    gotoxy(105,34); printf("# %s                     O %s",comandos[0].nombre,comandos[1].nombre);
+    gotoxy(105,36); printf("O %s                      O %s",comandos[2].nombre,comandos[3].nombre);
     int seleccion =0;
     coordenadas cursor;
     cursor.x = 105;
@@ -264,6 +272,7 @@ int Atacar(Info * atacante, Info * atacado, bool defensa){
 
 void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE){
     int E_select = rand()%2;
+    printf("\033[0;31m");
     switch (E_select)
     {
     case 0:
@@ -310,6 +319,8 @@ void empezarbatalla(Jugador *jugador,Info *Enemigo){
                i++;
                 gotoxy(105,i); printf("%s Logro huir con exito", jugador->datos->nombre);
                 Enemigo ->HP = Enemigo ->HPMAX;
+                Sleep(500);
+                batalla_final_limpiar();
                 return;
             }
             else{
@@ -320,12 +331,13 @@ void empezarbatalla(Jugador *jugador,Info *Enemigo){
         }
         i++;
         TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
-
+        printf("\033[0;36m");
         
         
         
         
     }
+    
     if(Enemigo ->HP<=0){
         Enemigo ->HP = Enemigo ->HPMAX;
         gotoxy(105,33); printf("VICTORIA");
@@ -333,6 +345,8 @@ void empezarbatalla(Jugador *jugador,Info *Enemigo){
     else{
         gotoxy(105,33); printf("DERROTA");
     }
+    Sleep(500);
+    batalla_final_limpiar();
 }
 
 Info *seleccionarenemigo(HashMap *Mapa,int numero){
