@@ -280,12 +280,12 @@ void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bo
     printf("\033[0;31m");
     switch (E_select)
     {
-        gotoxy(105,*ptri); printf("%s Decidio atacar", Enemigo ->nombre);
-        gotoxy(105,*ptri); printf("%s Logro Infringir %i de dano", Enemigo->nombre, Atacar(Enemigo,Jugador ->datos, *defensaJ));
+    case 0:    
+        gotoxy(105,(*ptri)); printf("%s Logro Infringir %i de dano", Enemigo->nombre, Atacar(Enemigo,Jugador ->datos, *defensaJ));
         *defensaJ = false;
         break;
     case 1:
-        gotoxy(105,*ptri); printf("%s se defiende ante el siguiente ataque", Enemigo->nombre);
+        gotoxy(105,(*ptri)); printf("%s se defiende ante el siguiente ataque", Enemigo->nombre);
         (*defensaE) = true;
         break;
     }
@@ -307,6 +307,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
         {
         case 1:
             gotoxy(105,i); printf("%s Decidio atacar", jugador->datos->nombre);
+            Sleep(20);
             gotoxy(105,i); printf("%s Logro Infringir %i de dano", jugador->datos, Atacar(jugador->datos,Enemigo,Def_enemigo));
             Def_enemigo =false;
             break;
@@ -337,7 +338,14 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
         TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
         printf("\033[0;36m");
         
-        
+        if(i>=31){
+            printf("\033[0;35m");
+            i=2;
+            for(int j=2; j<=31;j++){
+                gotoxy(104,j); printf("|                                                                                          |");
+            }
+            printf("\033[0;36m");
+        }
         
         
     }
@@ -345,14 +353,17 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
     if(Enemigo ->HP<=0){
         Enemigo ->HP = Enemigo ->HPMAX;
         gotoxy(105,33); printf("VICTORIA");
+        Sleep(500);
+        batalla_final_limpiar();
         return true;
     } 
     else{
         gotoxy(105,33); printf("DERROTA");
+        Sleep(500);
+        batalla_final_limpiar();
         return false;
     }
-    Sleep(500);
-    batalla_final_limpiar();
+    
 }
 
 Info *seleccionarenemigo(HashMap *Mapa,int numero){
@@ -364,8 +375,7 @@ Info *seleccionarenemigo(HashMap *Mapa,int numero){
 
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
      
-    gotoxy(0,42); printf(" Test funcionamiento de Batalla");
-    // de aca en adelante es solo para testear batallas
+    
     pantalla_batalla();
     
     empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10));
@@ -761,7 +771,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         }
 
         if(GetAsyncKeyState(0x09)){
-            TEST;
+            
             developerfunctions(listaJugadores,Mapamonster);
         }
     }
