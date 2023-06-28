@@ -707,7 +707,7 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
         limpiarpantalla();
         generarmapa(sandbox);
         player->pos.x = 2;
-        player->pos.y = 2;
+        player->pos.y = 19;
         return 1;
     }
     if(sandbox->tamano[y][x] == '@')
@@ -1361,7 +1361,7 @@ void CrearPerfil(List *lista){
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
     usuario ->pos.x=2;
-    usuario ->pos.y=2;
+    usuario ->pos.y=18;
     usuario ->datos->PH = 0;
     //faltan el quipamiento 
     pushBack(lista ,usuario);
