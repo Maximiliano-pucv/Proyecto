@@ -335,7 +335,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
             break;
         }
         i++;
-        TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
+        if(Enemigo->HP>=0) TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
         printf("\033[0;36m");
         
         if(i>=31){
@@ -378,7 +378,9 @@ void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
     
     pantalla_batalla();
     
-    empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10));
+    if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+        //printf("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO *SE ARDE*");
+    }
 
     
 }
