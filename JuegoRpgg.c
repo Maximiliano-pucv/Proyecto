@@ -98,12 +98,10 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
-void empezarbatalla(Jugador *jugador,Info *Enemigo);
-Info *seleccionarenemigo(HashMap *Mapa,int numero);
-int comandoBatalla(Opcion *comandos);
-bool Huir();
-int Atacar(Info * atacante, Info * atacado, bool defensa);
-void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
+
+
+
+
 
 void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
@@ -116,7 +114,7 @@ void mostrar_msg();
 //funciones para batallas
 void pantalla_batalla();
 void batalla_final_limpiar();
-void empezarbatalla(Jugador *jugador,Info *Enemigo);
+bool empezarbatalla(Jugador *jugador,Info *Enemigo);
 Info *seleccionarenemigo(HashMap *Mapa,int numero);
 int comandoBatalla(Opcion *comandos);
 bool Huir();
@@ -327,7 +325,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
                 Enemigo ->HP = Enemigo ->HPMAX;
                 Sleep(500);
                 batalla_final_limpiar();
-                return;
+                return true;
             }
             else{
                 i++;
