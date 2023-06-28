@@ -85,7 +85,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 HashMap* almacenarmounstruos();
 /*const*/ char *get_csv_field (char * tmp, int k);
 
-int validarmov(sala * sandbox, int x, int y);
+int validarmov(sala * sandbox, int x, int y, Jugador *player);
 
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
@@ -643,13 +643,15 @@ void mostrarDescrip(){
 }
 
 
-int validarmov(sala *sandbox, int x, int y)
+int validarmov(sala *sandbox, int x, int y,Jugador *player)
 {
     if(sandbox->tamano[y][x] == ' ') return 0;
     if(sandbox->tamano[y][x]=='>')
     {
         limpiarpantalla();
         generarmapa(sandbox);
+        player->pos.x = 2;
+        player->pos.y = 2;
         return 1;
     }
     if(sandbox->tamano[y][x] == '@')
@@ -675,13 +677,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //Moverse a la izquierda
         if((GetAsyncKeyState(0x25)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -695,13 +697,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //derecha
         if((GetAsyncKeyState(0x27)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -715,13 +717,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //abajo
         if((GetAsyncKeyState(0x28)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -734,13 +736,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //arriba
         if((GetAsyncKeyState(0x26)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1302,8 +1304,8 @@ void CrearPerfil(List *lista){
     estadisticasDeclase(usuario);
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
-    usuario ->pos.x=10;
-    usuario ->pos.y=18;
+    usuario ->pos.x=2;
+    usuario ->pos.y=2;
     usuario ->datos->PH = 0;
     //faltan el quipamiento 
     pushBack(lista ,usuario);
