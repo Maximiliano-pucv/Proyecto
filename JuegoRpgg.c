@@ -80,9 +80,11 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
+void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
+
 HashMap* almacenarmounstruos();
 /*const*/ char *get_csv_field (char * tmp, int k);
-void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
+
 int validarmov(sala * sandbox, int x, int y);
 
 /*equipamiento por clase*/
@@ -96,12 +98,14 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
-void empezarbatalla(Jugador *jugador,Info *Enemigo);
+
+bool empezarbatalla(Jugador *jugador,Info *Enemigo);
 Info *seleccionarenemigo(HashMap *Mapa,int numero);
 int comandoBatalla(Opcion *comandos);
 bool Huir();
 int Atacar(Info * atacante, Info * atacado, bool defensa);
 void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
+void pantalla_batalla();
 
 void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
@@ -112,7 +116,7 @@ void mostrarDescrip( );
 void mostrar_msg();
 
 //funciones para batallas
-void pantalla_batalla();
+
 
 
 //main
@@ -120,12 +124,12 @@ int main(){
     time_t t;
     srand((unsigned) time(&t));
     char *estado = (char *)malloc(sizeof(char)* 6);
-    strcpy(estado, "dead");
+    strcpy(estado, "vivo");
     List *listajugadores = createList();
     HashMap *mapamonster = almacenarmounstruos();
 
     do{
-        if(strcmp(estado, "dead") == 0){
+        if((strcmp(estado, "dead") == 0)||(strcmp(estado,"vivo")==0)){
             pantallainesesariadecarga();
             mainmenu();
         }
@@ -266,7 +270,6 @@ void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bo
     int E_select = rand()%2;
     switch (E_select)
     {
-    case 0:
         gotoxy(105,*ptri); printf("%s Decidio atacar", Enemigo ->nombre);
         gotoxy(105,*ptri); printf("%s Logro Infringir %i de dano", Enemigo->nombre, Atacar(Enemigo,Jugador ->datos, *defensaJ));
         *defensaJ = false;
@@ -279,7 +282,7 @@ void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bo
     (*ptri)++;
 }
 
-void empezarbatalla(Jugador *jugador,Info *Enemigo){
+bool empezarbatalla(Jugador *jugador,Info *Enemigo){
     gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
     printf("\033[0;36m");
     gotoxy(105,33); printf("-------------------------------------Elige una opcion-------------------------------------");
@@ -310,7 +313,7 @@ void empezarbatalla(Jugador *jugador,Info *Enemigo){
                i++;
                 gotoxy(105,i); printf("%s Logro huir con exito", jugador->datos->nombre);
                 Enemigo ->HP = Enemigo ->HPMAX;
-                return;
+                return true;
             }
             else{
                 i++;
@@ -329,10 +332,13 @@ void empezarbatalla(Jugador *jugador,Info *Enemigo){
     if(Enemigo ->HP<=0){
         Enemigo ->HP = Enemigo ->HPMAX;
         gotoxy(105,33); printf("VICTORIA");
+        return true;
     } 
     else{
         gotoxy(105,33); printf("DERROTA");
+        return false;
     }
+    return false;
 }
 
 Info *seleccionarenemigo(HashMap *Mapa,int numero){
@@ -646,6 +652,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
     
     while(true)
     {
+        if(strcmp(estado,"dead") == 0)
+        {
+            return;
+        }
         Sleep(100);
         printf("\033[0;35m");
         //Moverse a la izquierda
@@ -660,6 +670,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
             {
                 /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
 
@@ -676,6 +690,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
             {
                 /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
@@ -692,6 +710,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
             {
                 /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
@@ -707,6 +729,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == 2)
             {
                 /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
@@ -718,7 +744,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             }
         }
 
-        if(GetAsyncKeyState(0x08)){
+        if(GetAsyncKeyState(0x09)){
             TEST;
             developerfunctions(listaJugadores,Mapamonster);
         }
@@ -755,7 +781,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 void generarmapa(sala *sandbox)
 {
     
-    int variable = 1;
+    int variable = rand()%6;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
@@ -773,7 +799,6 @@ void generarmapa(sala *sandbox)
             
         }
     }
-    int salas[7] ={0}; //arreglo para evitar la repeticion de las salas
     printf("\033[0;32m");
 
     for(size_t i = 0; i<FILAS; i++)
@@ -784,40 +809,262 @@ void generarmapa(sala *sandbox)
             printf("%c",sandbox->tamano[i][j]);
         }
     }
+    if (variable == 0)  //MEJORAR
+    {
 
-    if (variable == 1)
-    {
-        rellenarmapa(sandbox,15,1,7,'-');
+        //ESPACIO 1 
+        rellenarmapa(sandbox, 15, 10, 20, '-');
+        rellenarmapa(sandbox, 15, 10, 20, '|');
+        rellenarmapa(sandbox, 15, 10, 10, '|');
+        rellenarmapa(sandbox, 10, 1, 15, '-');
+    
+        //ESPACIO 2
+        rellenarmapa(sandbox, 1, 80, 10, '|');
+        rellenarmapa(sandbox, 11, 85, 10, '|');
+        rellenarmapa(sandbox, 11, 80, 5, '-');
+        rellenarmapa(sandbox, 20, 85, 15, '-');
 
-        gotoxy(1,21); printf("-------");
+        //ESPACIO 3 
+        rellenarmapa(sandbox, 15, 30, 20, '-');
+        rellenarmapa(sandbox, 20, 20, 10, '-');
+        rellenarmapa(sandbox, 20, 50,10, '-');
+        rellenarmapa(sandbox, 35, 30, 20, '-');
+        rellenarmapa(sandbox, 30, 20,10, '-');
+        rellenarmapa(sandbox, 30, 50, 10, '-');
+
+        rellenarmapa(sandbox, 15, 30, 5, '|');
+        rellenarmapa(sandbox, 15, 50, 5, '|');
+        rellenarmapa(sandbox, 30, 30, 5, '|');
+        rellenarmapa(sandbox, 30, 50, 5, '|');
+        rellenarmapa(sandbox, 20, 20, 10, '|');
+        rellenarmapa(sandbox, 20, 60, 10, '|');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+        gotoxy(1,21); //printf("-------");
     }
-    else if(variable == 2)
+    else if(variable == 1) //"FALTA TERMINAR MAPA"
     {
-        gotoxy(1,20); printf("---------");
-        gotoxy(1,23); printf("---------");
+        printf("\033[0;35m");
+        rellenarmapa(sandbox, 5, 5, 15, '-');    
+        rellenarmapa(sandbox, 5, 5, 10, '|');    
+        rellenarmapa(sandbox, 5, 20, 10, '|');   
+        rellenarmapa(sandbox, 15, 5, 20, '-');   
+
+        rellenarmapa(sandbox, 10, 5, 10, '-');   
+
+        //PAREDES VERTICALES F2
+        rellenarmapa(sandbox, 3, 50, 7, '|');    
+        rellenarmapa(sandbox, 3, 55, 7, '|');    
+        rellenarmapa(sandbox, 12, 50, 13, '|');
+        rellenarmapa(sandbox, 10, 65, 8, '|');    
+        rellenarmapa(sandbox, 20, 65, 5, '|');
+
+
+        //PAREDES HORIZONTALES F2
+        rellenarmapa(sandbox, 10, 40, 11, '-');
+        rellenarmapa(sandbox, 12, 45, 5, '-');
+        rellenarmapa(sandbox, 25, 50, 15, '-');
+        rellenarmapa(sandbox, 10, 55, 10, '-');
+        rellenarmapa(sandbox, 18, 65, 5, '-');
+        rellenarmapa(sandbox, 20, 65, 5, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+
+        gotoxy(1,20); //printf("---------");
+        gotoxy(1,23); //printf("---------");
     }
-    else if (variable == 3)
+    else if (variable == 2) //"TERMINADO"
     {
-        gotoxy(20,8); printf("---");
-        gotoxy(23,9); printf("C");
+        printf("\033[0;35m"); 
+
+        //PAREDES VERTICALES F3
+        rellenarmapa(sandbox, 5, 30, 10, '|');    
+        rellenarmapa(sandbox, 9, 35, 9, '|');    
+        rellenarmapa(sandbox, 25, 15, 2, '|');
+        rellenarmapa(sandbox, 15, 50, 10, '|');    
+        rellenarmapa(sandbox, 9, 75, 6, '|');
+
+        rellenarmapa(sandbox, 5, 80, 13, '|');    
+        rellenarmapa(sandbox, 18, 66, 2, '|');    
+        rellenarmapa(sandbox, 20, 78, 5, '|');
+        rellenarmapa(sandbox, 27, 50, 3, '|');    
+        rellenarmapa(sandbox, 20, 85, 5, '|');
+        rellenarmapa(sandbox, 20, 88, 10, '|');
+
+        //PAREDES HORIZONTALES F3
+
+        rellenarmapa(sandbox, 15, 15, 15, '-');
+        rellenarmapa(sandbox, 18, 15, 20, '-');
+        rellenarmapa(sandbox, 5, 30, 50, '-');
+        rellenarmapa(sandbox, 9, 35, 40, '-');
+        rellenarmapa(sandbox, 15, 50, 25, '-');
+        rellenarmapa(sandbox, 18, 66, 14, '-');
+        rellenarmapa(sandbox, 20, 66, 12, '-');
+        rellenarmapa(sandbox, 25, 78, 7, '-');
+        //rellenarmapa(sandbox, 20, 15, 35, '-');
+        rellenarmapa(sandbox, 27, 15, 35, '-');
+        rellenarmapa(sandbox, 30, 50, 38, '-');
+        rellenarmapa(sandbox, 25, 15, 35, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+        gotoxy(20,8); //printf("---");
+        gotoxy(23,9); //printf("C");
     }
-    else if(variable == 4)
+    else if(variable == 3)   //TERMINADO
     {
-        gotoxy(2,1); printf("|");
+
+        printf("\033[0;34m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5, 10, 15, '|');
+        rellenarmapa(sandbox, 24, 16, 8, '|');
+        rellenarmapa(sandbox, 28, 13, 7, '|');
+        rellenarmapa(sandbox, 20, 20, 12, '|');
+        rellenarmapa(sandbox, 12, 23, 23, '|');
+        rellenarmapa(sandbox, 5, 23, 3, '|');
+        rellenarmapa(sandbox, 12, 40, 23, '|');
+        rellenarmapa(sandbox, 8, 43, 24, '|');
+        rellenarmapa(sandbox, 12, 46, 20, '|');
+        rellenarmapa(sandbox, 5, 55, 7, '|');
+        rellenarmapa(sandbox, 8, 60, 4, '|');
+        rellenarmapa(sandbox, 12, 63, 23, '|');
+
+
+
+        //PAREDES HORIZONTALES 
+        rellenarmapa(sandbox, 5, 10, 13, '-');
+        rellenarmapa(sandbox, 8, 23, 20, '-');
+        rellenarmapa(sandbox, 12, 23, 17, '-');
+        rellenarmapa(sandbox, 5, 55, 30, '-');
+        rellenarmapa(sandbox, 8, 60, 20, '-');
+        rellenarmapa(sandbox, 12, 46, 9, '-');
+        rellenarmapa(sandbox, 12, 60, 3, '-');
+        rellenarmapa(sandbox, 20, 10, 10, '-');
+        rellenarmapa(sandbox, 24, 3, 13, '-');
+        rellenarmapa(sandbox, 28, 3, 10, '-');
+        rellenarmapa(sandbox, 32, 16, 4, '-');
+        rellenarmapa(sandbox, 35, 13, 10, '-');
+        rellenarmapa(sandbox, 32, 43, 3, '-');
+        rellenarmapa(sandbox, 35, 40, 23, '-');
+        
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+        
+
+        gotoxy(2,1); //printf("|");
     }
-    else if(variable == 5)
+    else if(variable ==4)
     {
-        gotoxy(60,25); printf("---");
-    }
-    else if(variable == 6)
-    {
-        gotoxy(50,20); printf("A");
+        printf("\033[0;35m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5,15, 5, '|');
+        rellenarmapa(sandbox, 10,5, 5, '|');
+        rellenarmapa(sandbox, 30,25, 3, '|');
+        rellenarmapa(sandbox, 33,10, 4, '|');
+        rellenarmapa(sandbox, 30,35, 6, '|');
+        rellenarmapa(sandbox, 30,45, 6, '|');
+
+
+        rellenarmapa(sandbox, 5, 5, 4, '|');    
+        rellenarmapa(sandbox, 5, 20, 9, '|');  
+
+        rellenarmapa(sandbox, 1,50,14,'|');
+        rellenarmapa(sandbox, 15,55, 5, '|');
+        rellenarmapa(sandbox, 25,55, 10, '|');
+        rellenarmapa(sandbox, 28,65, 7, '|');
+        rellenarmapa(sandbox, 18,68, 5, '|');
+        rellenarmapa(sandbox, 1, 55, 2, '|');
+        rellenarmapa(sandbox, 3,60, 7, '|');
+        rellenarmapa(sandbox, 1, 70, 9, '|');    
+        rellenarmapa(sandbox, 1, 75, 17, '|'); 
+
+
+
+
+        //PAREDES HORIZONTALES
+        rellenarmapa(sandbox, 30,1,25,'-');
+        rellenarmapa(sandbox, 32,10,15,'-');
+        rellenarmapa(sandbox, 36,10,25,'-');
+        rellenarmapa(sandbox, 30,35,10,'-');
+        rellenarmapa(sandbox, 10,5,10,'-');
+        rellenarmapa(sandbox, 36,45,30,'-');
+
+
+        rellenarmapa(sandbox, 5, 5, 15, '-');    
+        rellenarmapa(sandbox, 15, 5, 50, '-'); 
+
+        rellenarmapa(sandbox, 1,55,15,'-');
+        rellenarmapa(sandbox, 3,55,5,'-');
+        //rellenarmapa(sandbox, 15,45,10,'-');
+        rellenarmapa(sandbox, 20,20,35,'-');
+        rellenarmapa(sandbox, 25,20,35,'-');
+        rellenarmapa(sandbox, 34,55,10,'-');
+        rellenarmapa(sandbox, 28,65,10,'-');
+        rellenarmapa(sandbox, 23, 68, 7, '-');    
+        rellenarmapa(sandbox, 18, 68, 12, '-');  
+        rellenarmapa(sandbox, 10,60, 10, '-');
+        rellenarmapa(sandbox, 20,45, 10, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+
+        gotoxy(60,25); 
+        //printf("---");
     }
     else
     {
-        gotoxy(51,25); printf("B");
+        printf("\033[0;34m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5,5, 7, '|');
+        rellenarmapa(sandbox, 30,5, 4, '|');
+        rellenarmapa(sandbox, 25,10, 5, '|');
+        rellenarmapa(sandbox, 20,12, 2, '|');
+        rellenarmapa(sandbox, 10,15, 5, '|');
+        rellenarmapa(sandbox, 0,18, 5, '|');
+
+        rellenarmapa(sandbox, 22,25, 8, '|');
+        rellenarmapa(sandbox, 0,25, 15, '|');
+        rellenarmapa(sandbox, 22,30, 8, '|');
+        rellenarmapa(sandbox, 22,60, 8, '|');
+        rellenarmapa(sandbox, 10,40, 10, '|');
+        rellenarmapa(sandbox, 10,45, 10, '|');
+        rellenarmapa(sandbox, 34,70, 4, '|');
+        rellenarmapa(sandbox, 5,70, 15, '|');
+        rellenarmapa(sandbox, 10,73,24, '|');
+        rellenarmapa(sandbox, 5,90, 5, '|');
+    
+
+    //PAREDES HORIZONTALES
+
+        rellenarmapa(sandbox, 12, 1, 4, '-');    
+        rellenarmapa(sandbox, 5, 5, 13, '-'); 
+
+        rellenarmapa(sandbox, 10,15,4,'-');
+        rellenarmapa(sandbox, 15,15,10,'-');
+        rellenarmapa(sandbox, 25,1,9,'-');
+        rellenarmapa(sandbox, 30,1,4,'-');
+        rellenarmapa(sandbox, 30,10,5,'-');
+        rellenarmapa(sandbox, 30,20,5,'-');
+        rellenarmapa(sandbox, 22,12,13,'-');
+        rellenarmapa(sandbox, 20, 12,28, '-');    
+        rellenarmapa(sandbox, 22, 30, 30, '-');  
+        rellenarmapa(sandbox, 30,30, 30, '-');
+        rellenarmapa(sandbox, 34,5, 65, '-');
+
+        rellenarmapa(sandbox, 20, 45, 25, '-');    
+        rellenarmapa(sandbox, 5, 70, 20, '-'); 
+
+        rellenarmapa(sandbox, 10,73,17,'-');
+        rellenarmapa(sandbox, 34,73,17,'-');
+        rellenarmapa(sandbox, 38,70,20,'-');
+
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+        
+        gotoxy(51,25); //printf("B");
     }
-    printf("\033[0;0m");
 
 }
 
