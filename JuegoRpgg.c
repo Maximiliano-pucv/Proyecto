@@ -120,7 +120,7 @@ int comandoBatalla(Opcion *comandos);
 bool Huir();
 int Atacar(Info * atacante, Info * atacado, bool defensa);
 void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
-
+void usarobjetoenbatalla(Jugador *jugador);
 //main
 int main(){
     time_t t;
@@ -291,6 +291,49 @@ void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bo
     }
     (*ptri)++;
 }
+void usarobjetoenbatalla(Jugador *jugador){
+
+    printf("\033[0;34m");
+    List *inventario = jugador->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+
+    gotoxy(0,41); printf("-----------------------que objeto vas a usar?----------------------");
+    for(int i=42; i<45;i++){
+        gotoxy(0,i); printf("|                                                                 |");
+    }
+    gotoxy(0,44); printf("|-------------Utiliza <- y -> Para seleccionar objeto-------------|");
+    gotoxy(0,45); printf("-------------------------------------------------------------------");
+    printf("\033[0;0m");
+    gotoxy(5,43); printf("->%s", item->stats->nombre);
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x27)){
+            item = nextList(inventario);
+            if(item != NULL){
+                gotoxy(5,43); printf("->                                                  ", item->stats->nombre);
+                gotoxy(5,43); printf("->%s", item->stats->nombre);
+            }
+            
+        }
+        if(GetAsyncKeyState(0x25)){
+            item = prevList(inventario);
+            if(item != NULL){
+                gotoxy(5,43); printf("->                                                  ", item->stats->nombre);
+                gotoxy(5,43); printf("->%s", item->stats->nombre);
+            }
+            
+        }
+        if(GetAsyncKeyState(0x1B)){
+            for(int i=41; i<46;i++){
+                gotoxy(0,i); printf("                                                                   ");
+            }
+            return;
+        }
+
+    }
+    
+    printf("\033[0;36m");
+}
 
 bool empezarbatalla(Jugador *jugador,Info *Enemigo){
     gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
@@ -317,6 +360,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
             break;
         case 3:
             gotoxy(105,i); printf("%s Decide utilizar un objeto", jugador->datos->nombre);
+            usarobjetoenbatalla(jugador);
             break;
         case 4:
             gotoxy(105,i); printf("%s intenta huir", jugador->datos->nombre);
