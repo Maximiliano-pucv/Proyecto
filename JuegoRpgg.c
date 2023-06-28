@@ -301,30 +301,35 @@ void usarobjetoenbatalla(Jugador *jugador){
     for(int i=42; i<45;i++){
         gotoxy(0,i); printf("|                                                                 |");
     }
-    gotoxy(0,44); printf("|-------------Utiliza <- y -> Para seleccionar objeto-------------|");
-    gotoxy(0,45); printf("-------------------------------------------------------------------");
+    gotoxy(0,45); printf("|-------------Utiliza <- y -> Para seleccionar objeto-------------|");
+    gotoxy(0,46); printf("-------------------------------------------------------------------");
     printf("\033[0;0m");
     gotoxy(5,43); printf("->%s", item->stats->nombre);
+    gotoxy(1,44);printf("-*%s", item->stats->descripcion);
     while(true){
         Sleep(100);
         if(GetAsyncKeyState(0x27)){
             item = nextList(inventario);
             if(item != NULL){
-                gotoxy(5,43); printf("->                                                  ", item->stats->nombre);
+                gotoxy(5,43); printf("->                                                  ");
+                gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
+                gotoxy(1,44); printf("-*%s", item->stats->descripcion);
             }
             
         }
         if(GetAsyncKeyState(0x25)){
             item = prevList(inventario);
             if(item != NULL){
-                gotoxy(5,43); printf("->                                                  ", item->stats->nombre);
+                gotoxy(5,43); printf("->                                                  ");
+                gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
+                gotoxy(1,44); printf("-*%s", item->stats->descripcion);
             }
             
         }
         if(GetAsyncKeyState(0x1B)){
-            for(int i=41; i<46;i++){
+            for(int i=41; i<=46;i++){
                 gotoxy(0,i); printf("                                                                   ");
             }
             return;
