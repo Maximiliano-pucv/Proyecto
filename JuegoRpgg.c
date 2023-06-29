@@ -669,10 +669,10 @@ void submenu_opciones(List *lista, int tipo_item){
 void mostrarDescrip(List *lista, int tipo){
     
     printf("\033[0;34m");
-    gotoxy(144, 26); printf("-------------------------------------");
-    gotoxy(144, 38); printf("-------------------------------------");
+    gotoxy(104, 26); printf("---------------------------------------------------------------------------------");
+    gotoxy(104, 38); printf("---------------------------------------------------------------------------------");
     for(int i = 27; i < 38; i++){
-        gotoxy(144, i); printf("|                                   |");
+        gotoxy(104, i); printf("|                                                                               |");
     }  
     printf("\033[0;0m");
 
@@ -680,57 +680,57 @@ void mostrarDescrip(List *lista, int tipo){
     TipoEquipamiento *item = firstList(inventario);
     Jugador *usuario = firstList(lista);
     
-    gotoxy(154, 27); printf("Tipo clase: %s", usuario->clase);
+    gotoxy(134, 27); printf("Tipo clase: %s", usuario->clase);
     
     coordenadas mov;
-    mov.x = 145;
+    mov.x = 105;
     mov.y = 28;
 
 
     printf("\033[0;33m");
-    gotoxy(147, 28); printf("Anterior");
-    gotoxy(171, 28); printf("Siguiente");
+    gotoxy(109, 28); printf("Anterior");
+    gotoxy(172, 28); printf("Siguiente");
    
     
     while(true){
         Sleep(100);
 
-        if(GetAsyncKeyState(0x26) && mov.x >= 145){
+        if(GetAsyncKeyState(0x26) && mov.x >= 107){
             gotoxy(mov.x, mov.y); printf(" ");
-            mov.x = 145;
+            mov.x = 107;
             gotoxy(mov.x, mov.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x28) && mov.x <= 169){
+        if(GetAsyncKeyState(0x28) && mov.x <= 168){
             gotoxy(mov.x, mov.y); printf(" ");
-            mov.x = 169;
+            mov.x = 168;
             gotoxy(mov.x, mov.y); printf(">");
         }
 
         printf("\033[0;0m");
-        if(GetAsyncKeyState(0x26) && mov.x == 145){
+        if(GetAsyncKeyState(0x26) && mov.x == 107){
             item = prevList(inventario);
             if(item != NULL){
-                gotoxy(145, 30); printf(" -Tipo: %s ", item->tipo);
-                gotoxy(145, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
-                gotoxy(145, 32); printf(" -Nombre: %s ", item->stats->nombre);
-                gotoxy(145, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
-                gotoxy(145, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
-                gotoxy(145, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
-                gotoxy(145, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
+                gotoxy(105, 30); printf(" -Tipo: %s ", item->tipo);
+                gotoxy(105, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
+                gotoxy(105, 32); printf(" -Nombre: %s ", item->stats->nombre);
+                gotoxy(105, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
+                gotoxy(105, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
+                gotoxy(105, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
+                gotoxy(105, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
             }
         }
 
-        if(GetAsyncKeyState(0x28) && mov.x == 169){
+        if(GetAsyncKeyState(0x28) && mov.x == 168){
             item = nextList(inventario);
             if(item != NULL){
-                gotoxy(145, 30); printf(" -Tipo: %s ", item->tipo);
-                gotoxy(145, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
-                gotoxy(145, 32); printf(" -Nombre: %s ", item->stats->nombre);
-                gotoxy(145, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
-                gotoxy(145, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
-                gotoxy(145, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
-                gotoxy(145, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
+                gotoxy(105, 30); printf(" -Tipo: %s ", item->tipo);
+                gotoxy(105, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
+                gotoxy(105, 32); printf(" -Nombre: %s ", item->stats->nombre);
+                gotoxy(105, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
+                gotoxy(105, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
+                gotoxy(105, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
+                gotoxy(105, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
             }
         }
         if(GetAsyncKeyState(0x1B)){
