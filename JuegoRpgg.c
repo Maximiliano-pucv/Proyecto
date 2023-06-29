@@ -127,7 +127,7 @@ void usarobjetoenbatalla(Jugador *jugador);
 //main
 int main(){
     time_t t;
-    srand((unsigned) time(&t));
+    srand((unsigned) time(&t)); 
     char *estado = (char *)malloc(sizeof(char)* 6);
     strcpy(estado, "vivo");
     List *listajugadores = createList();
@@ -945,7 +945,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 void generarmapa(sala *sandbox)
 {
     
-    int variable = rand()%6;
+    int variable = 1;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
@@ -976,33 +976,59 @@ void generarmapa(sala *sandbox)
     if (variable == 0)  //MEJORAR
     {
 
-        //ESPACIO 1 
-        rellenarmapa(sandbox, 15, 10, 20, '-');
-        rellenarmapa(sandbox, 15, 10, 20, '|');
-        rellenarmapa(sandbox, 15, 10, 10, '|');
-        rellenarmapa(sandbox, 10, 1, 15, '-');
-    
-        //ESPACIO 2
-        rellenarmapa(sandbox, 1, 80, 10, '|');
-        rellenarmapa(sandbox, 11, 85, 10, '|');
-        rellenarmapa(sandbox, 11, 80, 5, '-');
-        rellenarmapa(sandbox, 20, 85, 15, '-');
+//PAREDES  VERTICALES
+        rellenarmapa(sandbox, 0, 8, 8, '|'); 
+        rellenarmapa(sandbox, 10, 5, 15, '|'); 
+        rellenarmapa(sandbox, 5, 10, 5, '|'); 
+        rellenarmapa(sandbox, 27, 5, 11, '|'); 
+        rellenarmapa(sandbox, 22, 10, 5, '|'); 
+        rellenarmapa(sandbox, 25, 28, 13, '|'); 
+        rellenarmapa(sandbox, 25, 30, 15, '|'); 
+        rellenarmapa(sandbox, 30, 32, 8, '|'); 
+        rellenarmapa(sandbox, 25, 58, 2, '|'); 
+        rellenarmapa(sandbox, 20, 58, 2, '|'); 
+        rellenarmapa(sandbox, 32, 54, 6, '|'); 
+        rellenarmapa(sandbox, 34, 58, 6, '|'); 
+        rellenarmapa(sandbox, 5, 30, 15, '|'); 
+        rellenarmapa(sandbox, 0, 32, 22, '|'); 
+        rellenarmapa(sandbox, 10, 40, 8, '|'); 
+        rellenarmapa(sandbox, 18, 60, 12, '|'); 
+        rellenarmapa(sandbox, 10, 70, 22, '|'); 
+        rellenarmapa(sandbox, 0, 70, 8, '|'); 
+        rellenarmapa(sandbox, 10, 73, 22, '|'); 
+        rellenarmapa(sandbox, 32, 80, 2, '|'); 
+        rellenarmapa(sandbox, 10, 82, 28, '|'); 
+        rellenarmapa(sandbox, 10, 90, 20, '|');
+        rellenarmapa(sandbox, 10, 94, 20, '|');
+        rellenarmapa(sandbox, 0, 82, 8, '|');
+        
 
-        //ESPACIO 3 
-        rellenarmapa(sandbox, 15, 30, 20, '-');
-        rellenarmapa(sandbox, 20, 20, 10, '-');
-        rellenarmapa(sandbox, 20, 50,10, '-');
-        rellenarmapa(sandbox, 35, 30, 20, '-');
-        rellenarmapa(sandbox, 30, 20,10, '-');
-        rellenarmapa(sandbox, 30, 50, 10, '-');
 
-        rellenarmapa(sandbox, 15, 30, 5, '|');
-        rellenarmapa(sandbox, 15, 50, 5, '|');
-        rellenarmapa(sandbox, 30, 30, 5, '|');
-        rellenarmapa(sandbox, 30, 50, 5, '|');
-        rellenarmapa(sandbox, 20, 20, 10, '|');
-        rellenarmapa(sandbox, 20, 60, 10, '|');
-
+        //PAREDES HORIZONTALES
+        rellenarmapa(sandbox, 30, 90, 4, '-'); 
+        rellenarmapa(sandbox, 30, 32, 28, '-'); 
+        rellenarmapa(sandbox, 8, 0, 8, '-'); 
+        rellenarmapa(sandbox, 10, 5, 5, '-'); 
+        rellenarmapa(sandbox, 25, 0, 5, '-');
+        rellenarmapa(sandbox, 5, 10, 20, '-');
+        rellenarmapa(sandbox, 20, 10, 20, '-');
+        rellenarmapa(sandbox, 22, 10, 48, '-');
+        rellenarmapa(sandbox, 25, 14, 16, '-');
+        rellenarmapa(sandbox, 38, 5, 23, '-');
+        rellenarmapa(sandbox, 10, 40, 30, '-');
+        rellenarmapa(sandbox, 18, 40, 20, '-');
+        rellenarmapa(sandbox, 25, 30, 28, '-');
+        rellenarmapa(sandbox, 27, 30, 28, '-');
+        rellenarmapa(sandbox, 20, 32, 26, '-');
+        rellenarmapa(sandbox, 32, 54, 16, '-');
+        rellenarmapa(sandbox, 38,32, 22, '-');
+        rellenarmapa(sandbox, 34, 58, 22, '-');
+        rellenarmapa(sandbox, 32, 73, 7, '-');
+        rellenarmapa(sandbox, 8, 70, 12, '-');
+        rellenarmapa(sandbox, 10, 73, 9, '-');
+        rellenarmapa(sandbox, 10, 90, 10, '-');
+        rellenarmapa(sandbox, 32, 82, 18, '-');
+        rellenarmapa(sandbox, 27, 5, 4, '-');
         rellenarmapa(sandbox, 20,99,5,'>');
 
         gotoxy(1,21); //printf("-------");
@@ -1010,28 +1036,52 @@ void generarmapa(sala *sandbox)
     else if(variable == 1) //"FALTA TERMINAR MAPA"
     {
         printf("\033[0;35m");
-        rellenarmapa(sandbox, 5, 5, 15, '-');    
-        rellenarmapa(sandbox, 5, 5, 10, '|');    
-        rellenarmapa(sandbox, 5, 20, 10, '|');   
-        rellenarmapa(sandbox, 15, 5, 20, '-');   
+        //rellenarmapa(sandbox, 5, 5, 15, '-');    
+        //rellenarmapa(sandbox, 5, 5, 10, '|');    
+        //rellenarmapa(sandbox, 5, 20, 10, '|');   
+        //rellenarmapa(sandbox, 15, 5, 20, '-');   
 
-        rellenarmapa(sandbox, 10, 5, 10, '-');   
+        //rellenarmapa(sandbox, 10, 5, 10, '-');   
 
         //PAREDES VERTICALES F2
-        rellenarmapa(sandbox, 3, 50, 7, '|');    
-        rellenarmapa(sandbox, 3, 55, 7, '|');    
+        rellenarmapa(sandbox, 0, 50, 10, '|');    
+        rellenarmapa(sandbox, 0, 55, 10, '|');    
         rellenarmapa(sandbox, 12, 50, 13, '|');
         rellenarmapa(sandbox, 10, 65, 8, '|');    
         rellenarmapa(sandbox, 20, 65, 5, '|');
 
+        rellenarmapa(sandbox, 20, 95, 2, '|');
+        rellenarmapa(sandbox, 23, 95, 2, '|');
+
+        rellenarmapa(sandbox, 18, 80, 2, '|');
+        rellenarmapa(sandbox, 20, 75, 3, '|');
+
+        rellenarmapa(sandbox, 12, 45, 18, '|');
+        rellenarmapa(sandbox, 12, 5, 20, '|');
+
+        rellenarmapa(sandbox, 28, 80, 4, '|');
+        rellenarmapa(sandbox, 32,60, 8, '|');
 
         //PAREDES HORIZONTALES F2
-        rellenarmapa(sandbox, 10, 40, 11, '-');
-        rellenarmapa(sandbox, 12, 45, 5, '-');
+        rellenarmapa(sandbox, 10, 0, 50, '-');
+        rellenarmapa(sandbox, 12, 5, 40, '-');
         rellenarmapa(sandbox, 25, 50, 15, '-');
         rellenarmapa(sandbox, 10, 55, 10, '-');
-        rellenarmapa(sandbox, 18, 65, 5, '-');
-        rellenarmapa(sandbox, 20, 65, 5, '-');
+        //verrr
+
+        rellenarmapa(sandbox, 32, 5, 40, '-');
+        //
+        rellenarmapa(sandbox, 18, 65, 15, '-');
+        rellenarmapa(sandbox, 20, 65, 10, '-');
+
+        rellenarmapa(sandbox, 32, 60, 20, '-');
+        rellenarmapa(sandbox, 28, 80, 20, '-');
+
+        rellenarmapa(sandbox, 23, 75, 20, '-');
+        rellenarmapa(sandbox, 20, 80, 15, '-');
+
+        rellenarmapa(sandbox, 19, 95, 5, '-');
+        rellenarmapa(sandbox, 25, 95, 5, '-');
 
         rellenarmapa(sandbox, 20,99,5,'>');
 
@@ -1071,7 +1121,6 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 27, 15, 35, '-');
         rellenarmapa(sandbox, 30, 50, 38, '-');
         rellenarmapa(sandbox, 25, 15, 35, '-');
-
         rellenarmapa(sandbox, 20,99,5,'>');
 
         gotoxy(20,8); //printf("---");
