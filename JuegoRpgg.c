@@ -123,7 +123,7 @@ int comandoBatalla(Opcion *comandos);
 bool Huir();
 int Atacar(Info * atacante, Info * atacado, bool defensa);
 void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
-void usarobjetoenbatalla(Jugador *jugador);
+bool usarobjetoenbatalla(Jugador *jugador);
 //main
 int main(){
     time_t t;
@@ -294,7 +294,7 @@ void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bo
     }
     (*ptri)++;
 }
-void usarobjetoenbatalla(Jugador *jugador){
+bool usarobjetoenbatalla(Jugador *jugador){
 
     printf("\033[0;34m");
     List *inventario = jugador->inventario;
@@ -335,11 +335,18 @@ void usarobjetoenbatalla(Jugador *jugador){
             for(int i=41; i<=46;i++){
                 gotoxy(0,i); printf("                                                                   ");
             }
-            return;
+            return true;
+        }
+
+        if(GetAsyncKeyState(0x0D)){
+            for(int i=41; i<=46;i++){
+                gotoxy(0,i); printf("                                                                   ");
+            }
+            return false;
         }
 
     }
-    
+    return false;
     printf("\033[0;36m");
 }
 
@@ -347,13 +354,14 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
     gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
     printf("\033[0;36m");
     gotoxy(105,33); printf("-------------------------------------Elige una opcion-------------------------------------");
-    bool Def_enemigo = false , Def_jugador = false;
+    bool Def_enemigo = false , Def_jugador = false,turnoporobjeto=false;
     int i=2;
     while ((Enemigo ->HP>0)&&(jugador->datos->HP>0))
     {
         Sleep(500);
         gotoxy(105,39); printf(".%s - %i ",jugador ->datos->nombre,  jugador ->datos ->HP);
         gotoxy(105,40); printf(".%s - %i ",Enemigo ->nombre, Enemigo ->HP);
+        turnoporobjeto=false;
         switch (comandoBatalla(jugador->ataques))
         {
         case 1:
@@ -368,7 +376,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
             break;
         case 3:
             gotoxy(105,i); printf("%s Decide utilizar un objeto", jugador->datos->nombre);
-            usarobjetoenbatalla(jugador);
+            turnoporobjeto = usarobjetoenbatalla(jugador);
             break;
         case 4:
             gotoxy(105,i); printf("%s intenta huir", jugador->datos->nombre);
@@ -387,7 +395,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
             break;
         }
         i++;
-        if(Enemigo->HP>=0) TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
+        if((Enemigo->HP>=0)&&(turnoporobjeto == false)) TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
         printf("\033[0;36m");
         
         if(i>=31){
