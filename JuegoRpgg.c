@@ -101,9 +101,12 @@ void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
 void submenu_Inventario(List *lista);
 void mostrarInventario(List *lista);
-void submenu_opciones();
-void mostrarDescrip( );
-void mostrar_msg();
+void submenu_opciones(List *lista, int);
+void mostrarDescrip(List *lista, int);
+void mostrar_msg(List *lista, int, int );
+bool usar_item(List *lista, int );
+bool asignar_item(List *lista, int );
+bool eliminar_item(List *lista, int);
 
 //funciones para batallas
 void pantalla_batalla();
@@ -180,7 +183,7 @@ bool Submenu(List *listaJugadores){
         //abajo
         if((GetAsyncKeyState(0x28)) && (cursor.y<=3))
         {
-            gotoxy(cursor.x,cursor.y);printf("O");
+            gotoxy(cursor.x,cursor.y); printf("O");
             cursor.y++;
             gotoxy(cursor.x,cursor.y); printf("#");
             
@@ -189,7 +192,7 @@ bool Submenu(List *listaJugadores){
         //arriba
         if((GetAsyncKeyState(0x26)) && (cursor.y>=4))
         {
-            gotoxy(cursor.x,cursor.y);printf("O");
+            gotoxy(cursor.x,cursor.y); printf("O");
             cursor.y--;
             gotoxy(cursor.x,cursor.y); printf("#");
             
@@ -197,7 +200,7 @@ bool Submenu(List *listaJugadores){
         //derecha131
         if((GetAsyncKeyState(0x27)) && (cursor.x<=131))
         {
-            gotoxy(cursor.x,cursor.y);printf("O");
+            gotoxy(cursor.x,cursor.y); printf("O");
             cursor.x=129;
             gotoxy(cursor.x,cursor.y); printf("#");
             
@@ -206,7 +209,7 @@ bool Submenu(List *listaJugadores){
 
         if((GetAsyncKeyState(0x25)) && (cursor.x>=106))
         {
-            gotoxy(cursor.x,cursor.y);printf("O");
+            gotoxy(cursor.x,cursor.y); printf("O");
             cursor.x=106;
             gotoxy(cursor.x,cursor.y); printf("#");
             
@@ -214,7 +217,7 @@ bool Submenu(List *listaJugadores){
         if(GetAsyncKeyState(0x1B)){
             for(int i = 0; i< 9; i++)
             {
-                gotoxy(103,i);printf("                                       ");
+                gotoxy(103,i); printf("                                       ");
             }
             return false;
         }
@@ -241,8 +244,8 @@ bool Submenu(List *listaJugadores){
 void submenu_Inventario(List *lista){
     printf("\033[0;35m");
     gotoxy(104, 12); printf("-------------------------------------");
-    gotoxy(104, 20); printf("-------------------------------------");
-    for(int i = 13; i < 20; i++){
+    gotoxy(104, 22); printf("-------------------------------------");
+    for(int i = 13; i < 22; i++){
         gotoxy(104, i); printf("|                                   |");
     }  
     printf("\033[0;0m");
@@ -252,41 +255,46 @@ void submenu_Inventario(List *lista){
 
     coordenadas mov;
     mov.x = 106;
-    mov.y = 15;
+    mov.y = 16;
     gotoxy(mov.x, mov.y); printf("-");
     int opcion;
+    int tipo = 1;
     while(true){
         Sleep(100);
-        if(GetAsyncKeyState(0x26) && mov.y >= 16){
-            gotoxy(mov.x, mov.y);printf("+");
+
+        if(GetAsyncKeyState(0x26) && mov.y >= 17){
+            if(mov.y == 16)
+                tipo = 1;
+            else{
+                tipo--;
+            }
+            gotoxy(mov.x, mov.y); printf("+");
             mov.y--;
             gotoxy(mov.x, mov.y); printf(">");
             opcion = 1;
         }
 
-        if(GetAsyncKeyState(0x28) && mov.y <= 18){
-            gotoxy(mov.x, mov.y);printf("+");
+        if(GetAsyncKeyState(0x28) && mov.y <= 19){
+            if(mov.y == 20){
+                tipo = 5;
+            }
+            else{
+                tipo++;
+            }
+            gotoxy(mov.x, mov.y); printf("+");
             mov.y++;
             gotoxy(mov.x, mov.y); printf(">");
             opcion = 2;
         }
 
-        /*if(GetAsyncKeyState(0x38)){
-            for(int i = 0; i < 39; i++){
-                gotoxy(103, i);printf("                                       ");
-            }
-            return;
-        }*/
-
-
         if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
-            submenu_opciones();
+            submenu_opciones(lista, tipo);
         }
 
         if(GetAsyncKeyState(0x5A)){
             gotoxy(104, 12); printf("                                     ");
-            gotoxy(104, 20); printf("                                     ");
-            for(int i = 13; i < 20; i++){
+            gotoxy(104, 22); printf("                                     ");
+            for(int i = 13; i < 22; i++){
                 gotoxy(104, i); printf("                                     ");
             }  
             return;
@@ -299,12 +307,9 @@ void mostrarInventario(List *lista){
     
     List *inventario = ((Jugador *)firstList(lista))->inventario;
     TipoEquipamiento *item = firstList(inventario);
-    int i = 15;
-    
-    /*gotoxy(106, 15); printf("  -%s ", item->nombre);
-    gotoxy(106, 17); printf("  -%i ", item->ATK);
-    gotoxy(106, 18); printf("  -%i ", item->DEF);*/
-
+    Jugador *usuario = firstList(lista);
+    int i = 16;
+    gotoxy(113,14); printf("   Jugador: %s ", usuario->datos->nombre);
     while(item != NULL){
         gotoxy(106, i); printf("  -%s ", item->stats->nombre);
         item = nextList(inventario);
@@ -313,7 +318,7 @@ void mostrarInventario(List *lista){
 
 }
 
-void submenu_opciones(){
+void submenu_opciones(List *lista, int tipo_item){
     printf("\033[0;34m");
     gotoxy(144, 12); printf("-------------------------------------");
     gotoxy(144, 20); printf("-------------------------------------");
@@ -333,11 +338,13 @@ void submenu_opciones(){
     gotoxy(146, 18); printf("  4. Description");
 
     int opcion = 0;
+    int marca = 0;
+    Jugador *usuario = firstList(lista);
     while(true){
         Sleep(100);
         //flecha arriba
         if(GetAsyncKeyState(0x26) && mov.y >= 16){
-            gotoxy(mov.x, mov.y);printf(" ");
+            gotoxy(mov.x, mov.y); printf(" ");
             mov.y--;
             gotoxy(mov.x, mov.y); printf(">");
             opcion = 1;
@@ -345,18 +352,29 @@ void submenu_opciones(){
 
         //flecha abajo
         if(GetAsyncKeyState(0x28) && mov.y <= 17){
-            gotoxy(mov.x, mov.y);printf(" ");
+            gotoxy(mov.x, mov.y); printf(" ");
             mov.y++;
             gotoxy(mov.x, mov.y); printf(">");
             opcion = 2;
         }
         
         if(GetAsyncKeyState(0x0D) && mov.y > 17){
-           mostrarDescrip();
+           mostrarDescrip(lista, tipo_item);
+
+        }
+
+        if(mov.y == 15){
+            marca = 1;
+        }
+        else if(mov.y == 16){
+            marca = 2;
+        }
+        else{
+            marca = 3;
         }
 
         if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && mov.y <= 17){
-            mostrar_msg();
+            mostrar_msg(lista, marca, tipo_item);
         }
 
         if(GetAsyncKeyState(0x5A)){
@@ -367,12 +385,85 @@ void submenu_opciones(){
             }  
             return;
         }
-        //cerrar la pestaña (falta)
 
     }
 }
 
-void mostrar_msg(){
+void mostrarDescrip(List *lista, int tipo){
+    
+    printf("\033[0;34m");
+    gotoxy(144, 26); printf("-------------------------------------");
+    gotoxy(144, 38); printf("-------------------------------------");
+    for(int i = 27; i < 38; i++){
+        gotoxy(144, i); printf("|                                   |");
+    }  
+    printf("\033[0;0m");
+
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+    Jugador *usuario = firstList(lista);
+    
+    gotoxy(154, 27); printf("Tipo clase: %s", usuario->clase);
+    
+    coordenadas mov;
+    mov.x = 145;
+    mov.y = 28;
+
+
+    printf("\033[0;33m");
+    gotoxy(147, 28); printf("Anterior");
+    gotoxy(171, 28); printf("Siguiente");
+   
+    
+    while(true){
+        Sleep(100);
+
+        if(GetAsyncKeyState(0x26) && mov.x >= 145){
+            gotoxy(mov.x, mov.y); printf(" ");
+            mov.x = 145;
+            gotoxy(mov.x, mov.y); printf(">");
+        }
+
+        if(GetAsyncKeyState(0x28) && mov.x <= 169){
+            gotoxy(mov.x, mov.y); printf(" ");
+            mov.x = 169;
+            gotoxy(mov.x, mov.y); printf(">");
+        }
+
+        printf("\033[0;0m");
+        if(GetAsyncKeyState(0x26) && mov.x == 145){
+            item = prevList(inventario);
+            if(item != NULL){
+                gotoxy(145, 30); printf(" -Tipo: %s ", item->tipo);
+                gotoxy(145, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
+                gotoxy(145, 32); printf(" -Nombre: %s ", item->stats->nombre);
+                gotoxy(145, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
+                gotoxy(145, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
+                gotoxy(145, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
+                gotoxy(145, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
+            }
+        }
+
+        if(GetAsyncKeyState(0x28) && mov.x == 169){
+            item = nextList(inventario);
+            if(item != NULL){
+                gotoxy(145, 30); printf(" -Tipo: %s ", item->tipo);
+                gotoxy(145, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
+                gotoxy(145, 32); printf(" -Nombre: %s ", item->stats->nombre);
+                gotoxy(145, 33); printf(" -Puntos ataque: %i ", item->stats->ATK);
+                gotoxy(145, 34); printf(" -Puntos defensa: %i ", item->stats->DEF);
+                gotoxy(145, 35); printf(" -Puntos vida max: %i ", item->stats->HPMAX);
+                gotoxy(145, 36); printf(" -Descripcion: %s\n", item->stats->descripcion);
+            }
+        }
+        if(GetAsyncKeyState(0x1B)){
+            return;
+        }
+    }
+
+}
+
+void mostrar_msg(List *lista, int eleccion, int tipo){
 
     printf("\033[1;35m");
     gotoxy(144, 26); printf("-------------------------------------");
@@ -380,49 +471,45 @@ void mostrar_msg(){
     for(int i = 27; i < 32; i++){
         gotoxy(144, i); printf("|                                   |");
     }  
-    
     printf("\033[0;0m");
+
+    //lista = lista jugadores, recordar!!!!
+    if(eleccion == 1){
+        if(usar_item(lista, tipo)){
+            gotoxy(150, 28); printf("Accion realizada");
+        }
+    }
+    else if(eleccion == 2){
+        if(asignar_item(lista, tipo)){
+            gotoxy(150, 28); printf("Accion realizada");
+        }
+    }
+    else{
+        if(eliminar_item(lista, tipo)){
+            gotoxy(150, 28); printf("Accion realizada");
+        }
+    }
 
 }
 
-void mostrarDescrip(){
-    
-    printf("\033[0;34m");
-    gotoxy(144, 26); printf("-------------------------------------");
-    gotoxy(144, 36); printf("-------------------------------------");
-    for(int i = 27; i < 36; i++){
-        gotoxy(144, i); printf("|                                   |");
-    }  
-    printf("\033[0;0m");
+bool usar_item(List *lista, int tipo){
 
-    //gotoxy(148, 36); printf(" ");
+}
 
-    coordenadas mov;
-    mov.x = 148;
-    mov.y = 28;
+bool asignar_item(List *lista, int tipo){
 
-     while(true){
-        Sleep(100);
-        //flecha arriba
-        if(GetAsyncKeyState(0x26) && mov.y >= 28){
-            gotoxy(mov.x, mov.y);printf(" ");
-            mov.y--;
-            gotoxy(mov.x, mov.y); printf(">");
-            //opcion = 1;
-        }
+}
 
-        //flecha abajo
-        if(GetAsyncKeyState(0x28) && mov.y <= 34){
-            gotoxy(mov.x, mov.y);printf(" ");
-            mov.y++;
-            gotoxy(mov.x, mov.y); printf(">");
-           // opcion = 2;
-        }
+bool eliminar_item(List *lista, int tipo){
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+    bool hecho = false;
 
-        if(GetAsyncKeyState(0x1B)){
-            return;
-        }
+    if(tipo == 1){
+        
+        hecho = true;
     }
+    return hecho;
 
 }
 
