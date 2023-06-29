@@ -734,6 +734,9 @@ void mostrarDescrip(List *lista, int tipo){
             }
         }
         if(GetAsyncKeyState(0x1B)){
+            for(int i = 26; i < 39; i++){
+                gotoxy(104, i); printf("                                                                                 ");
+            } 
             return;
         }
     }
@@ -749,6 +752,10 @@ void mostrar_msg(List *lista, int eleccion, int tipo){
         gotoxy(144, i); printf("|                                   |");
     }  
     printf("\033[0;0m");
+
+    coordenadas mov;
+    mov.x = 167;
+    mov.y = 28;
 
     //lista = lista jugadores, recordar!!!!
     if(eleccion == 1){
@@ -766,6 +773,22 @@ void mostrar_msg(List *lista, int eleccion, int tipo){
             gotoxy(150, 28); printf("Accion realizada");
         }
     }
+
+    while(true){
+       if(GetAsyncKeyState(0x0D) && mov.x <= 167){
+            gotoxy(167, 28); printf(">");
+            mov.x == 167;
+       }
+
+        if(GetAsyncKeyState(0x1B)){
+            for(int i = 26; i < 33; i++){
+                gotoxy(144, i); printf("                                     "); 
+            }
+            return;
+        } 
+    }
+
+    
 
 }
 
