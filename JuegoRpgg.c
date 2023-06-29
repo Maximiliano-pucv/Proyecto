@@ -114,6 +114,8 @@ bool usar_item(List *lista, int );
 bool asignar_item(List *lista, int );
 bool eliminar_item(List *lista, int);
 
+void mostrarStats(List *lista);
+
 //funciones para batallas
 void pantalla_batalla();
 void batalla_final_limpiar();
@@ -513,6 +515,10 @@ bool Submenu(List *listaJugadores){
         if((cursor.x==129)&&(cursor.y==4)) selecc = 4;
         
         gotoxy(104,0); printf("%i",selecc);
+        if(GetAsyncKeyState(0x0D) && selecc == 1)
+        {
+            mostrarStats(listaJugadores);
+        }
         if(GetAsyncKeyState(0x0D) && selecc == 3){
             submenu_Inventario(listaJugadores);
         }
@@ -525,6 +531,19 @@ bool Submenu(List *listaJugadores){
         }
     }
 }
+
+void mostrarStats(List *lista)
+{
+    /*Jugador *aux = firstList(lista);
+    gotoxy(104, 12); printf("-------------------------------------");
+    gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
+    gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
+    gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
+    gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
+    gotoxy(104,18);printf("-------------------------------------");*/
+
+}
+
 
 void submenu_Inventario(List *lista){
     printf("\033[0;35m");
