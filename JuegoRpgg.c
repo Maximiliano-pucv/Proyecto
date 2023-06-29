@@ -19,6 +19,7 @@
  AMARILLO printf("\033[0;33m")
  ROJO printf("\033[0;31m")
   VERDE printf("\033[0;32m")
+  CYAN printf("\033[0;36m")
 AZUL printf("\033[0;34m")*/
 typedef struct{
     int x;
@@ -79,10 +80,12 @@ void inventarionuevo(Jugador *usuario);
 void OpcionesBatalla(Jugador *usuario);
 void limpiarpantalla();
 void generarmapa();
+void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
+
 HashMap* almacenarmounstruos();
 /*const*/ char *get_csv_field (char * tmp, int k);
-void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
-bool validarmov(sala * sandbox, int x, int y);
+
+int validarmov(sala * sandbox, int x, int y, Jugador *player);
 
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
@@ -95,6 +98,9 @@ void equipobaseC(Jugador *usuario);
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *mapamonster, char *);
 //funciones solo developers (fran)
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster);
+
+
+
 
 
 void mostrar_perfiles (List *lista);
@@ -110,19 +116,25 @@ bool eliminar_item(List *lista, int);
 
 //funciones para batallas
 void pantalla_batalla();
-
-
+void batalla_final_limpiar();
+bool empezarbatalla(Jugador *jugador,Info *Enemigo);
+Info *seleccionarenemigo(HashMap *Mapa,int numero);
+int comandoBatalla(Opcion *comandos);
+bool Huir();
+int Atacar(Info * atacante, Info * atacado, bool defensa);
+void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE);
+void usarobjetoenbatalla(Jugador *jugador);
 //main
 int main(){
     time_t t;
     srand((unsigned) time(&t));
     char *estado = (char *)malloc(sizeof(char)* 6);
-    strcpy(estado, "dead");
+    strcpy(estado, "vivo");
     List *listajugadores = createList();
     HashMap *mapamonster = almacenarmounstruos();
 
     do{
-        if(strcmp(estado, "dead") == 0){
+        if((strcmp(estado, "dead") == 0)||(strcmp(estado,"vivo")==0)){
             pantallainesesariadecarga();
             mainmenu();
         }
@@ -142,7 +154,7 @@ int main(){
 }
 
 void pantalla_batalla(){
-    /*gotoxy(104,0); printf("--------------------------------------------------------------------------------------------");
+    gotoxy(104,0); printf("--------------------------------------------------------------------------------------------");
     for(int i =1; i<41; i++){
         if(i == 32){
             gotoxy(104,i); printf("|------------------------------------------------------------------------------------------|");
@@ -150,13 +162,278 @@ void pantalla_batalla(){
             gotoxy(104,i); printf("|                                                                                          |");
         }
     }
-    gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");*/
+    gotoxy(104,41); printf("--------------------------------------------------------------------------------------------");
+}
+void batalla_final_limpiar(){
+    gotoxy(104,0); printf("                                                                                            ");
+    for(int i =1; i<41; i++){
+        gotoxy(104,i); printf("                                                                                            ");
+        
+    }
+    gotoxy(104,41); printf("                                                                                            ");
+}
+bool Huir(){
+    int numero = rand()%3;
+
+    switch (numero)
+    {
+    case 0:
+    case 1:
+        return false;
+        break;
+    case 2:
+        return true;
+        break;
+
+    default:
+        return false;
+        break;
+    }
+}
+
+int comandoBatalla(Opcion *comandos){
+    gotoxy(105,34); printf("# %s                     O %s",comandos[0].nombre,comandos[1].nombre);
+    gotoxy(105,36); printf("O %s                      O %s",comandos[2].nombre,comandos[3].nombre);
+    int seleccion =0;
+    coordenadas cursor;
+    cursor.x = 105;
+    cursor.y =34;
+
+    while (true)
+    {
+        Sleep(100);
+        
+        //abajo
+        if((GetAsyncKeyState(0x28)) && (cursor.y<=34))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y+=2;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+            
+        }
+        //arriba
+        if((GetAsyncKeyState(0x26)) && (cursor.y>=36))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.y-=2;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+        }
+        //derecha131
+        if((GetAsyncKeyState(0x27)) && (cursor.x<=134))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=134;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+            
+        }
+
+        if((GetAsyncKeyState(0x25)) && (cursor.x>=105))
+        {
+            gotoxy(cursor.x,cursor.y);printf("O");
+            cursor.x=105;
+            gotoxy(cursor.x,cursor.y); printf("#");
+            
+        }
+        if((cursor.x==105)&&(cursor.y==34)&&(seleccion!=1)){
+           seleccion = 1; 
+           gotoxy(105,38); printf("                                                                                          ");
+           gotoxy(105,38); printf("* %s", comandos[0].descripicion);
+        } 
+        if((cursor.x==134)&&(cursor.y==34)&&(seleccion!=2)){
+            seleccion = 2;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[1].descripicion);
+        } 
+        if((cursor.x==105)&&(cursor.y==36)&&(seleccion!=3)){
+            seleccion = 3;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[2].descripicion);
+        } 
+        if((cursor.x==134)&&(cursor.y==36)&&(seleccion!=4)){
+            seleccion = 4;
+            gotoxy(105,38); printf("                                                                                          ");
+            gotoxy(105,38); printf("* %s", comandos[3].descripicion);
+        } 
+        if(GetAsyncKeyState(0x0D)){
+            return seleccion;
+        }
+      
+    }
+    return 1;
+}
+
+int Atacar(Info * atacante, Info * atacado, bool defensa){
+    int Dano;
+    if(defensa == false){
+        Dano = (atacante->ATK)/2;
+        atacado ->HP -= Dano;
+    }else{
+        Dano = (int)log((atacante->ATK)/2);
+        atacado ->HP -= Dano;
+    }
+    
+    return Dano;
+}
+
+void TurnoEnemigo(Jugador *Jugador, Info *Enemigo, int *ptri, bool *defensaJ, bool*defensaE){
+    int E_select = rand()%2;
+    printf("\033[0;31m");
+    switch (E_select)
+    {
+    case 0:    
+        gotoxy(105,(*ptri)); printf("%s Logro Infringir %i de dano", Enemigo->nombre, Atacar(Enemigo,Jugador ->datos, *defensaJ));
+        *defensaJ = false;
+        break;
+    case 1:
+        gotoxy(105,(*ptri)); printf("%s se defiende ante el siguiente ataque", Enemigo->nombre);
+        (*defensaE) = true;
+        break;
+    }
+    (*ptri)++;
+}
+void usarobjetoenbatalla(Jugador *jugador){
+
+    printf("\033[0;34m");
+    List *inventario = jugador->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+
+    gotoxy(0,41); printf("-----------------------que objeto vas a usar?----------------------");
+    for(int i=42; i<45;i++){
+        gotoxy(0,i); printf("|                                                                 |");
+    }
+    gotoxy(0,45); printf("|-------------Utiliza <- y -> Para seleccionar objeto-------------|");
+    gotoxy(0,46); printf("-------------------------------------------------------------------");
+    printf("\033[0;0m");
+    gotoxy(5,43); printf("->%s", item->stats->nombre);
+    gotoxy(1,44);printf("-*%s", item->stats->descripcion);
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x27)){
+            item = nextList(inventario);
+            if(item != NULL){
+                gotoxy(5,43); printf("->                                                  ");
+                gotoxy(0,44); printf("|                                                                 |");
+                gotoxy(5,43); printf("->%s", item->stats->nombre);
+                gotoxy(1,44); printf("-*%s", item->stats->descripcion);
+            }
+            
+        }
+        if(GetAsyncKeyState(0x25)){
+            item = prevList(inventario);
+            if(item != NULL){
+                gotoxy(5,43); printf("->                                                  ");
+                gotoxy(0,44); printf("|                                                                 |");
+                gotoxy(5,43); printf("->%s", item->stats->nombre);
+                gotoxy(1,44); printf("-*%s", item->stats->descripcion);
+            }
+            
+        }
+        if(GetAsyncKeyState(0x1B)){
+            for(int i=41; i<=46;i++){
+                gotoxy(0,i); printf("                                                                   ");
+            }
+            return;
+        }
+
+    }
+    
+    printf("\033[0;36m");
+}
+
+bool empezarbatalla(Jugador *jugador,Info *Enemigo){
+    gotoxy(105,1);printf("o no aparecio un %s, rapido %s, Ataca", Enemigo->nombre, jugador ->datos->nombre);
+    printf("\033[0;36m");
+    gotoxy(105,33); printf("-------------------------------------Elige una opcion-------------------------------------");
+    bool Def_enemigo = false , Def_jugador = false;
+    int i=2;
+    while ((Enemigo ->HP>0)&&(jugador->datos->HP>0))
+    {
+        Sleep(500);
+        gotoxy(105,39); printf(".%s - %i ",jugador ->datos->nombre,  jugador ->datos ->HP);
+        gotoxy(105,40); printf(".%s - %i ",Enemigo ->nombre, Enemigo ->HP);
+        switch (comandoBatalla(jugador->ataques))
+        {
+        case 1:
+            gotoxy(105,i); printf("%s Decidio atacar", jugador->datos->nombre);
+            Sleep(20);
+            gotoxy(105,i); printf("%s Logro Infringir %i de dano", jugador->datos, Atacar(jugador->datos,Enemigo,Def_enemigo));
+            Def_enemigo =false;
+            break;
+        case 2:
+            gotoxy(105,i); printf("%s se defiende ante el siguiente ataque", jugador->datos->nombre);
+            Def_jugador =  true;
+            break;
+        case 3:
+            gotoxy(105,i); printf("%s Decide utilizar un objeto", jugador->datos->nombre);
+            usarobjetoenbatalla(jugador);
+            break;
+        case 4:
+            gotoxy(105,i); printf("%s intenta huir", jugador->datos->nombre);
+            if((Huir())==true){
+               i++;
+                gotoxy(105,i); printf("%s Logro huir con exito", jugador->datos->nombre);
+                Enemigo ->HP = Enemigo ->HPMAX;
+                Sleep(500);
+                batalla_final_limpiar();
+                return true;
+            }
+            else{
+                i++;
+                gotoxy(105,i); printf("%s No pudo huir, vuelve a internarlo o lucha", jugador->datos->nombre);
+            }  
+            break;
+        }
+        i++;
+        if(Enemigo->HP>=0) TurnoEnemigo(jugador,Enemigo,&i,&Def_jugador,&Def_enemigo);
+        printf("\033[0;36m");
+        
+        if(i>=31){
+            printf("\033[0;35m");
+            i=2;
+            for(int j=2; j<=31;j++){
+                gotoxy(104,j); printf("|                                                                                          |");
+            }
+            printf("\033[0;36m");
+        }
+        
+        
+    }
+    
+    if(Enemigo ->HP<=0){
+        Enemigo ->HP = Enemigo ->HPMAX;
+        gotoxy(105,33); printf("VICTORIA");
+        Sleep(500);
+        batalla_final_limpiar();
+        return true;
+    } 
+    else{
+        gotoxy(105,33); printf("DERROTA");
+        Sleep(500);
+        batalla_final_limpiar();
+        return false;
+    }
+    
+}
+
+Info *seleccionarenemigo(HashMap *Mapa,int numero){
+    char *cadena = malloc(sizeof(char)*2);
+    sprintf(cadena,"%i",numero);
+    Pair *dato = searchMap(Mapa,cadena);
+    return dato ->value;
 }
 
 void developerfunctions(List* listaJugadores, HashMap* Mapamonster){
      
-    gotoxy(0,42); printf(" Test funcionamiento de Batalla");
+    
     pantalla_batalla();
+    
+    if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+        //printf("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO *SE ARDE*");
+    }
+
     
 }
 
@@ -514,10 +791,23 @@ bool eliminar_item(List *lista, int tipo){
 }
 
 
-bool validarmov(sala *sandbox, int x, int y)
+int validarmov(sala *sandbox, int x, int y,Jugador *player)
 {
-    if(sandbox->tamano[y][x] == ' ' || isalpha(sandbox->tamano[y][x])) return true;
-    return false;
+    if(sandbox->tamano[y][x] == ' ') return 0;
+    if(sandbox->tamano[y][x]=='>')
+    {
+        limpiarpantalla();
+        generarmapa(sandbox);
+        player->pos.x = 2;
+        player->pos.y = 19;
+        return 1;
+    }
+    if(sandbox->tamano[y][x] == '@')
+    {
+        return 2;
+    }
+
+    return 1;
 }
 
 //△
@@ -526,16 +816,28 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
     
     while(true)
     {
+        if(strcmp(estado,"dead") == 0)
+        {
+            return;
+        }
         Sleep(100);
         printf("\033[0;35m");
         //Moverse a la izquierda
         if((GetAsyncKeyState(0x25)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            {
+                /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
 
@@ -543,11 +845,19 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //derecha
         if((GetAsyncKeyState(0x27)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            {
+                /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
@@ -555,22 +865,38 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //abajo
         if((GetAsyncKeyState(0x28)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            {
+                /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
         //arriba
         if((GetAsyncKeyState(0x26)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1) == true)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+            }
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            {
+                /* code */
+                pantalla_batalla();
+                if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
+                    strcpy(estado,"dead");
+                }
             }
             else continue;
         }
@@ -582,7 +908,8 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             }
         }
 
-        if(GetAsyncKeyState(0x08)){
+        if(GetAsyncKeyState(0x09)){
+            
             developerfunctions(listaJugadores,Mapamonster);
         }
     }
@@ -618,7 +945,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 void generarmapa(sala *sandbox)
 {
     
-    int variable = 1;
+    int variable = rand()%6;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
@@ -636,7 +963,6 @@ void generarmapa(sala *sandbox)
             
         }
     }
-    int salas[7] ={0}; //arreglo para evitar la repeticion de las salas
     printf("\033[0;32m");
 
     for(size_t i = 0; i<FILAS; i++)
@@ -647,40 +973,262 @@ void generarmapa(sala *sandbox)
             printf("%c",sandbox->tamano[i][j]);
         }
     }
+    if (variable == 0)  //MEJORAR
+    {
 
-    if (variable == 1)
-    {
-        rellenarmapa(sandbox,15,1,7,'-');
+        //ESPACIO 1 
+        rellenarmapa(sandbox, 15, 10, 20, '-');
+        rellenarmapa(sandbox, 15, 10, 20, '|');
+        rellenarmapa(sandbox, 15, 10, 10, '|');
+        rellenarmapa(sandbox, 10, 1, 15, '-');
+    
+        //ESPACIO 2
+        rellenarmapa(sandbox, 1, 80, 10, '|');
+        rellenarmapa(sandbox, 11, 85, 10, '|');
+        rellenarmapa(sandbox, 11, 80, 5, '-');
+        rellenarmapa(sandbox, 20, 85, 15, '-');
 
-        gotoxy(1,21); printf("-------");
+        //ESPACIO 3 
+        rellenarmapa(sandbox, 15, 30, 20, '-');
+        rellenarmapa(sandbox, 20, 20, 10, '-');
+        rellenarmapa(sandbox, 20, 50,10, '-');
+        rellenarmapa(sandbox, 35, 30, 20, '-');
+        rellenarmapa(sandbox, 30, 20,10, '-');
+        rellenarmapa(sandbox, 30, 50, 10, '-');
+
+        rellenarmapa(sandbox, 15, 30, 5, '|');
+        rellenarmapa(sandbox, 15, 50, 5, '|');
+        rellenarmapa(sandbox, 30, 30, 5, '|');
+        rellenarmapa(sandbox, 30, 50, 5, '|');
+        rellenarmapa(sandbox, 20, 20, 10, '|');
+        rellenarmapa(sandbox, 20, 60, 10, '|');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+        gotoxy(1,21); //printf("-------");
     }
-    else if(variable == 2)
+    else if(variable == 1) //"FALTA TERMINAR MAPA"
     {
-        gotoxy(1,20); printf("---------");
-        gotoxy(1,23); printf("---------");
+        printf("\033[0;35m");
+        rellenarmapa(sandbox, 5, 5, 15, '-');    
+        rellenarmapa(sandbox, 5, 5, 10, '|');    
+        rellenarmapa(sandbox, 5, 20, 10, '|');   
+        rellenarmapa(sandbox, 15, 5, 20, '-');   
+
+        rellenarmapa(sandbox, 10, 5, 10, '-');   
+
+        //PAREDES VERTICALES F2
+        rellenarmapa(sandbox, 3, 50, 7, '|');    
+        rellenarmapa(sandbox, 3, 55, 7, '|');    
+        rellenarmapa(sandbox, 12, 50, 13, '|');
+        rellenarmapa(sandbox, 10, 65, 8, '|');    
+        rellenarmapa(sandbox, 20, 65, 5, '|');
+
+
+        //PAREDES HORIZONTALES F2
+        rellenarmapa(sandbox, 10, 40, 11, '-');
+        rellenarmapa(sandbox, 12, 45, 5, '-');
+        rellenarmapa(sandbox, 25, 50, 15, '-');
+        rellenarmapa(sandbox, 10, 55, 10, '-');
+        rellenarmapa(sandbox, 18, 65, 5, '-');
+        rellenarmapa(sandbox, 20, 65, 5, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+
+        gotoxy(1,20); //printf("---------");
+        gotoxy(1,23); //printf("---------");
     }
-    else if (variable == 3)
+    else if (variable == 2) //"TERMINADO"
     {
-        gotoxy(20,8); printf("---");
-        gotoxy(23,9); printf("C");
+        printf("\033[0;35m"); 
+
+        //PAREDES VERTICALES F3
+        rellenarmapa(sandbox, 5, 30, 10, '|');    
+        rellenarmapa(sandbox, 9, 35, 9, '|');    
+        rellenarmapa(sandbox, 25, 15, 2, '|');
+        rellenarmapa(sandbox, 15, 50, 10, '|');    
+        rellenarmapa(sandbox, 9, 75, 6, '|');
+
+        rellenarmapa(sandbox, 5, 80, 13, '|');    
+        rellenarmapa(sandbox, 18, 66, 2, '|');    
+        rellenarmapa(sandbox, 20, 78, 5, '|');
+        rellenarmapa(sandbox, 27, 50, 3, '|');    
+        rellenarmapa(sandbox, 20, 85, 5, '|');
+        rellenarmapa(sandbox, 20, 88, 10, '|');
+
+        //PAREDES HORIZONTALES F3
+
+        rellenarmapa(sandbox, 15, 15, 15, '-');
+        rellenarmapa(sandbox, 18, 15, 20, '-');
+        rellenarmapa(sandbox, 5, 30, 50, '-');
+        rellenarmapa(sandbox, 9, 35, 40, '-');
+        rellenarmapa(sandbox, 15, 50, 25, '-');
+        rellenarmapa(sandbox, 18, 66, 14, '-');
+        rellenarmapa(sandbox, 20, 66, 12, '-');
+        rellenarmapa(sandbox, 25, 78, 7, '-');
+        //rellenarmapa(sandbox, 20, 15, 35, '-');
+        rellenarmapa(sandbox, 27, 15, 35, '-');
+        rellenarmapa(sandbox, 30, 50, 38, '-');
+        rellenarmapa(sandbox, 25, 15, 35, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+        gotoxy(20,8); //printf("---");
+        gotoxy(23,9); //printf("C");
     }
-    else if(variable == 4)
+    else if(variable == 3)   //TERMINADO
     {
-        gotoxy(2,1); printf("|");
+
+        printf("\033[0;34m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5, 10, 15, '|');
+        rellenarmapa(sandbox, 24, 16, 8, '|');
+        rellenarmapa(sandbox, 28, 13, 7, '|');
+        rellenarmapa(sandbox, 20, 20, 12, '|');
+        rellenarmapa(sandbox, 12, 23, 23, '|');
+        rellenarmapa(sandbox, 5, 23, 3, '|');
+        rellenarmapa(sandbox, 12, 40, 23, '|');
+        rellenarmapa(sandbox, 8, 43, 24, '|');
+        rellenarmapa(sandbox, 12, 46, 20, '|');
+        rellenarmapa(sandbox, 5, 55, 7, '|');
+        rellenarmapa(sandbox, 8, 60, 4, '|');
+        rellenarmapa(sandbox, 12, 63, 23, '|');
+
+
+
+        //PAREDES HORIZONTALES 
+        rellenarmapa(sandbox, 5, 10, 13, '-');
+        rellenarmapa(sandbox, 8, 23, 20, '-');
+        rellenarmapa(sandbox, 12, 23, 17, '-');
+        rellenarmapa(sandbox, 5, 55, 30, '-');
+        rellenarmapa(sandbox, 8, 60, 20, '-');
+        rellenarmapa(sandbox, 12, 46, 9, '-');
+        rellenarmapa(sandbox, 12, 60, 3, '-');
+        rellenarmapa(sandbox, 20, 10, 10, '-');
+        rellenarmapa(sandbox, 24, 3, 13, '-');
+        rellenarmapa(sandbox, 28, 3, 10, '-');
+        rellenarmapa(sandbox, 32, 16, 4, '-');
+        rellenarmapa(sandbox, 35, 13, 10, '-');
+        rellenarmapa(sandbox, 32, 43, 3, '-');
+        rellenarmapa(sandbox, 35, 40, 23, '-');
+        
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+        
+
+        gotoxy(2,1); //printf("|");
     }
-    else if(variable == 5)
+    else if(variable ==4)
     {
-        gotoxy(60,25); printf("---");
-    }
-    else if(variable == 6)
-    {
-        gotoxy(50,20); printf("A");
+        printf("\033[0;35m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5,15, 5, '|');
+        rellenarmapa(sandbox, 10,5, 5, '|');
+        rellenarmapa(sandbox, 30,25, 3, '|');
+        rellenarmapa(sandbox, 33,10, 4, '|');
+        rellenarmapa(sandbox, 30,35, 6, '|');
+        rellenarmapa(sandbox, 30,45, 6, '|');
+
+
+        rellenarmapa(sandbox, 5, 5, 4, '|');    
+        rellenarmapa(sandbox, 5, 20, 9, '|');  
+
+        rellenarmapa(sandbox, 1,50,14,'|');
+        rellenarmapa(sandbox, 15,55, 5, '|');
+        rellenarmapa(sandbox, 25,55, 10, '|');
+        rellenarmapa(sandbox, 28,65, 7, '|');
+        rellenarmapa(sandbox, 18,68, 5, '|');
+        rellenarmapa(sandbox, 1, 55, 2, '|');
+        rellenarmapa(sandbox, 3,60, 7, '|');
+        rellenarmapa(sandbox, 1, 70, 9, '|');    
+        rellenarmapa(sandbox, 1, 75, 17, '|'); 
+
+
+
+
+        //PAREDES HORIZONTALES
+        rellenarmapa(sandbox, 30,1,25,'-');
+        rellenarmapa(sandbox, 32,10,15,'-');
+        rellenarmapa(sandbox, 36,10,25,'-');
+        rellenarmapa(sandbox, 30,35,10,'-');
+        rellenarmapa(sandbox, 10,5,10,'-');
+        rellenarmapa(sandbox, 36,45,30,'-');
+
+
+        rellenarmapa(sandbox, 5, 5, 15, '-');    
+        rellenarmapa(sandbox, 15, 5, 50, '-'); 
+
+        rellenarmapa(sandbox, 1,55,15,'-');
+        rellenarmapa(sandbox, 3,55,5,'-');
+        //rellenarmapa(sandbox, 15,45,10,'-');
+        rellenarmapa(sandbox, 20,20,35,'-');
+        rellenarmapa(sandbox, 25,20,35,'-');
+        rellenarmapa(sandbox, 34,55,10,'-');
+        rellenarmapa(sandbox, 28,65,10,'-');
+        rellenarmapa(sandbox, 23, 68, 7, '-');    
+        rellenarmapa(sandbox, 18, 68, 12, '-');  
+        rellenarmapa(sandbox, 10,60, 10, '-');
+        rellenarmapa(sandbox, 20,45, 10, '-');
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+
+
+        gotoxy(60,25); 
+        //printf("---");
     }
     else
     {
-        gotoxy(51,25); printf("B");
+        printf("\033[0;34m");
+        //PAREDES VERTICALES 
+        rellenarmapa(sandbox, 5,5, 7, '|');
+        rellenarmapa(sandbox, 30,5, 4, '|');
+        rellenarmapa(sandbox, 25,10, 5, '|');
+        rellenarmapa(sandbox, 20,12, 2, '|');
+        rellenarmapa(sandbox, 10,15, 5, '|');
+        rellenarmapa(sandbox, 0,18, 5, '|');
+
+        rellenarmapa(sandbox, 22,25, 8, '|');
+        rellenarmapa(sandbox, 0,25, 15, '|');
+        rellenarmapa(sandbox, 22,30, 8, '|');
+        rellenarmapa(sandbox, 22,60, 8, '|');
+        rellenarmapa(sandbox, 10,40, 10, '|');
+        rellenarmapa(sandbox, 10,45, 10, '|');
+        rellenarmapa(sandbox, 34,70, 4, '|');
+        rellenarmapa(sandbox, 5,70, 15, '|');
+        rellenarmapa(sandbox, 10,73,24, '|');
+        rellenarmapa(sandbox, 5,90, 5, '|');
+    
+
+    //PAREDES HORIZONTALES
+
+        rellenarmapa(sandbox, 12, 1, 4, '-');    
+        rellenarmapa(sandbox, 5, 5, 13, '-'); 
+
+        rellenarmapa(sandbox, 10,15,4,'-');
+        rellenarmapa(sandbox, 15,15,10,'-');
+        rellenarmapa(sandbox, 25,1,9,'-');
+        rellenarmapa(sandbox, 30,1,4,'-');
+        rellenarmapa(sandbox, 30,10,5,'-');
+        rellenarmapa(sandbox, 30,20,5,'-');
+        rellenarmapa(sandbox, 22,12,13,'-');
+        rellenarmapa(sandbox, 20, 12,28, '-');    
+        rellenarmapa(sandbox, 22, 30, 30, '-');  
+        rellenarmapa(sandbox, 30,30, 30, '-');
+        rellenarmapa(sandbox, 34,5, 65, '-');
+
+        rellenarmapa(sandbox, 20, 45, 25, '-');    
+        rellenarmapa(sandbox, 5, 70, 20, '-'); 
+
+        rellenarmapa(sandbox, 10,73,17,'-');
+        rellenarmapa(sandbox, 34,73,17,'-');
+        rellenarmapa(sandbox, 38,70,20,'-');
+
+
+        rellenarmapa(sandbox, 20,99,5,'>');
+        
+        gotoxy(51,25); //printf("B");
     }
-    printf("\033[0;0m");
 
 }
 
@@ -904,7 +1452,7 @@ void CrearPerfil(List *lista){
     estadisticasDeclase(usuario);
     inventarionuevo(usuario);
     OpcionesBatalla(usuario);
-    usuario ->pos.x=10;
+    usuario ->pos.x=2;
     usuario ->pos.y=18;
     usuario ->datos->PH = 0;
     //faltan el quipamiento 
@@ -917,9 +1465,9 @@ void OpcionesBatalla(Jugador *usuario){
     strcpy(usuario->ataques[2].nombre,"ITEMS");
     strcpy(usuario->ataques[3].nombre,"HUIR");
     
-    strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle daño al enemigo");
-    strcpy(usuario->ataques[1].descripicion,"Si nesesitas pensar o no pudes hacer nada, defiendete para recibir menos daño");
-    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar? Que esperas? solo hay una forma de saber que hacer");
+    strcpy(usuario->ataques[0].descripicion,"Utiliza tu arma para poder hacerle dano al enemigo");
+    strcpy(usuario->ataques[1].descripicion,"Si nesesitas pensar o no pudes hacer nada, defiendete para recibir menos dano");
+    strcpy(usuario->ataques[2].descripicion,"Juntaste algun objeto que puedas usar? Que esperas? USALO!!!!");
     strcpy(usuario->ataques[3].descripicion,"Ya no te queda de otra? :( HUYE ANTES QUE TE MATEN, o te da flojera pelear? vete");
 
 }
