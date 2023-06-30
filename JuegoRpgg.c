@@ -313,6 +313,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
         if(GetAsyncKeyState(0x27)){
             item = nextList(inventario);
             if(item != NULL){
+                gotoxy(1,42); printf("                                           ");
                 gotoxy(5,43); printf("->                                                  ");
                 gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
@@ -323,6 +324,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
         if(GetAsyncKeyState(0x25)){
             item = prevList(inventario);
             if(item != NULL){
+                gotoxy(1,42); printf("                                           ");
                 gotoxy(5,43); printf("->                                                  ");
                 gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
@@ -331,6 +333,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
             
         }
         if(GetAsyncKeyState(0x1B)){
+            
             for(int i=41; i<=46;i++){
                 gotoxy(0,i); printf("                                                                   ");
             }
@@ -338,10 +341,23 @@ bool usarobjetoenbatalla(Jugador *jugador){
         }
 
         if(GetAsyncKeyState(0x0D)){
-            for(int i=41; i<=46;i++){
-                gotoxy(0,i); printf("                                                                   ");
-            }
-            return false;
+            if((strcmp(item->tipoArmadura,"Consumible")!=0)){
+                printf("\033[0;31m");
+                gotoxy(1,42); printf("este objeto no se puede consumir en batalla");
+                
+                printf("\033[0;0m");
+            } else {
+                if((jugador->datos->HP)+(item->stats->HP)>jugador->datos->HPMAX) jugador->datos->HP = jugador->datos->HPMAX;
+                else jugador->datos->HP+= item->stats->HP;
+                jugador->datos->ATK += item->stats->ATK;
+                jugador->datos->DEF += item->stats->DEF;
+                popCurrent(inventario);
+                for(int i=41; i<=46;i++){
+                    gotoxy(0,i); printf("                                                                   ");
+                }
+                return false;
+            } 
+            
         }
 
     }
