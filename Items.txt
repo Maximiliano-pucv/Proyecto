@@ -1,0 +1,41 @@
+nombre,tipo,tipoarmor,ataque,defensa,hp,hpmax,Ph,descripcion
+Sarten de experimentado,Arma,None,18,3,3,3,0,Un sarten bien cuidado
+Gorro de experimentado,Armadura,Casco,5,0,8,8,0,La linea amarilla muestra experiencia
+Uniforme de experimentado,Armadura,Pecho,6,0,10,10,0,Colores negro y amarillo(bello)
+Pantalones de experimentado,Armadura,Piernas,6,0,10,10,0,Es negro
+Zapatos de experimentado,Armadura,Botas,5,0,9,9,0,Unos zapatos elegantes
+Sarten del maestro,Arma,None,30,8,8,8,0,Cocina lo que sea
+Gorro del maestro,Armadura,Casco,8,0,16,16,0,Por aguna razon dan habilidades
+Uniforme del maestro,Armadura,Pecho,10,0,35,35,0,Simplemente hermoso
+Pantalones del maestro,Armadura,Piernas,10,0,25,25,0,Limpio y brillante
+Zapatos del maestro,Armadura,Botas,8,0,18,18,0,Un paso e impones
+Daga de onice,Arma,None,15,0,2,2,0,Corta muy fino
+Capa de lobo,Armadura,Casco,5,2,7,7,0,Abrigado y oscuro
+Peto de lobo,Armadura,Pecho,7,4,1,1,0,Unos cortes no son suficientes
+Pantalones de lobo,Armadura,Piernas,6,3,10,10,0,Buenos para la piel
+Botas de lobo,Armadura,Botas,4,1,5,5,0,Poco ruido al moverse
+Daga de dragon,Arma,None,30,3,5,5,0,Ni intentes pasar el dedo
+Capa de las sombras,Armadura,Casco,8,5,10,10,0,Sigilo absoluto
+Peto de las sombras,Armadura,Pecho,12,8,17,17,0,Cortes
+Pantalones de las sombras,Armadura,Piernas,10,7,15,15,0,Calidad infinita
+Botas de las sombras,Armadura,Botas,13,6,10,10,0,Silencio absoluto
+Espada de fuego,Arma,None,10,1,2,2,0,Una ola de calor en cada corte
+Casco de acero,Armadura,Casco,3,5,10,10,0,Una abolladura no es suficiente
+Armadura de acero,Armadura,Pecho,5,8,20,20,0,Resplandeciente y protector
+Pantalones de acero,Armadura,Piernas,4,7,15,15,0,Incomodos pero utiles
+Botas de acero,Armadura,Botas,2,3,10,10,0,Proteccion de pies
+Espada de los dioses antiguos,Arma,None,25,5,10,10,0,Balanceado
+Casco sagrado,Armadura,Casco,7,9,20,20,0,Un casco reluciente
+Armadura sagrada,Armadura,Pecho,11,13,40,40,0,Proteccion absoluta
+Pantalones sagrados,Armadura,Piernas,8,12,30,30,0,Comodidad asegurada
+Botas sagradas,Armadura,Botas,6,8,20,20,0,Drip asegurado
+Baston de la corte,Arma,None,20,0,0,0,0,Un baston importante
+Sombrero de la corte,Armadura,Casco,5,1,3,3,0,Un sombrero simbolico
+Tunica de la corte,Armadura,Pecho,8,2,5,5,0,Una tunica simbolica
+Pantalones de la corte,Armadura,Piernas,7,1,4,4,0,Un pantalon simbolico
+Zapatos de la corte,Armadura,Botas,6,0,3,3,0,Unos zapatos finos
+Baston de archimago,Arma,None,40,0,0,0,0,Un baston mitico
+Sombrero de archimago,Armadura,Casco,10,3,6,6,0,Un sombrero increible
+Tunica de archimago,Armadura,Pecho,16,4,8,8,0,Una tunica sedosa
+Pantalones de archimago,Armadura,Piernas,12,3,7,7,0,Unos pantalones maravillosos
+Botas de archimago,Armadura,Botas,8,1,5,5,0,Se dice que puedes volar!
