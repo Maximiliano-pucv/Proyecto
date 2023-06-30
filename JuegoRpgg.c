@@ -114,7 +114,6 @@ bool usar_item(List *lista, TipoEquipamiento* );
 bool asignar_item(List *lista, TipoEquipamiento* );
 bool eliminar_item(List *lista, TipoEquipamiento*);
 
-void mostrarStats(List *lista);
 
 //funciones para batallas
 void pantalla_batalla();
@@ -484,7 +483,7 @@ bool Submenu(List *listaJugadores){
     cursor.x = 106;
     cursor.y = 3;
     gotoxy(cursor.x,cursor.y); printf("#");
-    int selecc = 1;
+    int selecc = 0;
     while (true)
     {
         Sleep(100);
@@ -536,10 +535,10 @@ bool Submenu(List *listaJugadores){
         if((cursor.x==129)&&(cursor.y==4)) selecc = 4;
         
         gotoxy(104,0); printf("%i",selecc);
-        /*if(GetAsyncKeyState(0x0D) && selecc == 1)
+        if(GetAsyncKeyState(0x0D) && selecc == 1)
         {
-            mostrarStats(listaJugadores);
-        }*/
+            mostrar_perfiles(listaJugadores);
+        }
         if(GetAsyncKeyState(0x0D) && selecc == 3){
             submenu_Inventario(listaJugadores);
         }
@@ -1586,21 +1585,15 @@ void limpiarpantalla(){
 
 void mostrar_perfiles (List *lista){
    Jugador *usuario= firstList(lista);
-   printf("\n");
-   while(usuario != NULL){
-    printf("Nombre = %s\n",usuario ->datos->nombre);
-    printf("Clase = %s\n",usuario->clase);
-    printf("Estadisticas:\n");
-    printf("  -Ataque = %i",usuario ->datos->ATK);
-    printf("  -Defensa = %i",usuario ->datos->DEF);
-    printf("  -Puntos de vida = %i", usuario -> datos ->HPMAX);
-    printf("  -Nivel = %i\n",usuario->nivel);
-    printf("Opciones de batalla\n");
-    printf("%s\n%s\n%s\n%s\n",usuario ->ataques[0].nombre,usuario ->ataques[1].nombre,usuario ->ataques[2].nombre,usuario ->ataques[3].nombre);
-    usuario = nextList(lista);
-    printf("\n");
-    
-   }
+
+   gotoxy(106,10); printf("Nombre = %s\n",usuario ->datos->nombre);
+   gotoxy(106,11); printf("Clase = %s\n",usuario->clase);
+   gotoxy(106,12); printf("Estadisticas:\n");
+   gotoxy(106,13); printf("  -Ataque = %i",usuario ->datos->ATK);
+   gotoxy(106,14); printf("  -Defensa = %i",usuario ->datos->DEF);
+   gotoxy(106,15); printf("  -Puntos de vida = %i/%i",usuario->datos->HP, usuario -> datos->HPMAX);
+   gotoxy(106,16); printf("  -PH = %i",usuario->datos->PH);
+
    
 }
 void gotoxy (int x, int y){
@@ -2015,7 +2008,7 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
 
     pushBack(usuario->inventario,equipoBase);
-
+    usuario->datos->HP = usuario->datos->HPMAX;
 }
 
 void equipobaseM(Jugador *usuario)
@@ -2113,7 +2106,7 @@ void equipobaseM(Jugador *usuario)
     strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
 
     pushBack(usuario->inventario,equipoBase);
-
+    usuario->datos->HP = usuario->datos->HPMAX;
 }
 
 void equipobaseL(Jugador *usuario)
@@ -2208,7 +2201,7 @@ void equipobaseL(Jugador *usuario)
     strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
 
     pushBack(usuario->inventario,equipoBase);
-    
+    usuario->datos->HP = usuario->datos->HPMAX;
 }
 
 
@@ -2305,7 +2298,7 @@ void equipobaseC(Jugador *usuario)
     strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
 
     pushBack(usuario->inventario,equipoBase);
-
+    usuario->datos->HP = usuario->datos->HPMAX;
 }
 
 /*fin de chantarle equipamiento a las clases*/
