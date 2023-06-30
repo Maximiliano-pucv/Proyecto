@@ -87,7 +87,7 @@ HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
 
 int validarmov(sala * sandbox, int x, int y, Jugador *player);
-
+TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero);
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
 TipoEquipamiento *createEquipoBase();
@@ -267,7 +267,7 @@ int comandoBatalla(Opcion *comandos){
 int Atacar(Info * atacante, Info * atacado, bool defensa){
     int Dano;
     if(defensa == false){
-        Dano = (atacante->ATK)/2;
+        Dano = (atacante->ATK)-atacado->DEF;
         atacado ->HP -= Dano;
     }else{
         Dano = (int)log((atacante->ATK)/2);
@@ -313,6 +313,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
         if(GetAsyncKeyState(0x27)){
             item = nextList(inventario);
             if(item != NULL){
+                gotoxy(1,42); printf("                                           ");
                 gotoxy(5,43); printf("->                                                  ");
                 gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
@@ -323,6 +324,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
         if(GetAsyncKeyState(0x25)){
             item = prevList(inventario);
             if(item != NULL){
+                gotoxy(1,42); printf("                                           ");
                 gotoxy(5,43); printf("->                                                  ");
                 gotoxy(0,44); printf("|                                                                 |");
                 gotoxy(5,43); printf("->%s", item->stats->nombre);
@@ -331,6 +333,7 @@ bool usarobjetoenbatalla(Jugador *jugador){
             
         }
         if(GetAsyncKeyState(0x1B)){
+            
             for(int i=41; i<=46;i++){
                 gotoxy(0,i); printf("                                                                   ");
             }
@@ -338,10 +341,26 @@ bool usarobjetoenbatalla(Jugador *jugador){
         }
 
         if(GetAsyncKeyState(0x0D)){
-            for(int i=41; i<=46;i++){
-                gotoxy(0,i); printf("                                                                   ");
-            }
-            return false;
+            if((strcmp(item->tipo,"Consumible")!=0)){
+                printf("\033[0;31m");
+                gotoxy(1,42); printf("este objeto no se puede consumir en batalla");
+                
+                printf("\033[0;0m");
+            } else {
+                if((strcmp(item->tipo,"Arma")!=0)){
+                    if((jugador->datos->HP)+(item->stats->HP)>jugador->datos->HPMAX) jugador->datos->HP = jugador->datos->HPMAX;
+                    else jugador->datos->HP+= item->stats->HP;
+                    jugador->datos->ATK += item->stats->ATK;
+                    jugador->datos->DEF += item->stats->DEF;
+                    popCurrent(inventario);
+                    for(int i=41; i<=46;i++){
+                        gotoxy(0,i); printf("                                                                   ");
+                    }
+                    return false;
+                }
+                
+            } 
+            
         }
 
     }
@@ -413,6 +432,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
         Enemigo ->HP = Enemigo ->HPMAX;
         gotoxy(105,33); printf("VICTORIA");
         Sleep(500);
+        jugador->PH += Enemigo->PH;
         batalla_final_limpiar();
         return true;
     } 
@@ -531,7 +551,7 @@ bool Submenu(List *listaJugadores){
 
 void mostrarStats(List *lista)
 {
-    /*Jugador *aux = firstList(lista);
+    /*Jugador aux = firstList(lista);
     gotoxy(104, 12); printf("-------------------------------------");
     gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
     gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
@@ -1024,14 +1044,26 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
     return 1;
 }
 
+TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero){
+    char *cadena = malloc(sizeof(char)*4);
+    sprintf(cadena,"%i",numero);
+    Pair *dato = searchMap(Mapaitems,cadena);
+    if(dato != NULL){
+        return dato ->value;
+    }
+}
+
 //△
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
-    HashMap *Mpapaitems = generaritems();
+    HashMap *Mapaitems = generaritems();
+    
     while(true)
     {
+        
         if(strcmp(estado,"dead") == 0)
         {
+            limpiarpantalla();
             return;
         }
         Sleep(100);
@@ -1045,7 +1077,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1065,7 +1097,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1085,7 +1117,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1215,7 +1247,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 10, 90, 20, '|');
         rellenarmapa(sandbox, 10, 94, 20, '|');
         rellenarmapa(sandbox, 0, 82, 8, '|');
-        
+
 
 
         //PAREDES HORIZONTALES
@@ -1243,9 +1275,16 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 10, 90, 10, '-');
         rellenarmapa(sandbox, 32, 82, 18, '-');
         rellenarmapa(sandbox, 27, 5, 4, '-');
+
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
-        gotoxy(1,21); //printf("-------");
+        //Entidades
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,32,71,0,'@');
+        rellenarmapa(sandbox,29,72,0,'@');
+        rellenarmapa(sandbox,25,71,0,'@');
+        rellenarmapa(sandbox,20,72,0,'@');
     }
     else if(variable == 1) //"FALTA TERMINAR MAPA"
     {
@@ -1297,6 +1336,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 19, 95, 5, '-');
         rellenarmapa(sandbox, 25, 95, 5, '-');
 
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
 
@@ -1335,6 +1375,8 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 27, 15, 35, '-');
         rellenarmapa(sandbox, 30, 50, 38, '-');
         rellenarmapa(sandbox, 25, 15, 35, '-');
+
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
         gotoxy(20,8); //printf("---");
@@ -1376,7 +1418,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 32, 43, 3, '-');
         rellenarmapa(sandbox, 35, 40, 23, '-');
         
-
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
         
 
@@ -1434,6 +1476,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 10,60, 10, '-');
         rellenarmapa(sandbox, 20,45, 10, '-');
 
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
 
@@ -1487,7 +1530,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 34,73,17,'-');
         rellenarmapa(sandbox, 38,70,20,'-');
 
-
+        printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
         
         gotoxy(51,25); //printf("B");
@@ -1703,6 +1746,7 @@ HashMap* generaritems(){
         }
       }  
     }
+    equipo->equipado = false;
     char *ubicacion = malloc(sizeof(char)*3);
     sprintf(ubicacion,"%i",cant);
     insertMap(mapaaux, ubicacion, equipo);
@@ -1848,6 +1892,7 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
     strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    equipoBase->stats->ATK = 1;
     equipoBase->stats->HPMAX = 5;
     equipoBase->stats->DEF = 2;
     strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
@@ -1863,8 +1908,9 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
     strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
+    equipoBase->stats->ATK = 3;
+    equipoBase->stats->HPMAX = 7;
+    equipoBase->stats->DEF = 3;
     strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
     equipoBase->equipado = true;
 
@@ -1879,6 +1925,7 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
     strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    equipoBase->stats->ATK = 2;
     equipoBase->stats->HPMAX = 5;
     equipoBase->stats->DEF = 2;
     strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
@@ -1894,6 +1941,7 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
     strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    equipoBase->stats->ATK = 0;
     equipoBase->stats->HPMAX = 5;
     equipoBase->stats->DEF = 2;
     strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
@@ -1910,6 +1958,8 @@ void equipobaseE(Jugador *usuario)
     strcpy(equipoBase->tipo,"Arma");
     strcpy(equipoBase->stats->nombre,"Espada larga");
     equipoBase->stats->ATK = 5;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->DEF = 0;
     strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
     equipoBase->equipado = true;
 
@@ -1917,6 +1967,18 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
     
+    equipoBase = createEquipoBase();
+
+    strcpy(equipoBase->tipo,"Consumible");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Pocion de curacion");
+    equipoBase->stats->ATK = 0;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->HP = 5;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
+
+    pushBack(usuario->inventario,equipoBase);
 
 }
 
@@ -1926,10 +1988,11 @@ void equipobaseM(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
+    strcpy(equipoBase->stats->nombre,"Sombrero de mago");
+    equipoBase->stats->ATK = 3;
+    equipoBase->stats->HPMAX = 2;
     equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->stats->descripcion,"Un sombrero simple");
     equipoBase->equipado = true;
 
 
@@ -1941,10 +2004,11 @@ void equipobaseM(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
+    strcpy(equipoBase->stats->nombre,"Tunica de mago");
+    equipoBase->stats->ATK = 5;
     equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Una ropa comun entre los magos");
     equipoBase->equipado = true;
 
 
@@ -1956,10 +2020,11 @@ void equipobaseM(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->stats->nombre,"Pantalones de mago");
+    equipoBase->stats->ATK = 4;
+    equipoBase->stats->HPMAX = 2;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, pura vestimenta");
     equipoBase->equipado = true;
 
 
@@ -1971,9 +2036,10 @@ void equipobaseM(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->nombre,"Zapatos de mago");
+    equipoBase->stats->ATK = 4;
+    equipoBase->stats->HPMAX = 2;
+    equipoBase->stats->DEF = 0;
     strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
     equipoBase->equipado = true;
 
@@ -1985,15 +2051,30 @@ void equipobaseM(Jugador *usuario)
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Varita magica");
+    equipoBase->stats->ATK = 10;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Una simple varita");
     equipoBase->equipado = true;
 
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
 
+    equipoBase = createEquipoBase();
+
+    strcpy(equipoBase->tipo,"Consumible");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Pocion de curacion");
+    equipoBase->stats->ATK = 0;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->HP = 5;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
+
+    pushBack(usuario->inventario,equipoBase);
 
 }
 
@@ -2003,10 +2084,11 @@ void equipobaseL(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->stats->nombre,"Capa de cuero");
+    equipoBase->stats->ATK = 3;
+    equipoBase->stats->HPMAX = 4;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Confundico como un bandido");
     equipoBase->equipado = true;
 
 
@@ -2018,10 +2100,11 @@ void equipobaseL(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
+    strcpy(equipoBase->stats->nombre,"Armadura de cuero");
+    equipoBase->stats->ATK = 5;
+    equipoBase->stats->HPMAX = 8;
     equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    strcpy(equipoBase->stats->descripcion,"Ligero pero protege");
     equipoBase->equipado = true;
 
 
@@ -2032,10 +2115,11 @@ void equipobaseL(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
+    strcpy(equipoBase->stats->nombre,"Pantalones de lino");
+    equipoBase->stats->ATK = 2;
     equipoBase->stats->HPMAX = 5;
     equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon de clase baja");
     equipoBase->equipado = true;
 
 
@@ -2046,10 +2130,11 @@ void equipobaseL(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    strcpy(equipoBase->stats->nombre,"Botas de cuero");
+    equipoBase->stats->ATK = 4;
+    equipoBase->stats->HPMAX = 3;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Unas Botas ruidosas");
     equipoBase->equipado = true;
 
 
@@ -2059,14 +2144,30 @@ void equipobaseL(Jugador *usuario)
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Daga");
+    equipoBase->stats->ATK = 7;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Por lo menos corta");
     equipoBase->equipado = true;
 
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+
+    equipoBase = createEquipoBase();
+
+    strcpy(equipoBase->tipo,"Consumible");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Pocion de curacion");
+    equipoBase->stats->ATK = 0;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->HP = 5;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
+
+    pushBack(usuario->inventario,equipoBase);
     
 }
 
@@ -2078,10 +2179,11 @@ void equipobaseC(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Casco");
-    strcpy(equipoBase->stats->nombre,"Casco de guerrero");
+    strcpy(equipoBase->stats->nombre,"Gorro de chef");
+    equipoBase->stats->ATK = 3;
     equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Un gorro basico");
     equipoBase->equipado = true;
 
 
@@ -2092,10 +2194,11 @@ void equipobaseC(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Pecho");
-    strcpy(equipoBase->stats->nombre,"Armadura de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Una armadura basica, lo sufucientemente robusta para defenderte");
+    strcpy(equipoBase->stats->nombre,"Uniforme de chef");
+    equipoBase->stats->ATK = 4;
+    equipoBase->stats->HPMAX = 10;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Un uniforme sucio");
     equipoBase->equipado = true;
 
 
@@ -2106,10 +2209,11 @@ void equipobaseC(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Piernas");
-    strcpy(equipoBase->stats->nombre,"Pantalones de guerrero");
-    equipoBase->stats->HPMAX = 5;
-    equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Un Pantalon basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->stats->nombre,"Pantalones de chef");
+    equipoBase->stats->ATK = 3;
+    equipoBase->stats->HPMAX = 8;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Un Pantalon sucio");
     equipoBase->equipado = true;
 
 
@@ -2121,10 +2225,11 @@ void equipobaseC(Jugador *usuario)
 
     strcpy(equipoBase->tipo,"Armadura");
     strcpy(equipoBase->tipoArmadura,"Botas");
-    strcpy(equipoBase->stats->nombre,"Botas de guerrero");
+    strcpy(equipoBase->stats->nombre,"Zapatos de chef");
+    equipoBase->stats->ATK = 3;
     equipoBase->stats->HPMAX = 5;
     equipoBase->stats->DEF = 2;
-    strcpy(equipoBase->stats->descripcion,"Unas Botas basicas, lo sufucientemente robustas para defenderte");
+    strcpy(equipoBase->stats->descripcion,"Un par de zapatos");
     equipoBase->equipado = true;
 
 
@@ -2135,15 +2240,30 @@ void equipobaseC(Jugador *usuario)
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Arma");
-    strcpy(equipoBase->stats->nombre,"Espada larga");
-    equipoBase->stats->ATK = 5;
-    strcpy(equipoBase->stats->descripcion,"Un casco basico, lo sufucientemente robusto para defenderte");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Sarten sucio");
+    equipoBase->stats->ATK = 9;
+    equipoBase->stats->HPMAX = 2;
+    equipoBase->stats->DEF = 2;
+    strcpy(equipoBase->stats->descripcion,"Un sarten muy usado");
     equipoBase->equipado = true;
 
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
 
+    equipoBase = createEquipoBase();
+
+    strcpy(equipoBase->tipo,"Consumible");
+    strcpy(equipoBase->tipoArmadura,"None");
+    strcpy(equipoBase->stats->nombre,"Pocion de curacion");
+    equipoBase->stats->ATK = 0;
+    equipoBase->stats->HPMAX = 0;
+    equipoBase->stats->HP = 5;
+    equipoBase->stats->DEF = 0;
+    strcpy(equipoBase->stats->descripcion,"Amargo pero te cura");
+
+    pushBack(usuario->inventario,equipoBase);
 
 }
 
