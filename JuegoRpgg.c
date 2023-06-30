@@ -842,39 +842,39 @@ void mostrar(List *lista, int marca){
 void usar_asignar(List *lista, int marca){
     List *inventario = ((Jugador *)firstList(lista))->inventario;
     TipoEquipamiento *item = firstList(inventario);
-    bool hecho = false;
     
-    if(marca == 1){
-        if(usar_item(inventario, item))
+   // while(inventario){
+        if(usar_item(inventario, item) && marca == 1){
             gotoxy(136, 39); printf("Accion realizada");
-    }
-    else{
-        if(asignar_item(lista, item))
-            gotoxy(136, 39); printf("Accion realizada");
-    }
-
+        }
+        else{
+            if(asignar_item(lista, item) && marca == 2)
+                gotoxy(136, 39); printf("Accion realizada");
+        }  
+    //}
 }
 
 
 bool usar_item(List *lista, TipoEquipamiento *item){
     bool hecho = false;
-    item = firstList(lista);
-
     coordenadas pos;
     pos.x = 136;
     pos.y = 29;
    
 
-   while(item != NULL){
+    while(item != NULL){
         if(strcmp(item->tipo, "Consumible") == 0){
-            //gotoxy(pos.x, pos.y); printf("SI");
             hecho = true;
         }
-        else{
-            gotoxy(pos.x, pos.y); printf(":(");
-        }
         item = nextList(lista);
-   }
+    }
+
+    if(hecho == true){
+        gotoxy(136, 29); printf("SI");
+    }
+    else{
+        gotoxy(0,0); printf("No");
+    }
 
     return hecho;
 
@@ -882,14 +882,7 @@ bool usar_item(List *lista, TipoEquipamiento *item){
 
 bool asignar_item(List *lista, TipoEquipamiento *item){
     List *lista_items = ((Jugador *)firstList(lista))->inventario;
-
-    /*Info *nuevo = (Info *)malloc(sizeof(Info *));
-    char aux[21];
-
-    gotoxy(136, 38); printf("Ingrese nombre del item: ");
-    gotoxy(136, 39); getchar();
-    scanf("%s", aux);
-    strcpy(nuevo->nombre, aux);*/
+    Jugador *mapa;
     
     bool hecho = false;
     coordenadas pos;
@@ -909,31 +902,6 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
             pos.y++;
             gotoxy(pos.x, pos.y); printf(">");
         }
-
-        /*if(pos.y == 29){
-            opcion = 1;
-        }
-        else if(pos.y == 30){
-            opcion = 2;
-        }
-        else if(pos.y == 31){
-            opcion = 3;
-        }
-
-        else if(pos.y == 32){
-            opcion = 4;
-        }
-        else{
-            opcion = 5;
-        }
-
-        if(strcmp(item->stats->nombre, nuevo->nombre) == 0){
-            pushBack(lista_items, nuevo);
-            hecho = true;
-        }
-        else{
-            hecho = false;
-        }*/
 
     }
     return hecho;
