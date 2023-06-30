@@ -595,7 +595,7 @@ void submenu_Inventario(List *lista){
             opcion = 1;
         }
 
-        if(GetAsyncKeyState(0x28) && mov.y <= 19){
+        if(GetAsyncKeyState(0x28) && mov.y <= 20){
             if(mov.y == 20){
                 tipo = 5;
             }
@@ -797,8 +797,8 @@ void mostrar(List *lista, int marca){
 
     printf("\033[0;31m");
     gotoxy(134, 26); printf("-----------------------------------------");
-    gotoxy(134, 37); printf("-----------------------------------------");
-    for(int i = 27; i < 37; i++){
+    gotoxy(134, 41); printf("-----------------------------------------");
+    for(int i = 27; i < 41; i++){
         gotoxy(134, i); printf("|                                       |");
     }  
 
@@ -817,21 +817,21 @@ void mostrar(List *lista, int marca){
 
         if(marca == 1){
             if(usar_item(inventario, item))
-                gotoxy(136, 36); printf("Accion realizada");
+                gotoxy(136, 39); printf("Accion realizada");
         }
         else if(marca == 2){
             if(asignar_item(lista, item))
-                gotoxy(136, 36); printf("Accion realizada");
+                gotoxy(136, 39); printf("Accion realizada");
 
         }
         else{
             if(eliminar_item(inventario, item))
-                gotoxy(136, 36); printf("Accion realizada");
+                gotoxy(136, 39); printf("Accion realizada");
         }
 
         Sleep(100);
         if(GetAsyncKeyState(0x1B)){
-            for(int i = 26; i < 38; i++){
+            for(int i = 26; i < 42; i++){
                 gotoxy(134, i); printf("                                         "); 
             }
             return;
@@ -858,7 +858,7 @@ bool usar_item(List *lista, TipoEquipamiento *item){
             gotoxy(pos.x, pos.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+        if(GetAsyncKeyState(0x28) && pos.y <= 37){
             gotoxy(pos.x, pos.y); printf(" ");
             pos.y++;
             gotoxy(pos.x, pos.y); printf(">");
@@ -970,9 +970,9 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
             gotoxy(pos.x, pos.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x28) && pos.y <= 34){
+        if(GetAsyncKeyState(0x28) && pos.y <= 36){
             if(nextList(lista) == NULL)
-                opcion = 5;
+                opcion = 6;
             else{
                 opcion++;
             }
@@ -1008,6 +1008,12 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
                     }
                     break;
                 case 5: 
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
+                    break;
+                case 6: 
                     if(lista != NULL){
                         popCurrent(lista);
                         hecho = true;
