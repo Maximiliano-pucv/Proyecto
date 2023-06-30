@@ -515,10 +515,10 @@ bool Submenu(List *listaJugadores){
         if((cursor.x==129)&&(cursor.y==4)) selecc = 4;
         
         gotoxy(104,0); printf("%i",selecc);
-        if(GetAsyncKeyState(0x0D) && selecc == 1)
+        /*if(GetAsyncKeyState(0x0D) && selecc == 1)
         {
             mostrarStats(listaJugadores);
-        }
+        }*/
         if(GetAsyncKeyState(0x0D) && selecc == 3){
             submenu_Inventario(listaJugadores);
         }
@@ -995,7 +995,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 void generarmapa(sala *sandbox)
 {
     
-    int variable = 1;
+    int variable = rand()%6;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
