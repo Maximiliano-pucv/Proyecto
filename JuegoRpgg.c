@@ -1952,7 +1952,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1969,6 +1969,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1985,7 +1986,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2000,7 +2001,8 @@ void equipobaseE(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
-    
+    aplicarItem(usuario,equipoBase);
+
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Consumible");
@@ -2033,6 +2035,7 @@ void equipobaseM(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2048,7 +2051,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2064,7 +2067,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2080,7 +2083,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2096,6 +2099,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2128,7 +2132,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2144,7 +2148,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2159,7 +2163,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2174,6 +2178,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2189,6 +2194,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2224,6 +2230,7 @@ void equipobaseC(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2238,7 +2245,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2253,7 +2260,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2269,7 +2276,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2285,7 +2292,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Consumible");
