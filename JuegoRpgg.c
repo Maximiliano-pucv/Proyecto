@@ -341,21 +341,24 @@ bool usarobjetoenbatalla(Jugador *jugador){
         }
 
         if(GetAsyncKeyState(0x0D)){
-            if((strcmp(item->tipoArmadura,"Consumible")!=0)){
+            if((strcmp(item->tipo,"Consumible")!=0)){
                 printf("\033[0;31m");
                 gotoxy(1,42); printf("este objeto no se puede consumir en batalla");
                 
                 printf("\033[0;0m");
             } else {
-                if((jugador->datos->HP)+(item->stats->HP)>jugador->datos->HPMAX) jugador->datos->HP = jugador->datos->HPMAX;
-                else jugador->datos->HP+= item->stats->HP;
-                jugador->datos->ATK += item->stats->ATK;
-                jugador->datos->DEF += item->stats->DEF;
-                popCurrent(inventario);
-                for(int i=41; i<=46;i++){
-                    gotoxy(0,i); printf("                                                                   ");
+                if((strcmp(item->tipo,"Arma")!=0)){
+                    if((jugador->datos->HP)+(item->stats->HP)>jugador->datos->HPMAX) jugador->datos->HP = jugador->datos->HPMAX;
+                    else jugador->datos->HP+= item->stats->HP;
+                    jugador->datos->ATK += item->stats->ATK;
+                    jugador->datos->DEF += item->stats->DEF;
+                    popCurrent(inventario);
+                    for(int i=41; i<=46;i++){
+                        gotoxy(0,i); printf("                                                                   ");
+                    }
+                    return false;
                 }
-                return false;
+                
             } 
             
         }
