@@ -267,10 +267,10 @@ int comandoBatalla(Opcion *comandos){
 int Atacar(Info * atacante, Info * atacado, bool defensa){
     int Dano;
     if(defensa == false){
-        Dano = (atacante->ATK)-atacado->DEF;
+        Dano = (int)abs((atacante->ATK)-atacado->DEF);
         atacado ->HP -= Dano;
     }else{
-        Dano = (int)log((atacante->ATK)/2);
+        Dano = (int)abs(log((atacante->ATK)/2));
         atacado ->HP -= Dano;
     }
     
