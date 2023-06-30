@@ -87,7 +87,7 @@ HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
 
 int validarmov(sala * sandbox, int x, int y, Jugador *player);
-
+TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero);
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
 TipoEquipamiento *createEquipoBase();
@@ -861,12 +861,23 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
     return 1;
 }
 
+TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero){
+    char *cadena = malloc(sizeof(char)*4);
+    sprintf(cadena,"%i",numero);
+    Pair *dato = searchMap(Mapaitems,cadena);
+    if(dato != NULL){
+        return dato ->value;
+    }
+}
+
 //△
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
-    HashMap *Mpapaitems = generaritems();
+    HashMap *Mapaitems = generaritems();
+    
     while(true)
     {
+        
         if(strcmp(estado,"dead") == 0)
         {
             return;
@@ -1540,6 +1551,7 @@ HashMap* generaritems(){
         }
       }  
     }
+    equipo->equipado = false;
     char *ubicacion = malloc(sizeof(char)*3);
     sprintf(ubicacion,"%i",cant);
     insertMap(mapaaux, ubicacion, equipo);
