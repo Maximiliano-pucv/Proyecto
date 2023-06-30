@@ -83,6 +83,7 @@ void generarmapa();
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
 
 HashMap* almacenarmounstruos();
+HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
 
 int validarmov(sala * sandbox, int x, int y, Jugador *player);
@@ -863,7 +864,7 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
 //△
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
-    
+    HashMap *Mpapaitems = generaritems();
     while(true)
     {
         if(strcmp(estado,"dead") == 0)
@@ -1482,6 +1483,69 @@ void mainmenu(){
        return ret;
     }
     return NULL;
+}
+
+HashMap* generaritems(){
+  HashMap *mapaaux = createMap(41);
+  FILE *fp = fopen ("Items.txt", "r");
+  if(fp == NULL){
+    printf("el archivo no existe\n");
+    return NULL; 
+  } 
+  char linea[1024];
+  int i;
+  int cant =0;
+  fgets (linea, 1023, fp);
+  //nombre,tipo,tipoarmor,ataque,defensa,hp,hpmax,Ph,descripcion
+  while (fgets (linea, 1023, fp) != NULL) { // Se lee la linea
+    TipoEquipamiento *equipo = (TipoEquipamiento*)malloc(sizeof(TipoEquipamiento));
+    equipo->stats = (Info*)malloc(sizeof(Info));
+    for(i = 0;i < 13;i++){
+      char *aux = get_csv_field(linea, i); // Se obtiene el nombre
+      
+      if(aux != NULL){
+        if(i == 0)
+        {
+          strcpy(equipo->stats->nombre, aux);
+        }
+        if(i == 1)
+        {
+            equipo->tipo=malloc(sizeof(char)*(strlen(aux)+1));
+          strcpy(equipo->tipo,aux);
+        }
+        if(i == 2)
+        {
+            equipo->tipoArmadura=malloc(sizeof(char)*(strlen(aux)+1));
+          strcpy(equipo->tipoArmadura,aux);
+        }
+        if(i == 3)
+        {
+          equipo->stats ->ATK = atoi(aux);
+        }
+        if(i == 4){
+          equipo->stats ->DEF = atoi(aux);
+        }
+        if(i == 5){
+          equipo->stats ->HP = atoi(aux);
+        }
+        if(i == 6){
+          equipo->stats ->HPMAX = atoi(aux);
+        }
+        if(i == 7){
+          equipo->stats ->PH =atoi(aux);
+        }
+        if(i==8){
+          equipo->stats ->descripcion = malloc(sizeof(char)*(strlen(aux)+1));
+          strcpy(equipo->stats ->descripcion, aux );
+        }
+      }  
+    }
+    char *ubicacion = malloc(sizeof(char)*3);
+    sprintf(ubicacion,"%i",cant);
+    insertMap(mapaaux, ubicacion, equipo);
+    cant++;
+  }
+  return mapaaux; 
 }
 
 HashMap* almacenarmounstruos(){
