@@ -82,6 +82,8 @@ void limpiarpantalla();
 void generarmapa();
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
 
+void aplicarItem(Jugador *usuario,TipoEquipamiento *equipo);
+
 HashMap* almacenarmounstruos();
 HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
@@ -135,6 +137,7 @@ int main(){
     do{
         if((strcmp(estado, "dead") == 0)||(strcmp(estado,"vivo")==0)){
             pantallainesesariadecarga();
+            strcpy(estado, "vivo");
             mainmenu();
         }
         
@@ -548,13 +551,16 @@ bool Submenu(List *listaJugadores){
 
 void mostrarStats(List *lista)
 {
-    /*Jugador aux = firstList(lista);
-    gotoxy(104, 12); printf("-------------------------------------");
-    gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
-    gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
-    gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
-    gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
-    gotoxy(104,18);printf("-------------------------------------");*/
+    
+    /*while(true)
+    {
+        gotoxy(104, 12); printf("-------------------------------------");
+        gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
+        gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
+        gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
+        gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
+        gotoxy(104,20);printf("-------------------------------------");
+    }*/
 
 }
 
@@ -1057,6 +1063,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
 
@@ -1076,6 +1088,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 pantalla_batalla();
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
+                }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
             else continue;
@@ -1097,6 +1115,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
         }
@@ -1116,6 +1140,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
         }
@@ -1126,11 +1156,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 return;
             }
         }
+        gotoxy(0,FILAS); printf("ESC--Menu de pausa");
 
-        if(GetAsyncKeyState(0x09)){
+        /*if(GetAsyncKeyState(0x09)){
             
             developerfunctions(listaJugadores,Mapamonster);
-        }
+        }*/
     }
 }
 
@@ -1331,13 +1362,15 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 18, 66, 2, '|');    
         rellenarmapa(sandbox, 20, 78, 5, '|');
         rellenarmapa(sandbox, 27, 50, 3, '|');    
-        rellenarmapa(sandbox, 20, 85, 5, '|');
-        rellenarmapa(sandbox, 20, 88, 10, '|');
+        rellenarmapa(sandbox, 19, 85, 6, '|');
+        rellenarmapa(sandbox, 22, 88, 8, '|');
+        rellenarmapa(sandbox, 22, 95, 6, '|');
 
         //PAREDES HORIZONTALES F3
 
-        rellenarmapa(sandbox, 15, 15, 15, '-');
+        rellenarmapa(sandbox, 15, 0, 30, '-');
         rellenarmapa(sandbox, 18, 15, 20, '-');
+        rellenarmapa(sandbox, 18, 0, 13, '-');
         rellenarmapa(sandbox, 5, 30, 50, '-');
         rellenarmapa(sandbox, 9, 35, 40, '-');
         rellenarmapa(sandbox, 15, 50, 25, '-');
@@ -1348,6 +1381,9 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 27, 15, 35, '-');
         rellenarmapa(sandbox, 30, 50, 38, '-');
         rellenarmapa(sandbox, 25, 15, 35, '-');
+        rellenarmapa(sandbox, 18, 85, 15, '-');
+        rellenarmapa(sandbox, 22, 88, 7, '-');
+        rellenarmapa(sandbox, 28, 95, 5, '-');
 
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1372,6 +1408,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 55, 7, '|');
         rellenarmapa(sandbox, 8, 60, 4, '|');
         rellenarmapa(sandbox, 12, 63, 23, '|');
+        rellenarmapa(sandbox, 8, 80, 20, '|');
 
 
 
@@ -1379,17 +1416,18 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 10, 13, '-');
         rellenarmapa(sandbox, 8, 23, 20, '-');
         rellenarmapa(sandbox, 12, 23, 17, '-');
-        rellenarmapa(sandbox, 5, 55, 30, '-');
+        rellenarmapa(sandbox, 5, 55, 45, '-');
         rellenarmapa(sandbox, 8, 60, 20, '-');
         rellenarmapa(sandbox, 12, 46, 9, '-');
         rellenarmapa(sandbox, 12, 60, 3, '-');
         rellenarmapa(sandbox, 20, 10, 10, '-');
         rellenarmapa(sandbox, 24, 3, 13, '-');
-        rellenarmapa(sandbox, 28, 3, 10, '-');
+        rellenarmapa(sandbox, 28, 0, 13, '-');
         rellenarmapa(sandbox, 32, 16, 4, '-');
         rellenarmapa(sandbox, 35, 13, 10, '-');
         rellenarmapa(sandbox, 32, 43, 3, '-');
         rellenarmapa(sandbox, 35, 40, 23, '-');
+        rellenarmapa(sandbox, 28, 80, 20, '-');
         
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1412,15 +1450,16 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 5, 4, '|');    
         rellenarmapa(sandbox, 5, 20, 9, '|');  
 
-        rellenarmapa(sandbox, 1,50,14,'|');
+        rellenarmapa(sandbox, 2,50,13,'|');
         rellenarmapa(sandbox, 15,55, 5, '|');
         rellenarmapa(sandbox, 25,55, 10, '|');
         rellenarmapa(sandbox, 28,65, 7, '|');
         rellenarmapa(sandbox, 18,68, 5, '|');
         rellenarmapa(sandbox, 1, 55, 2, '|');
         rellenarmapa(sandbox, 3,60, 7, '|');
-        rellenarmapa(sandbox, 1, 70, 9, '|');    
-        rellenarmapa(sandbox, 1, 75, 17, '|'); 
+        rellenarmapa(sandbox, 1, 70, 8, '|');    
+        rellenarmapa(sandbox, 0, 75, 19, '|'); 
+        rellenarmapa(sandbox, 20, 20, 5, '|');
 
 
 
@@ -1443,9 +1482,9 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 20,20,35,'-');
         rellenarmapa(sandbox, 25,20,35,'-');
         rellenarmapa(sandbox, 34,55,10,'-');
-        rellenarmapa(sandbox, 28,65,10,'-');
+        rellenarmapa(sandbox, 28,65,30,'-');
         rellenarmapa(sandbox, 23, 68, 7, '-');    
-        rellenarmapa(sandbox, 18, 68, 12, '-');  
+        rellenarmapa(sandbox, 18, 68, 31, '-');  
         rellenarmapa(sandbox, 10,60, 10, '-');
         rellenarmapa(sandbox, 20,45, 10, '-');
 
@@ -1471,15 +1510,15 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 0,25, 15, '|');
         rellenarmapa(sandbox, 22,30, 8, '|');
         rellenarmapa(sandbox, 22,60, 8, '|');
-        rellenarmapa(sandbox, 10,40, 10, '|');
-        rellenarmapa(sandbox, 10,45, 10, '|');
+        rellenarmapa(sandbox, 0,40, 20, '|');
+        rellenarmapa(sandbox, 0,45, 20, '|');
         rellenarmapa(sandbox, 34,70, 4, '|');
         rellenarmapa(sandbox, 5,70, 15, '|');
         rellenarmapa(sandbox, 10,73,24, '|');
         rellenarmapa(sandbox, 5,90, 5, '|');
-    
+       
 
-    //PAREDES HORIZONTALES
+       //PAREDES HORIZONTALES
 
         rellenarmapa(sandbox, 12, 1, 4, '-');    
         rellenarmapa(sandbox, 5, 5, 13, '-'); 
@@ -1496,12 +1535,12 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 30,30, 30, '-');
         rellenarmapa(sandbox, 34,5, 65, '-');
 
-        rellenarmapa(sandbox, 20, 45, 25, '-');    
+         rellenarmapa(sandbox, 20, 45, 25, '-');    
         rellenarmapa(sandbox, 5, 70, 20, '-'); 
 
         rellenarmapa(sandbox, 10,73,17,'-');
-        rellenarmapa(sandbox, 34,73,17,'-');
-        rellenarmapa(sandbox, 38,70,20,'-');
+        rellenarmapa(sandbox, 34,73,24,'-');
+        rellenarmapa(sandbox, 38,70,30,'-');
 
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1875,6 +1914,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
 
@@ -2241,6 +2281,19 @@ void equipobaseC(Jugador *usuario)
 }
 
 /*fin de chantarle equipamiento a las clases*/
+
+//Apicar estadisticas de equipamiento
+void aplicarItem(Jugador *usuario,TipoEquipamiento *item)
+{
+    Info *aux = usuario->datos;
+    if(item->equipado == true)
+    {
+        aux->ATK += item->stats->ATK;
+        aux->DEF += item->stats->DEF;
+        aux->HPMAX += item->stats->HPMAX;
+    }
+}
+
 
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
