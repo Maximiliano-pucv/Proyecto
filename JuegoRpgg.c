@@ -345,13 +345,13 @@ bool usarobjetoenbatalla(Jugador *jugador){
         }
 
         if(GetAsyncKeyState(0x0D)){
-            if((strcmp(item->tipo,"Consumible")!=0)){
-                printf("\033[0;31m");
-                gotoxy(1,42); printf("este objeto no se puede consumir en batalla");
-                
-                printf("\033[0;0m");
-            } else {
-                if((strcmp(item->tipo,"Arma")!=0)){
+            if(item !=NULL){
+                if((strcmp(item->tipo,"Consumible")!=0)){
+                    printf("\033[0;31m");
+                    gotoxy(1,42); printf("este objeto no se puede consumir en batalla");
+                    
+                    printf("\033[0;0m");
+                } else {
                     if((jugador->datos->HP)+(item->stats->HP)>jugador->datos->HPMAX) jugador->datos->HP = jugador->datos->HPMAX;
                     else jugador->datos->HP+= item->stats->HP;
                     jugador->datos->ATK += item->stats->ATK;
@@ -361,9 +361,9 @@ bool usarobjetoenbatalla(Jugador *jugador){
                         gotoxy(0,i); printf("                                                                   ");
                     }
                     return false;
-                }
-                
-            } 
+                } 
+            }
+            
             
         }
 
@@ -822,19 +822,29 @@ void mostrar(List *lista, int marca){
         gotoxy(136, j); printf("  %i. %s", opcion, item->stats->nombre);
         item = nextList(inventario);
         j++;
-    }     
-
+    }
+    /*while (true)
+    {
+        if(eliminar_item(inventario, item) && marca == 3){
+        gotoxy(136, 39); printf("Accion realizada");
+        Sleep(100);
+        for(int i = 26; i < 42; i++){
+            gotoxy(134, i); printf("                                         "); 
+        }   
+        return;
+    }*/
+    
     while(true){
 
-        if(eliminar_item(inventario, item) && marca == 3)
+       if(eliminar_item(inventario, item) && marca == 3)
             gotoxy(136, 39); printf("Accion realizada");
-        Sleep(100);
+            Sleep(100);
         if(GetAsyncKeyState(0x1B)){
             for(int i = 26; i < 42; i++){
                 gotoxy(134, i); printf("                                         "); 
             }   
             return;
-        } 
+        }
     }
 
 }
@@ -947,13 +957,37 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
     coordenadas pos;
     pos.x = 136;
     pos.y = 31;
-
+    TipoEquipamiento *objeto = firstList(lista);
     int opcion = 1;
     gotoxy(136, 29); printf("Seleccione 'esc' y 'z' para eliminar");
 
     while(true){
         Sleep(100);
         if(GetAsyncKeyState(0x26) && pos.y >= 32){
+           objeto = prevList(lista);
+            if(objeto != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y--;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
+        }
+        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+            objeto = nextList(lista);
+            if(objeto != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y++;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
+        }
+
+        if(GetAsyncKeyState(0x58)){
+            if(objeto != NULL){
+                popCurrent(lista);
+            }
+            hecho = true;
+            return hecho;
+        }
+        /*if(GetAsyncKeyState(0x26) && pos.y >= 32){
             if(prevList(lista) == NULL)
                 opcion = 1;
             else{
@@ -1017,7 +1051,7 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
                     break;
             }
             break;
-        }
+        }*/
 
     }
 
@@ -1179,10 +1213,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         }
         gotoxy(0,FILAS); printf("ESC--Menu de pausa");
 
-        /*if(GetAsyncKeyState(0x09)){
+        if(GetAsyncKeyState(0x09)){
             
-            developerfunctions(listaJugadores,Mapamonster);
-        }*/
+            //developerfunctions(listaJugadores,Mapamonster);
+        }
     }
 }
 
