@@ -975,33 +975,6 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
         gotoxy(164, 35); getchar();
         scanf("%i", &opcion);*/
 
-         if(GetAsyncKeyState(0x1B)){
-            switch(opcion){
-                case 1: 
-                    popCurrent(lista);
-                    hecho = true;
-                    break;
-                case 2:
-                    popCurrent(lista);
-                    hecho = true;
-                    break;
-                case 3:
-                    popCurrent(lista);
-                    hecho = true;
-                    break;
-                case 4:
-                    popCurrent(lista);
-                    hecho = true;
-                    break;
-                case 5: 
-                    popCurrent(lista);
-                    hecho = true;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        }
     }
 
     return hecho;
