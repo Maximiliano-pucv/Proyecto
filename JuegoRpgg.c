@@ -82,6 +82,8 @@ void limpiarpantalla();
 void generarmapa();
 void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char caracter);
 
+void aplicarItem(Jugador *usuario,TipoEquipamiento *equipo);
+
 HashMap* almacenarmounstruos();
 HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
@@ -107,6 +109,7 @@ void mostrarInventario(List *lista);
 void submenu_opciones(List *lista, int);
 void mostrarDescrip(List *lista, int);
 void mostrar(List *lista, int);
+void usar_asignar(List *lista, int );
 bool usar_item(List *lista, TipoEquipamiento* );
 bool asignar_item(List *lista, TipoEquipamiento* );
 bool eliminar_item(List *lista, TipoEquipamiento*);
@@ -135,6 +138,7 @@ int main(){
     do{
         if((strcmp(estado, "dead") == 0)||(strcmp(estado,"vivo")==0)){
             pantallainesesariadecarga();
+            strcpy(estado, "vivo");
             mainmenu();
         }
         
@@ -551,13 +555,16 @@ bool Submenu(List *listaJugadores){
 
 void mostrarStats(List *lista)
 {
-    /*Jugador aux = firstList(lista);
-    gotoxy(104, 12); printf("-------------------------------------");
-    gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
-    gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
-    gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
-    gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
-    gotoxy(104,18);printf("-------------------------------------");*/
+    
+    /*while(true)
+    {
+        gotoxy(104, 12); printf("-------------------------------------");
+        gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
+        gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
+        gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
+        gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
+        gotoxy(104,20);printf("-------------------------------------");
+    }*/
 
 }
 
@@ -565,8 +572,8 @@ void mostrarStats(List *lista)
 void submenu_Inventario(List *lista){
     printf("\033[0;35m");
     gotoxy(104, 12); printf("-------------------------------------");
-    gotoxy(104, 22); printf("-------------------------------------");
-    for(int i = 13; i < 22; i++){
+    gotoxy(104, 24); printf("-------------------------------------");
+    for(int i = 13; i < 24; i++){
         gotoxy(104, i); printf("|                                   |");
     }  
     printf("\033[0;0m");
@@ -595,7 +602,7 @@ void submenu_Inventario(List *lista){
             opcion = 1;
         }
 
-        if(GetAsyncKeyState(0x28) && mov.y <= 19){
+        if(GetAsyncKeyState(0x28) && mov.y <= 20){
             if(mov.y == 20){
                 tipo = 5;
             }
@@ -614,8 +621,8 @@ void submenu_Inventario(List *lista){
 
         if(GetAsyncKeyState(0x5A)){
             gotoxy(104, 12); printf("                                     ");
-            gotoxy(104, 22); printf("                                     ");
-            for(int i = 13; i < 22; i++){
+            gotoxy(104, 24); printf("                                     ");
+            for(int i = 13; i < 24; i++){
                 gotoxy(104, i); printf("                                     ");
             }  
             return;
@@ -641,10 +648,10 @@ void mostrarInventario(List *lista){
 
 void submenu_opciones(List *lista, int tipo_item){
     printf("\033[0;34m");
-    gotoxy(144, 12); printf("-------------------------------------");
-    gotoxy(144, 20); printf("-------------------------------------");
-    for(int i = 13; i < 20; i++){
-        gotoxy(144, i); printf("|                                   |");
+    gotoxy(144, 12); printf("--------------------------------------------");
+    gotoxy(144, 21); printf("--------------------------------------------");
+    for(int i = 13; i < 21; i++){
+        gotoxy(144, i); printf("|                                          |");
     }  
     printf("\033[0;0m");
 
@@ -657,6 +664,8 @@ void submenu_opciones(List *lista, int tipo_item){
     gotoxy(146, 16); printf("  2. Assign");
     gotoxy(146, 17); printf("  3. Drop");
     gotoxy(146, 18); printf("  4. Description");
+    gotoxy(145, 20); printf("'Enter' para entrar y 'z' para devolverse");
+
 
     int opcion = 0;
     int marca = 0;
@@ -694,15 +703,19 @@ void submenu_opciones(List *lista, int tipo_item){
             marca = 3;
         }
 
-        if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && mov.y <= 17){
+        if(GetAsyncKeyState(0x0D) && mov.y == 17){
             mostrar(lista, marca);
         }
 
+        if(GetAsyncKeyState(0X0D) && mov.y == 15 || GetAsyncKeyState(0x0D) && mov.y == 16){
+            usar_asignar(lista, marca);
+        }
+
         if(GetAsyncKeyState(0x5A)){
-            gotoxy(144, 12); printf("                                     ");
-            gotoxy(144, 20); printf("                                     ");
-            for(int i = 13; i < 20; i++){
-                gotoxy(144, i); printf("                                     ");
+            gotoxy(144, 12); printf("                                            ");
+            gotoxy(144, 21); printf("                                            ");
+            for(int i = 13; i < 21; i++){
+                gotoxy(144, i); printf("                                             ");
             }  
             return;
         }
@@ -795,42 +808,49 @@ void mostrar(List *lista, int marca){
 
     printf("\033[0;31m");
     gotoxy(134, 26); printf("-----------------------------------------");
-    gotoxy(134, 37); printf("-----------------------------------------");
-    for(int i = 27; i < 37; i++){
+    gotoxy(134, 41); printf("-----------------------------------------");
+    for(int i = 27; i < 41; i++){
         gotoxy(134, i); printf("|                                       |");
     }  
 
     printf("\033[0;0m");
     gotoxy(142, 27); printf("Items");
-    int j = 29;
+
+    int j = 31;
     while(item != NULL){
         opcion++;
         gotoxy(136, j); printf("  %i. %s", opcion, item->stats->nombre);
         item = nextList(inventario);
         j++;
-    }
+    }     
 
     while(true){
 
-        if(marca == 1){
-            if(usar_item(inventario, item))
-                gotoxy(136, 38); printf("Accion realizada");
-        }
-        else if(marca == 2){
-            if(asignar_item(inventario, item))
-                gotoxy(136, 38); printf("Accion realizada");
-        }
-        else{
-            if(eliminar_item(inventario, item))
-                gotoxy(136, 38); printf("Accion realizada");
-        }
-
+        if(eliminar_item(inventario, item) && marca == 3)
+            gotoxy(136, 39); printf("Accion realizada");
+        Sleep(100);
         if(GetAsyncKeyState(0x1B)){
-            for(int i = 26; i < 39; i++){
+            for(int i = 26; i < 42; i++){
                 gotoxy(134, i); printf("                                         "); 
-            }
+            }   
             return;
         } 
+    }
+
+}
+
+void usar_asignar(List *lista, int marca){
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
+    bool hecho = false;
+    
+    if(marca == 1){
+        if(usar_item(inventario, item))
+            gotoxy(136, 39); printf("Accion realizada");
+    }
+    else{
+        if(asignar_item(lista, item))
+            gotoxy(136, 39); printf("Accion realizada");
     }
 
 }
@@ -838,60 +858,44 @@ void mostrar(List *lista, int marca){
 
 bool usar_item(List *lista, TipoEquipamiento *item){
     bool hecho = false;
+    item = firstList(lista);
+
     coordenadas pos;
     pos.x = 136;
     pos.y = 29;
+   
 
-    int opcion = 1;
-
-
-    while(true){
-        Sleep(100);
-        if(GetAsyncKeyState(0x26) && pos.y >= 30){
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y--;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-        if(GetAsyncKeyState(0x28) && pos.y <= 32){
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y++;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-        if(pos.y == 29){
-            opcion = 1;
-        }
-        else if(pos.y == 30){
-            opcion = 2;
-        }
-        else if(pos.y == 31){
-            opcion = 3;
-        }
-
-        else if(pos.y == 32){
-            opcion = 4;
+   while(item != NULL){
+        if(strcmp(item->tipo, "Consumible") == 0){
+            //gotoxy(pos.x, pos.y); printf("SI");
+            hecho = true;
         }
         else{
-            opcion = 5;
+            gotoxy(pos.x, pos.y); printf(":(");
         }
+        item = nextList(lista);
+   }
 
-
-
-    }
+    return hecho;
 
 }
 
 bool asignar_item(List *lista, TipoEquipamiento *item){
+    List *lista_items = ((Jugador *)firstList(lista))->inventario;
 
+    /*Info *nuevo = (Info *)malloc(sizeof(Info *));
+    char aux[21];
+
+    gotoxy(136, 38); printf("Ingrese nombre del item: ");
+    gotoxy(136, 39); getchar();
+    scanf("%s", aux);
+    strcpy(nuevo->nombre, aux);*/
+    
     bool hecho = false;
     coordenadas pos;
     pos.x = 136;
     pos.y = 29;
 
-    int opcion = 1;
-
-
     while(true){
         Sleep(100);
         if(GetAsyncKeyState(0x26) && pos.y >= 30){
@@ -906,7 +910,7 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
             gotoxy(pos.x, pos.y); printf(">");
         }
 
-        if(pos.y == 29){
+        /*if(pos.y == 29){
             opcion = 1;
         }
         else if(pos.y == 30){
@@ -923,7 +927,16 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
             opcion = 5;
         }
 
+        if(strcmp(item->stats->nombre, nuevo->nombre) == 0){
+            pushBack(lista_items, nuevo);
+            hecho = true;
+        }
+        else{
+            hecho = false;
+        }*/
+
     }
+    return hecho;
 
 }
 
@@ -933,15 +946,15 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
     bool hecho = false;
     coordenadas pos;
     pos.x = 136;
-    pos.y = 29;
+    pos.y = 31;
 
     int opcion = 1;
+    gotoxy(136, 29); printf("Seleccione 'esc' y 'z' para eliminar");
 
     while(true){
         Sleep(100);
-        if(GetAsyncKeyState(0x26) && pos.y >= 30){
-            item = prevList(lista);
-            if(pos.y == 29)
+        if(GetAsyncKeyState(0x26) && pos.y >= 32){
+            if(prevList(lista) == NULL)
                 opcion = 1;
             else{
                 opcion--;
@@ -951,10 +964,9 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
             gotoxy(pos.x, pos.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x28) && pos.y <= 32){
-            item = nextList(lista);
-            if(pos.y == 33)
-                opcion = 5;
+        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+            if(nextList(lista) == NULL)
+                opcion = 6;
             else{
                 opcion++;
             }
@@ -963,37 +975,49 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
             gotoxy(pos.x, pos.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x1B)){
+        if(GetAsyncKeyState(0x5A)){
             switch(opcion){
                 case 1: 
-                    popCurrent(lista);
-                    hecho = true;
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
                     break;
                 case 2:
-                    popCurrent(lista);
-                    hecho = true;
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
                     break;
                 case 3:
-                    popCurrent(lista);
-                    hecho = true;
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
                     break;
                 case 4:
-                    popCurrent(lista);
-                    hecho = true;
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
                     break;
                 case 5: 
-                    popCurrent(lista);
-                    hecho = true;
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
+                    break;
+                case 6: 
+                    if(lista != NULL){
+                        popCurrent(lista);
+                        hecho = true;
+                    }
                     break;
                 default:
                     break;
             }
             break;
         }
-
-        /*gotoxy(136, 35); printf("Seleccione item a eliminar: ");
-        gotoxy(164, 35); getchar();
-        scanf("%i", &opcion);*/
 
     }
 
@@ -1060,6 +1084,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
 
@@ -1079,6 +1109,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 pantalla_batalla();
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
+                }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
             else continue;
@@ -1100,6 +1136,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
         }
@@ -1119,6 +1161,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 if(empezarbatalla(firstList(listaJugadores),seleccionarenemigo(Mapamonster, rand()%10))==false){
                     strcpy(estado,"dead");
                 }
+                else
+                {
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    mainPlayer->pos.y++;
+                    gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
+                }
             }
             else continue;
         }
@@ -1129,11 +1177,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 return;
             }
         }
+        gotoxy(0,FILAS); printf("ESC--Menu de pausa");
 
-        if(GetAsyncKeyState(0x09)){
+        /*if(GetAsyncKeyState(0x09)){
             
             developerfunctions(listaJugadores,Mapamonster);
-        }
+        }*/
     }
 }
 
@@ -1334,13 +1383,15 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 18, 66, 2, '|');    
         rellenarmapa(sandbox, 20, 78, 5, '|');
         rellenarmapa(sandbox, 27, 50, 3, '|');    
-        rellenarmapa(sandbox, 20, 85, 5, '|');
-        rellenarmapa(sandbox, 20, 88, 10, '|');
+        rellenarmapa(sandbox, 19, 85, 6, '|');
+        rellenarmapa(sandbox, 22, 88, 8, '|');
+        rellenarmapa(sandbox, 22, 95, 6, '|');
 
         //PAREDES HORIZONTALES F3
 
-        rellenarmapa(sandbox, 15, 15, 15, '-');
+        rellenarmapa(sandbox, 15, 0, 30, '-');
         rellenarmapa(sandbox, 18, 15, 20, '-');
+        rellenarmapa(sandbox, 18, 0, 13, '-');
         rellenarmapa(sandbox, 5, 30, 50, '-');
         rellenarmapa(sandbox, 9, 35, 40, '-');
         rellenarmapa(sandbox, 15, 50, 25, '-');
@@ -1351,6 +1402,9 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 27, 15, 35, '-');
         rellenarmapa(sandbox, 30, 50, 38, '-');
         rellenarmapa(sandbox, 25, 15, 35, '-');
+        rellenarmapa(sandbox, 18, 85, 15, '-');
+        rellenarmapa(sandbox, 22, 88, 7, '-');
+        rellenarmapa(sandbox, 28, 95, 5, '-');
 
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1375,6 +1429,7 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 55, 7, '|');
         rellenarmapa(sandbox, 8, 60, 4, '|');
         rellenarmapa(sandbox, 12, 63, 23, '|');
+        rellenarmapa(sandbox, 8, 80, 20, '|');
 
 
 
@@ -1382,17 +1437,18 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 10, 13, '-');
         rellenarmapa(sandbox, 8, 23, 20, '-');
         rellenarmapa(sandbox, 12, 23, 17, '-');
-        rellenarmapa(sandbox, 5, 55, 30, '-');
+        rellenarmapa(sandbox, 5, 55, 45, '-');
         rellenarmapa(sandbox, 8, 60, 20, '-');
         rellenarmapa(sandbox, 12, 46, 9, '-');
         rellenarmapa(sandbox, 12, 60, 3, '-');
         rellenarmapa(sandbox, 20, 10, 10, '-');
         rellenarmapa(sandbox, 24, 3, 13, '-');
-        rellenarmapa(sandbox, 28, 3, 10, '-');
+        rellenarmapa(sandbox, 28, 0, 13, '-');
         rellenarmapa(sandbox, 32, 16, 4, '-');
         rellenarmapa(sandbox, 35, 13, 10, '-');
         rellenarmapa(sandbox, 32, 43, 3, '-');
         rellenarmapa(sandbox, 35, 40, 23, '-');
+        rellenarmapa(sandbox, 28, 80, 20, '-');
         
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1415,15 +1471,16 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 5, 5, 4, '|');    
         rellenarmapa(sandbox, 5, 20, 9, '|');  
 
-        rellenarmapa(sandbox, 1,50,14,'|');
+        rellenarmapa(sandbox, 2,50,13,'|');
         rellenarmapa(sandbox, 15,55, 5, '|');
         rellenarmapa(sandbox, 25,55, 10, '|');
         rellenarmapa(sandbox, 28,65, 7, '|');
         rellenarmapa(sandbox, 18,68, 5, '|');
         rellenarmapa(sandbox, 1, 55, 2, '|');
         rellenarmapa(sandbox, 3,60, 7, '|');
-        rellenarmapa(sandbox, 1, 70, 9, '|');    
-        rellenarmapa(sandbox, 1, 75, 17, '|'); 
+        rellenarmapa(sandbox, 1, 70, 8, '|');    
+        rellenarmapa(sandbox, 0, 75, 19, '|'); 
+        rellenarmapa(sandbox, 20, 20, 5, '|');
 
 
 
@@ -1446,9 +1503,9 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 20,20,35,'-');
         rellenarmapa(sandbox, 25,20,35,'-');
         rellenarmapa(sandbox, 34,55,10,'-');
-        rellenarmapa(sandbox, 28,65,10,'-');
+        rellenarmapa(sandbox, 28,65,30,'-');
         rellenarmapa(sandbox, 23, 68, 7, '-');    
-        rellenarmapa(sandbox, 18, 68, 12, '-');  
+        rellenarmapa(sandbox, 18, 68, 31, '-');  
         rellenarmapa(sandbox, 10,60, 10, '-');
         rellenarmapa(sandbox, 20,45, 10, '-');
 
@@ -1474,15 +1531,15 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 0,25, 15, '|');
         rellenarmapa(sandbox, 22,30, 8, '|');
         rellenarmapa(sandbox, 22,60, 8, '|');
-        rellenarmapa(sandbox, 10,40, 10, '|');
-        rellenarmapa(sandbox, 10,45, 10, '|');
+        rellenarmapa(sandbox, 0,40, 20, '|');
+        rellenarmapa(sandbox, 0,45, 20, '|');
         rellenarmapa(sandbox, 34,70, 4, '|');
         rellenarmapa(sandbox, 5,70, 15, '|');
         rellenarmapa(sandbox, 10,73,24, '|');
         rellenarmapa(sandbox, 5,90, 5, '|');
-    
+       
 
-    //PAREDES HORIZONTALES
+       //PAREDES HORIZONTALES
 
         rellenarmapa(sandbox, 12, 1, 4, '-');    
         rellenarmapa(sandbox, 5, 5, 13, '-'); 
@@ -1499,12 +1556,12 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 30,30, 30, '-');
         rellenarmapa(sandbox, 34,5, 65, '-');
 
-        rellenarmapa(sandbox, 20, 45, 25, '-');    
+         rellenarmapa(sandbox, 20, 45, 25, '-');    
         rellenarmapa(sandbox, 5, 70, 20, '-'); 
 
         rellenarmapa(sandbox, 10,73,17,'-');
-        rellenarmapa(sandbox, 34,73,17,'-');
-        rellenarmapa(sandbox, 38,70,20,'-');
+        rellenarmapa(sandbox, 34,73,24,'-');
+        rellenarmapa(sandbox, 38,70,30,'-');
 
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
@@ -1878,6 +1935,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
 
@@ -1894,7 +1952,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1911,6 +1969,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1927,7 +1986,7 @@ void equipobaseE(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1942,7 +2001,8 @@ void equipobaseE(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
-    
+    aplicarItem(usuario,equipoBase);
+
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Consumible");
@@ -1975,6 +2035,7 @@ void equipobaseM(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -1990,7 +2051,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2006,7 +2067,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2022,7 +2083,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2038,6 +2099,7 @@ void equipobaseM(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2070,7 +2132,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2086,7 +2148,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2101,7 +2163,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2116,6 +2178,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2131,6 +2194,7 @@ void equipobaseL(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2166,6 +2230,7 @@ void equipobaseC(Jugador *usuario)
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
 
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2180,7 +2245,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Armadura");
@@ -2195,7 +2260,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2211,7 +2276,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipoArmadura,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
 
     equipoBase = createEquipoBase();
 
@@ -2227,7 +2292,7 @@ void equipobaseC(Jugador *usuario)
 
     pushBack(usuario->inventario,equipoBase);
     insertMap(usuario->equipamiento,equipoBase->tipo,equipoBase);
-
+    aplicarItem(usuario,equipoBase);
     equipoBase = createEquipoBase();
 
     strcpy(equipoBase->tipo,"Consumible");
@@ -2244,6 +2309,19 @@ void equipobaseC(Jugador *usuario)
 }
 
 /*fin de chantarle equipamiento a las clases*/
+
+//Apicar estadisticas de equipamiento
+void aplicarItem(Jugador *usuario,TipoEquipamiento *item)
+{
+    Info *aux = usuario->datos;
+    if(item->equipado == true)
+    {
+        aux->ATK += item->stats->ATK;
+        aux->DEF += item->stats->DEF;
+        aux->HPMAX += item->stats->HPMAX;
+    }
+}
+
 
 void estadisticasDeclase(Jugador *usuario){
     if(strcmp("Espadachin",usuario->clase)==0){
