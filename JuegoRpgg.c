@@ -729,8 +729,8 @@ void mostrarDescrip(List *lista){
     
     printf("\033[0;34m");
     gotoxy(104, 26); printf("---------------------------------------------------------------------------------");
-    gotoxy(104, 38); printf("---------------------------------------------------------------------------------");
-    for(int i = 27; i < 38; i++){
+    gotoxy(104, 40); printf("---------------------------------------------------------------------------------");
+    for(int i = 27; i < 40; i++){
         gotoxy(104, i); printf("|                                                                               |");
     }  
     printf("\033[0;0m");
@@ -748,6 +748,9 @@ void mostrarDescrip(List *lista){
     printf("\033[0;33m");
     gotoxy(109, 28); printf("Anterior");
     gotoxy(172, 28); printf("Siguiente");
+    
+    printf("\033[0;0m");
+    gotoxy(106, 38); printf(" Flecha arriba para ver el anterior y flecha abajo para el siguiente");
 
     
     while(true){
@@ -759,9 +762,9 @@ void mostrarDescrip(List *lista){
             gotoxy(mov.x, mov.y); printf(">");
         }
 
-        if(GetAsyncKeyState(0x28) && mov.x <= 168){
+        if(GetAsyncKeyState(0x28) && mov.x <= 170){
             gotoxy(mov.x, mov.y); printf(" ");
-            mov.x = 168;
+            mov.x = 170;
             gotoxy(mov.x, mov.y); printf(">");
         }
 
@@ -782,7 +785,7 @@ void mostrarDescrip(List *lista){
             }
         }
 
-        if(GetAsyncKeyState(0x28) && mov.x == 168){
+        if(GetAsyncKeyState(0x28) && mov.x == 170){
             item = nextList(inventario);
             if(item != NULL){
                 for(int j = 30; j < 36; j++){
@@ -798,7 +801,7 @@ void mostrarDescrip(List *lista){
             }
         }
         if(GetAsyncKeyState(0x1B)){
-            for(int i = 26; i < 39; i++){
+            for(int i = 26; i < 41; i++){
                 gotoxy(104, i); printf("                                                                                 ");
             } 
             return;
