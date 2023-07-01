@@ -106,8 +106,8 @@ void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
 void submenu_Inventario(List *lista);
 void mostrarInventario(List *lista);
-void submenu_opciones(List *lista, int);
-void mostrarDescrip(List *lista, int);
+void submenu_opciones(List *lista);
+void mostrarDescrip(List *lista);
 void mostrar(List *lista, int);
 //void usar_asignar(List *lista, int );
 bool usar_item(List *lista );
@@ -584,43 +584,40 @@ void submenu_Inventario(List *lista){
 
     gotoxy(113, 13); printf("     Inventario     ");
     mostrarInventario(lista);
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
 
     coordenadas mov;
     mov.x = 106;
     mov.y = 16;
     gotoxy(mov.x, mov.y); printf("-");
     int opcion;
-    int tipo = 1;
+
     while(true){
         Sleep(100);
 
         if(GetAsyncKeyState(0x26) && mov.y >= 17){
-            if(mov.y == 16)
-                tipo = 1;
-            else{
-                tipo--;
+            item = prevList(inventario);
+            if(item != NULL){
+                gotoxy(mov.x, mov.y); printf("+");
+                mov.y--;
+                gotoxy(mov.x, mov.y); printf(">");
+                opcion = 1;
             }
-            gotoxy(mov.x, mov.y); printf("+");
-            mov.y--;
-            gotoxy(mov.x, mov.y); printf(">");
-            opcion = 1;
         }
 
         if(GetAsyncKeyState(0x28) && mov.y <= 20){
-            if(mov.y == 20){
-                tipo = 5;
+            item = nextList(inventario);
+            if(item != NULL){
+                gotoxy(mov.x, mov.y); printf("+");
+                mov.y++;
+                gotoxy(mov.x, mov.y); printf(">");
+                opcion = 2;
             }
-            else{
-                tipo++;
-            }
-            gotoxy(mov.x, mov.y); printf("+");
-            mov.y++;
-            gotoxy(mov.x, mov.y); printf(">");
-            opcion = 2;
         }
 
         if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
-            submenu_opciones(lista, tipo);
+            submenu_opciones(lista);
         }
 
         if(GetAsyncKeyState(0x5A)){
@@ -650,7 +647,7 @@ void mostrarInventario(List *lista){
 
 }
 
-void submenu_opciones(List *lista, int tipo_item){
+void submenu_opciones(List *lista){
     printf("\033[0;34m");
     gotoxy(144, 12); printf("--------------------------------------------");
     gotoxy(144, 21); printf("--------------------------------------------");
@@ -693,7 +690,7 @@ void submenu_opciones(List *lista, int tipo_item){
         }
         
         if(GetAsyncKeyState(0x0D) && mov.y > 17){
-           mostrarDescrip(lista, tipo_item);
+           mostrarDescrip(lista);
 
         }
 
@@ -723,7 +720,7 @@ void submenu_opciones(List *lista, int tipo_item){
     }
 }
 
-void mostrarDescrip(List *lista, int tipo){
+void mostrarDescrip(List *lista){
     
     printf("\033[0;34m");
     gotoxy(104, 26); printf("---------------------------------------------------------------------------------");
