@@ -22,6 +22,8 @@ En el siguiente archivo README, se especificará:
    
    -Al momento de ingresar al submenú y escoge la opción de reiniciar, es posible que el programa presente fallas y no tenemos una explicación exacta del error.
    -Hay ocasiones que no seleccionamos nada pero se realiza la funcion al momento de ingresar al submenu.
+   -En la funcion fase de batalla, cuando se elimina un enemigo, o se escapa, si bien la posicion queda en blanco, el enemigo seguira estado ahi.
+   
    
 3. Explicación en relación a como se desarrolla la aplicación
    Al momento de iniciar la ejecución del programa el jugador deberá utilizar las flechas de arriba, abajo para indicar la acción que desea realizar (iniciar partida o salir de la         aplicación) una vez elegida la acción que desea realizar, se presiona el botón escape (esc) para seleccionar dicha acción.
