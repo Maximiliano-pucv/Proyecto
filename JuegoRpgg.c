@@ -1303,7 +1303,7 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 void generarmapa(sala *sandbox)
 {
     //rand()%6
-    int variable = 0;
+    int variable = rand()%6;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
