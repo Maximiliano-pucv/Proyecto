@@ -11,7 +11,7 @@ En el siguiente archivo README, se especificará:
 
    Y LUEGO PUEDE ABRIR EL EJECTUABLE DESDE LA TERMINAL (.\\NOMBREQUEDESEA) O EN LA DIRECCIÓN QUE GUARDO LA CARPETA. 
 
-   RECOMENDAACIÓN: AL MOMENTO DE ABRIR EL EJECUTABLE SE RECOMIENDA REDUCIR EL ZOOM DEL EJECUTABLE, DADO A TEMAS DE ESPACIO QUE PUEDEN GENERAR PROBLEMAS AL MOMENTO DE MOSTRAR.
+   RECOMENDAACIÓN: AL MOMENTO DE ABRIR EL EJECUTABLE SE RECOMIENDA REDUCIR EL ZOOM DE ESTE, DADO A TEMAS DE ESPACIO QUE PUEDEN GENERAR PROBLEMAS AL MOMENTO DE MOSTRAR LA APLICACIÓN.
 
    
 2. Las funciones que se ejecutan correctamente y los posibles errores
@@ -31,7 +31,7 @@ En el siguiente archivo README, se especificará:
    -Luego, el programa solicitara elegir una de las 4 clases existentes(espadachín, mago, ladrón y/o chef) y el usuario deberá ingresar el número desde el 1 al 4 dependiendo de clase       elegida, finalmente presiona enter y comienza la partida.
 
 
-   UNA VEZ INICIALIZADA LA PARTIDA EL JUGADOR PODRÁ DESPLAZARSE LIBREMENTE POR EL MAPA ENCONTRANDO TESOROS($) Y ENEMIGOS(@).
+   UNA VEZ INICIALIZADA LA PARTIDA EL JUGADOR PODRÁ DESPLAZARSE LIBREMENTE POR EL MAPA ENCONTRANDO TESOROS($) Y ENEMIGOS(@). El desplazamiento se realiza con las teclas que contienen flechas generadndo moviemientos hacía la derecha, izquierda, arriba y abajo.
    El juego desarrolla batallas en las cuales el jugador deberá enfrentarse.
 
 
