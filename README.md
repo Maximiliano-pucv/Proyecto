@@ -35,3 +35,4 @@ RECOMENDAACIÓN: AL MOMENTO DE ABRIR EL EJECUTABLE SE RECOMIENDA REDUCIR EL ZOOM
    
 
 
+En uno de los mapas pensara que no hay salida, pero lo hay, solo hay que tener un buen ojo y buscar
