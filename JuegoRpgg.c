@@ -106,13 +106,13 @@ void mostrar_perfiles (List *lista);
 bool Submenu(List *lista);
 void submenu_Inventario(List *lista);
 void mostrarInventario(List *lista);
-void submenu_opciones(List *lista, int);
-void mostrarDescrip(List *lista, int);
+void submenu_opciones(List *lista);
+void mostrarDescrip(List *lista);
 void mostrar(List *lista, int);
-void usar_asignar(List *lista, int );
-bool usar_item(List *lista, TipoEquipamiento* );
+//void usar_asignar(List *lista, int );
+bool usar_item(List *lista );
 bool asignar_item(List *lista, TipoEquipamiento* );
-bool eliminar_item(List *lista, TipoEquipamiento*);
+bool eliminar_item(List *lista);
 
 //funciones para batallas
 void pantalla_batalla();
@@ -275,7 +275,7 @@ int comandoBatalla(Opcion *comandos){
 int Atacar(Info * atacante, Info * atacado, bool defensa){
     int Dano;
     if(defensa == false){
-        Dano = (int)abs((atacante->ATK)-atacado->DEF);
+        Dano = (int)abs((atacante->ATK/2)-atacado->DEF);
         atacado ->HP -= Dano;
     }else{
         Dano = (int)abs(log((atacante->ATK)/2));
@@ -584,43 +584,40 @@ void submenu_Inventario(List *lista){
 
     gotoxy(113, 13); printf("     Inventario     ");
     mostrarInventario(lista);
+    List *inventario = ((Jugador *)firstList(lista))->inventario;
+    TipoEquipamiento *item = firstList(inventario);
 
     coordenadas mov;
     mov.x = 106;
     mov.y = 16;
     gotoxy(mov.x, mov.y); printf("-");
     int opcion;
-    int tipo = 1;
+
     while(true){
         Sleep(100);
 
         if(GetAsyncKeyState(0x26) && mov.y >= 17){
-            if(mov.y == 16)
-                tipo = 1;
-            else{
-                tipo--;
+            item = prevList(inventario);
+            if(item != NULL){
+                gotoxy(mov.x, mov.y); printf("+");
+                mov.y--;
+                gotoxy(mov.x, mov.y); printf(">");
+                opcion = 1;
             }
-            gotoxy(mov.x, mov.y); printf("+");
-            mov.y--;
-            gotoxy(mov.x, mov.y); printf(">");
-            opcion = 1;
         }
 
         if(GetAsyncKeyState(0x28) && mov.y <= 20){
-            if(mov.y == 20){
-                tipo = 5;
+            item = nextList(inventario);
+            if(item != NULL){
+                gotoxy(mov.x, mov.y); printf("+");
+                mov.y++;
+                gotoxy(mov.x, mov.y); printf(">");
+                opcion = 2;
             }
-            else{
-                tipo++;
-            }
-            gotoxy(mov.x, mov.y); printf("+");
-            mov.y++;
-            gotoxy(mov.x, mov.y); printf(">");
-            opcion = 2;
         }
 
         if(GetAsyncKeyState(0x0D) && opcion == 1 || GetAsyncKeyState(0x0D) && opcion == 2){
-            submenu_opciones(lista, tipo);
+            submenu_opciones(lista);
         }
 
         if(GetAsyncKeyState(0x5A)){
@@ -650,7 +647,7 @@ void mostrarInventario(List *lista){
 
 }
 
-void submenu_opciones(List *lista, int tipo_item){
+void submenu_opciones(List *lista){
     printf("\033[0;34m");
     gotoxy(144, 12); printf("--------------------------------------------");
     gotoxy(144, 21); printf("--------------------------------------------");
@@ -693,7 +690,7 @@ void submenu_opciones(List *lista, int tipo_item){
         }
         
         if(GetAsyncKeyState(0x0D) && mov.y > 17){
-           mostrarDescrip(lista, tipo_item);
+           mostrarDescrip(lista);
 
         }
 
@@ -707,12 +704,8 @@ void submenu_opciones(List *lista, int tipo_item){
             marca = 3;
         }
 
-        if(GetAsyncKeyState(0x0D) && mov.y == 17){
+        if(GetAsyncKeyState(0x0D) && opcion == 1|| GetAsyncKeyState(0x0D) && mov.y <= 17){
             mostrar(lista, marca);
-        }
-
-        if(GetAsyncKeyState(0X0D) && mov.y == 15 || GetAsyncKeyState(0x0D) && mov.y == 16){
-            usar_asignar(lista, marca);
         }
 
         if(GetAsyncKeyState(0x5A)){
@@ -727,7 +720,7 @@ void submenu_opciones(List *lista, int tipo_item){
     }
 }
 
-void mostrarDescrip(List *lista, int tipo){
+void mostrarDescrip(List *lista){
     
     printf("\033[0;34m");
     gotoxy(104, 26); printf("---------------------------------------------------------------------------------");
@@ -827,69 +820,85 @@ void mostrar(List *lista, int marca){
         item = nextList(inventario);
         j++;
     }
-    /*while (true)
-    {
-        if(eliminar_item(inventario, item) && marca == 3){
-        gotoxy(136, 39); printf("Accion realizada");
-        Sleep(100);
-        for(int i = 26; i < 42; i++){
-            gotoxy(134, i); printf("                                         "); 
-        }   
-        return;
-    }*/
     
     while(true){
-
-       if(eliminar_item(inventario, item) && marca == 3)
-            gotoxy(136, 39); printf("Accion realizada");
-            Sleep(100);
-        if(GetAsyncKeyState(0x1B)){
-            for(int i = 26; i < 42; i++){
-                gotoxy(134, i); printf("                                         "); 
-            }   
-            return;
+        if(marca == 1){
+            if(usar_item(inventario)){
+                gotoxy(136, 39); printf("Accion realizada");
+                Sleep(100);
+                for(int i = 26; i < 42; i++){
+                    gotoxy(134, i); printf("                                         "); 
+                }   
+                return;
+            }
+        }
+        else if(marca == 2){
+            if(asignar_item(lista, item)){
+                gotoxy(136, 39); printf("Accion realizada");
+                Sleep(100);
+                for(int i = 26; i < 42; i++){
+                    gotoxy(134, i); printf("                                         "); 
+                }   
+                return;
+            }
+        }
+        else{
+            if(eliminar_item(inventario)){
+                gotoxy(136, 39); printf("Accion realizada");
+                Sleep(100);
+                for(int i = 26; i < 42; i++){
+                    gotoxy(134, i); printf("                                         "); 
+                }   
+                return;
+            }
         }
     }
 
 }
 
-void usar_asignar(List *lista, int marca){
-    List *inventario = ((Jugador *)firstList(lista))->inventario;
-    TipoEquipamiento *item = firstList(inventario);
-    
-   // while(inventario){
-        if(usar_item(inventario, item) && marca == 1){
-            gotoxy(136, 39); printf("Accion realizada");
-        }
-        else{
-            if(asignar_item(lista, item) && marca == 2)
-                gotoxy(136, 39); printf("Accion realizada");
-        }  
-    //}
-}
-
-
-bool usar_item(List *lista, TipoEquipamiento *item){
+bool usar_item(List *lista){
     bool hecho = false;
     coordenadas pos;
     pos.x = 136;
-    pos.y = 29;
-   
+    pos.y = 31;
 
-    while(item != NULL){
-        if(strcmp(item->tipo, "Consumible") == 0){
-            hecho = true;
+    TipoEquipamiento *item = firstList(lista);
+
+    gotoxy(136, 29); printf("Seleccione 'x' para usar");
+
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x26) && pos.y >= 32){
+           item = prevList(lista);
+            if(item != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y--;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
         }
-        item = nextList(lista);
-    }
+        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+            item = nextList(lista);
+            if(item != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y++;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
+        }
 
-    if(hecho == true){
-        gotoxy(136, 29); printf("SI");
+        if(GetAsyncKeyState(0x58)){
+            if(item != NULL){
+                if(strcmp(item->tipo, "Consumible") == 0){
+                    gotoxy(136, 40); printf("Puedes usarlo");
+                    popCurrent(lista);
+                    hecho = true;
+                }
+                else{
+                    gotoxy(136, 40); printf("No puedes usarlo");
+                }
+            }
+            return hecho;
+        }
     }
-    else{
-        gotoxy(0,0); printf("No");
-    }
-
     return hecho;
 
 }
@@ -901,51 +910,58 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
     bool hecho = false;
     coordenadas pos;
     pos.x = 136;
-    pos.y = 29;
-
-    while(true){
-        Sleep(100);
-        if(GetAsyncKeyState(0x26) && pos.y >= 30){
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y--;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-        if(GetAsyncKeyState(0x28) && pos.y <= 32){
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y++;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-    }
-    return hecho;
-
-}
-
-
-bool eliminar_item(List *lista, TipoEquipamiento *item){
-    
-    bool hecho = false;
-    coordenadas pos;
-    pos.x = 136;
     pos.y = 31;
-    TipoEquipamiento *objeto = firstList(lista);
-    int opcion = 1;
-    gotoxy(136, 29); printf("Seleccione 'esc' y 'z' para eliminar");
 
     while(true){
         Sleep(100);
         if(GetAsyncKeyState(0x26) && pos.y >= 32){
-           objeto = prevList(lista);
-            if(objeto != NULL){
+           item = prevList(lista);
+            if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
                 pos.y--;
                 gotoxy(pos.x, pos.y); printf(">");
             }
         }
         if(GetAsyncKeyState(0x28) && pos.y <= 36){
-            objeto = nextList(lista);
-            if(objeto != NULL){
+            item = nextList(lista);
+            if(item != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y++;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
+        }
+
+        /*if(searchMap(mapa->equipamiento, item->tipo)){
+            //gotoxy(0,0); printf("ok");
+
+        }*/
+    }
+}
+
+
+bool eliminar_item(List *lista){
+    
+    bool hecho = false;
+    coordenadas pos;
+    pos.x = 136;
+    pos.y = 31;
+    TipoEquipamiento *item = firstList(lista);
+    
+    gotoxy(136, 29); printf("Seleccione 'x' para eliminar");
+
+    while(true){
+        Sleep(100);
+        if(GetAsyncKeyState(0x26) && pos.y >= 32){
+           item = prevList(lista);
+            if(item != NULL){
+                gotoxy(pos.x, pos.y); printf(" ");
+                pos.y--;
+                gotoxy(pos.x, pos.y); printf(">");
+            }
+        }
+        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+            item = nextList(lista);
+            if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
                 pos.y++;
                 gotoxy(pos.x, pos.y); printf(">");
@@ -953,78 +969,12 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
         }
 
         if(GetAsyncKeyState(0x58)){
-            if(objeto != NULL){
+            if(item != NULL){
                 popCurrent(lista);
             }
             hecho = true;
             return hecho;
         }
-        /*if(GetAsyncKeyState(0x26) && pos.y >= 32){
-            if(prevList(lista) == NULL)
-                opcion = 1;
-            else{
-                opcion--;
-            }
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y--;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-        if(GetAsyncKeyState(0x28) && pos.y <= 36){
-            if(nextList(lista) == NULL)
-                opcion = 6;
-            else{
-                opcion++;
-            }
-            gotoxy(pos.x, pos.y); printf(" ");
-            pos.y++;
-            gotoxy(pos.x, pos.y); printf(">");
-        }
-
-        if(GetAsyncKeyState(0x5A)){
-            switch(opcion){
-                case 1: 
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                case 2:
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                case 3:
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                case 4:
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                case 5: 
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                case 6: 
-                    if(lista != NULL){
-                        popCurrent(lista);
-                        hecho = true;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        }*/
-
     }
 
     return hecho;
