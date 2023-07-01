@@ -38,14 +38,10 @@ En el siguiente archivo README, se especificará:
    RECORDAMOS QUE EXISTEN 4 ESTADOS:
    
    VIVO: El jugador se puede desplazar libremente por el mapa
-   
    DEAD: El juego finaliza ya que se perdio una batalla
-   
    RESET: El juego se reinicia con el mismo personaje y las estádisticas desde cero.
-   
    WIN: El jugador ha recorrido una cierta cantidad de mapas y se denomina como ganador, se cierra la aplicación. 
    
    
-
 
 En uno de los mapas pensará que no hay salida, pero lo hay, solo hay que tener un buen ojo y buscar. SUERTE!!!
