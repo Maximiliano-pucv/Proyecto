@@ -48,3 +48,4 @@ En el siguiente archivo README, se especificará:
    
 
 En uno de los mapas pensará que no hay salida, pero lo hay, solo hay que tener un buen ojo y buscar. SUERTE!!!
+Secreto: Hay un exploit.
