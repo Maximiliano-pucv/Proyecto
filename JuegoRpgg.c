@@ -745,7 +745,6 @@ void mostrarDescrip(List *lista){
     mov.x = 105;
     mov.y = 28;
 
-
     printf("\033[0;33m");
     gotoxy(109, 28); printf("Anterior");
     gotoxy(172, 28); printf("Siguiente");
@@ -770,6 +769,9 @@ void mostrarDescrip(List *lista){
         if(GetAsyncKeyState(0x26) && mov.x == 107){
             item = prevList(inventario);
             if(item != NULL){
+                for(int j = 30; j < 36; j++){
+                    gotoxy(105, j); printf("                                     ");
+                }
                 gotoxy(105, 30); printf(" -Tipo: %s ", item->tipo);
                 gotoxy(105, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
                 gotoxy(105, 32); printf(" -Nombre: %s ", item->stats->nombre);
@@ -783,6 +785,9 @@ void mostrarDescrip(List *lista){
         if(GetAsyncKeyState(0x28) && mov.x == 168){
             item = nextList(inventario);
             if(item != NULL){
+                for(int j = 30; j < 36; j++){
+                    gotoxy(105, j); printf("                                     ");
+                }
                 gotoxy(105, 30); printf(" -Tipo: %s ", item->tipo);
                 gotoxy(105, 31); printf(" -Tipo armadura: %s ", item->tipoArmadura);
                 gotoxy(105, 32); printf(" -Nombre: %s ", item->stats->nombre);
