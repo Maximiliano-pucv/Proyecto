@@ -1053,7 +1053,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.x--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1078,7 +1078,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1104,7 +1104,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.x++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1129,7 +1129,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1156,7 +1156,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.y++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1181,7 +1181,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1207,7 +1207,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.y--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1232,7 +1232,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
+                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
