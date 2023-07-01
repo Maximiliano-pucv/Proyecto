@@ -1030,7 +1030,7 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player, int *cont)
         generarmapa(sandbox);
         player->pos.x = 2;
         player->pos.y = 19;
-        *cont++;
+        (*cont)++;
         return 1;
     }
     if(sandbox->tamano[y][x] == '@')
@@ -1060,13 +1060,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
     int cont = 0;
     while(true)
     {
-        
+        gotoxy(50,FILAS); printf("%i",cont);
         if(strcmp(estado,"dead") == 0)
         {
             limpiarpantalla();
             return;
         }
-        if(cont == 5)
+        if(cont == 4)
         {
             strcpy(estado,"win");
             return;
