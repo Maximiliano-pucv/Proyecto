@@ -88,7 +88,7 @@ HashMap* almacenarmounstruos();
 HashMap* generaritems();
 /*const*/ char *get_csv_field (char * tmp, int k);
 
-int validarmov(sala * sandbox, int x, int y, Jugador *player);
+int validarmov(sala * sandbox, int x, int y, Jugador *player, int *cont);
 TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero);
 /*equipamiento por clase*/
 void equipamientoBase(Jugador *usuario);
@@ -440,7 +440,7 @@ bool empezarbatalla(Jugador *jugador,Info *Enemigo){
         Enemigo ->HP = Enemigo ->HPMAX;
         gotoxy(105,33); printf("VICTORIA");
         Sleep(500);
-        jugador->PH += Enemigo->PH;
+        jugador->datos->PH += Enemigo->PH;
         batalla_final_limpiar();
         return true;
     } 
@@ -1031,7 +1031,7 @@ bool eliminar_item(List *lista, TipoEquipamiento *item){
 }
 
 
-int validarmov(sala *sandbox, int x, int y,Jugador *player)
+int validarmov(sala *sandbox, int x, int y,Jugador *player, int *cont)
 {
     if(sandbox->tamano[y][x] == ' ') return 0;
     if(sandbox->tamano[y][x]=='>')
@@ -1040,6 +1040,7 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
         generarmapa(sandbox);
         player->pos.x = 2;
         player->pos.y = 19;
+        *cont++;
         return 1;
     }
     if(sandbox->tamano[y][x] == '@')
@@ -1066,6 +1067,7 @@ TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero){
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
     HashMap *Mapaitems = generaritems();
+    int cont = 0;
     while(true)
     {
         
@@ -1074,18 +1076,23 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
             limpiarpantalla();
             return;
         }
+        if(cont == 5)
+        {
+            strcpy(estado,"win");
+            return;
+        }
         Sleep(100);
         printf("\033[0;35m");
         //Moverse a la izquierda
         if((GetAsyncKeyState(0x25)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer,&cont) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer,&cont) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1095,11 +1102,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                     mainPlayer->pos.x--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer,&cont) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1119,6 +1127,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1128,13 +1137,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //derecha
         if((GetAsyncKeyState(0x27)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer,&cont) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer,&cont) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1144,11 +1153,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                     mainPlayer->pos.x++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer,&cont) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1168,6 +1178,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1178,13 +1189,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //abajo
         if((GetAsyncKeyState(0x28)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer,&cont) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer,&cont) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1194,11 +1205,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                     mainPlayer->pos.y++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer,&cont) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1218,6 +1230,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1227,13 +1240,13 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
         //arriba
         if((GetAsyncKeyState(0x26)))
         {
-            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 0)
+            if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer,&cont) == 0)
             {
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
-            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 2)
+            else if (validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer,&cont) == 2)
             {
                 /* code */
                 pantalla_batalla();
@@ -1243,11 +1256,12 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                    sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                     mainPlayer->pos.y--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer,&cont) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1267,6 +1281,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                sandbox->tamano[mainPlayer->pos.y][mainPlayer->pos.x] = ' ';
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
