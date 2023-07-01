@@ -151,10 +151,10 @@ int main(){
 
     }while(strcmp(estado, "win") != 0);
     limpiarpantalla();
+    gotoxy(50,50); printf("HAS GANADO");
     for(int j = 0; j<50; j++)
     {
         Sleep(100);
-        gotoxy(50,50); printf("HAS GANADO");
     }
     //mostrar_perfiles(listajugadores);
     return 0;
@@ -1060,7 +1060,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
     int cont = 0;
     while(true)
     {
-        gotoxy(50,FILAS); printf("%i",cont);
         if(strcmp(estado,"dead") == 0)
         {
             limpiarpantalla();
