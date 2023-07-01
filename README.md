@@ -31,7 +31,7 @@ En el siguiente archivo README, se especificará:
    -Luego, el programa solicitara elegir una de las 4 clases existentes(espadachín, mago, ladrón y/o chef) y el usuario deberá ingresar el número desde el 1 al 4 dependiendo de clase       elegida, finalmente presiona enter y comienza la partida.
 
 
-   UNA VEZ INICIALIZADA LA PARTIDA EL JUGADOR PODRÁ DESPLAZARSE LIBREMENTE POR EL MAPA ENCONTRANDO TESOROS($) Y ENEMIGOS(@).
+   UNA VEZ INICIALIZADA LA PARTIDA EL JUGADOR PODRÁ DESPLAZARSE LIBREMENTE POR EL MAPA ENCONTRANDO TESOROS($) Y ENEMIGOS(@). El desplazamiento se realiza con las teclas que contienen flechas generadndo moviemientos hacía la derecha, izquierda, arriba y abajo.
    El juego desarrolla batallas en las cuales el jugador deberá enfrentarse.
 
 
