@@ -111,7 +111,7 @@ void mostrarDescrip(List *lista);
 void mostrar(List *lista, int);
 //void usar_asignar(List *lista, int );
 bool usar_item(List *lista );
-bool asignar_item(List *lista, TipoEquipamiento* );
+bool asignar_item(List *lista);
 bool eliminar_item(List *lista);
 
 //funciones para batallas
@@ -744,7 +744,7 @@ void mostrarDescrip(List *lista){
     printf("\033[0;33m");
     gotoxy(109, 28); printf("Anterior");
     gotoxy(172, 28); printf("Siguiente");
-   
+
     
     while(true){
         Sleep(100);
@@ -833,7 +833,7 @@ void mostrar(List *lista, int marca){
             }
         }
         else if(marca == 2){
-            if(asignar_item(lista, item)){
+            if(asignar_item(lista)){
                 gotoxy(136, 39); printf("Accion realizada");
                 Sleep(100);
                 for(int i = 26; i < 42; i++){
@@ -903,19 +903,25 @@ bool usar_item(List *lista){
 
 }
 
-bool asignar_item(List *lista, TipoEquipamiento *item){
+bool asignar_item(List *lista){
     List *lista_items = ((Jugador *)firstList(lista))->inventario;
-    Jugador *mapa;
+    TipoEquipamiento *item = firstList(lista_items);
+    Jugador *usuario = firstList(lista);
+
+    HashMap *mapa = usuario->equipamiento;
+    TipoEquipamiento *aux = (TipoEquipamiento *)malloc(sizeof(TipoEquipamiento));
     
     bool hecho = false;
     coordenadas pos;
     pos.x = 136;
     pos.y = 31;
 
+    gotoxy(136, 29); printf("Seleccione 'x' para asignar item");
+
     while(true){
         Sleep(100);
         if(GetAsyncKeyState(0x26) && pos.y >= 32){
-           item = prevList(lista);
+           item = prevList(lista_items);
             if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
                 pos.y--;
@@ -923,7 +929,7 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
             }
         }
         if(GetAsyncKeyState(0x28) && pos.y <= 36){
-            item = nextList(lista);
+            item = nextList(lista_items);
             if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
                 pos.y++;
@@ -931,11 +937,53 @@ bool asignar_item(List *lista, TipoEquipamiento *item){
             }
         }
 
-        /*if(searchMap(mapa->equipamiento, item->tipo)){
-            //gotoxy(0,0); printf("ok");
+        if(GetAsyncKeyState(0x58)){
+            if(item != NULL){
+                if(strcmp(item->tipo, "Arma") == 0){
+                    if(searchMap(mapa, item->tipo)){
+                        aux = (TipoEquipamiento* )searchMap(mapa, item->tipo);
+                        item->equipado = false;
+                        eraseMap(mapa, aux->tipo);
+                    }
+                    insertMap(mapa, item->tipo, item);
+                    item->equipado = true;
+                    hecho = true;
+                }
+                else{
+                    if(strcmp(item->tipo, "Armadura") == 0){
+                        if(searchMap(mapa, item->tipo)){
+                            aux = (TipoEquipamiento *) searchMap(mapa, item->tipo);
+                            if(strcmp(aux->tipo, "Casco") == 0){
+                                item->equipado = false;
+                                eraseMap(mapa, aux->tipo);
+                            }
+                            else if(strcmp(aux->tipo, "Pecho") == 0){
+                                item->equipado = false;
+                                eraseMap(mapa, aux->tipo);
+                            }
+                            else if(strcmp(aux->tipo, "Piernas") == 0){
+                                item->equipado = false;
+                                eraseMap(mapa, aux->tipo);
+                            }
+                            else{
+                                if(strcmp(aux->tipo, "Botas")== 0){
+                                    item->equipado = false;
+                                    eraseMap(mapa, aux->tipo);
 
-        }*/
+                                }
+                            }
+                        }
+                        insertMap(mapa, item->tipo, item);
+                        item->equipado = true;
+                        hecho = true;
+                    }
+                }
+            }
+            return hecho;
+        }
     }
+
+    return hecho;
 }
 
 
@@ -1724,7 +1772,6 @@ void gotoxy (int x, int y){
     posicion.Y = y;
     SetConsoleCursorPosition(consola,posicion);
 }
-
 
 
 void mainmenu(){
