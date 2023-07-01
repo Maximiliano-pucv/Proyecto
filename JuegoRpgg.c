@@ -114,7 +114,6 @@ bool usar_item(List *lista, TipoEquipamiento* );
 bool asignar_item(List *lista, TipoEquipamiento* );
 bool eliminar_item(List *lista, TipoEquipamiento*);
 
-
 //funciones para batallas
 void pantalla_batalla();
 void batalla_final_limpiar();
@@ -151,6 +150,12 @@ int main(){
         faseDElanzamiento(listajugadores,sandbox,mapamonster,estado);
 
     }while(strcmp(estado, "win") != 0);
+    limpiarpantalla();
+    for(int j = 0; j<50; j++)
+    {
+        Sleep(100);
+        gotoxy(50,50); printf("HAS GANADO");
+    }
     //mostrar_perfiles(listajugadores);
     return 0;
 }
@@ -1039,7 +1044,10 @@ int validarmov(sala *sandbox, int x, int y,Jugador *player)
     {
         return 2;
     }
-
+    if(sandbox->tamano[y][x] == '$')
+    {
+        return 3;
+    }
     return 1;
 }
 
@@ -1056,7 +1064,6 @@ TipoEquipamiento* seleccionaritem(HashMap *Mapaitems,int numero){
 void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, char *estado){
     Jugador *mainPlayer = firstList(listaJugadores);
     HashMap *Mapaitems = generaritems();
-    
     while(true)
     {
         
@@ -1090,6 +1097,25 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
+            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            {
+                if(strcmp(mainPlayer->clase,"Chef") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Ladron") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,10+rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Espadachin") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,20+rand()%10));
+                }
+                else
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
+                }
+            }
             else continue;
 
         }
@@ -1116,6 +1142,26 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
+            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            {
+                if(strcmp(mainPlayer->clase,"Chef") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Ladron") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,10+rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Espadachin") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,20+rand()%10));
+                }
+                else
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
+                }
+            }
+
             else continue;
         }
 
@@ -1142,6 +1188,26 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
+            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            {
+                if(strcmp(mainPlayer->clase,"Chef") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Ladron") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,10+rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Espadachin") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,20+rand()%10));
+                }
+                else
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
+                }
+            }
+
             else continue;
         }
         //arriba
@@ -1167,6 +1233,26 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
+            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            {
+                if(strcmp(mainPlayer->clase,"Chef") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Ladron") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,10+rand()%10));
+                }
+                else if(strcmp(mainPlayer->clase,"Espadachin") == 0)
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,20+rand()%10));
+                }
+                else
+                {
+                    pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
+                }
+            }
+
             else continue;
         }
 
@@ -1214,8 +1300,8 @@ void rellenarmapa(sala * sandbox, int posfila, int poscolum, int largo, char car
 
 void generarmapa(sala *sandbox)
 {
-    
-    int variable = rand()%6;
+    //rand()%6
+    int variable = 0;
     for(size_t i = 0; i<FILAS ; i++)
     {
         for(size_t j = 0; j<COLUMNAS ; j++)
@@ -1303,12 +1389,18 @@ void generarmapa(sala *sandbox)
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
-        //Entidades
+        //ENTIDADES
         printf("\033[0;31m");
         rellenarmapa(sandbox,32,71,0,'@');
         rellenarmapa(sandbox,29,72,0,'@');
         rellenarmapa(sandbox,25,71,0,'@');
         rellenarmapa(sandbox,20,72,0,'@');
+
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,1,92,0,'$');
+        rellenarmapa(sandbox,3,20,0,'$');
+        rellenarmapa(sandbox,3,35,0,'$');
     }
     else if(variable == 1) //"FALTA TERMINAR MAPA"
     {
@@ -1364,8 +1456,26 @@ void generarmapa(sala *sandbox)
         rellenarmapa(sandbox, 20,99,5,'>');
 
 
-        gotoxy(1,20); //printf("---------");
-        gotoxy(1,23); //printf("---------");
+        //entidades
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,21,77,0,'@');
+        rellenarmapa(sandbox,20,96,0,'@');
+        rellenarmapa(sandbox,23,96,0,'@');
+        rellenarmapa(sandbox,30,70,0,'@');
+
+        //Entidades
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,21,77,0,'@');
+        rellenarmapa(sandbox,20,96,0,'@');
+        rellenarmapa(sandbox,23,96,0,'@');
+        rellenarmapa(sandbox,30,70,0,'@');
+
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,25,20,0,'$');
+        rellenarmapa(sandbox,28,25,0,'$');
+        rellenarmapa(sandbox,21,96,0,'$');
+
     }
     else if (variable == 2) //"TERMINADO"
     {
@@ -1408,8 +1518,18 @@ void generarmapa(sala *sandbox)
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
-        gotoxy(20,8); //printf("---");
-        gotoxy(23,9); //printf("C");
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,26,92,0,'@');
+        rellenarmapa(sandbox,20,86,0,'@');
+        rellenarmapa(sandbox,8,32,0,'@');
+        //rellenarmapa(sandbox,,,0,'@');
+
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,25,90,0,'$');
+        rellenarmapa(sandbox,17,66,0,'$');
+        rellenarmapa(sandbox,6,32,0,'$');
+
     }
     else if(variable == 3)   //TERMINADO
     {
@@ -1452,8 +1572,20 @@ void generarmapa(sala *sandbox)
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
         
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,25,90,0,'@');
+        rellenarmapa(sandbox,33,14,0,'@');
+        rellenarmapa(sandbox,34,41,0,'@');
+        rellenarmapa(sandbox,20,60,0,'@');
+        rellenarmapa(sandbox,25,60,0,'@');
 
-        gotoxy(2,1); //printf("|");
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,5,5,0,'$');
+        rellenarmapa(sandbox,10,11,0,'$');
+        rellenarmapa(sandbox,23,95,0,'$');
+        rellenarmapa(sandbox,6,58,0,'$');
+
     }
     else if(variable ==4)
     {
@@ -1511,9 +1643,17 @@ void generarmapa(sala *sandbox)
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
 
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,7,10,0,'@');
+        rellenarmapa(sandbox,18,50,0,'@');
+        rellenarmapa(sandbox,20,67,0,'@');
+        //rellenarmapa(sandbox,,,0,'@');
 
-        gotoxy(60,25); 
-        //printf("---");
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,23,54,0,'$');
+        rellenarmapa(sandbox,8,12,0,'$');
+        rellenarmapa(sandbox,20,65,0,'$');
     }
     else
     {
@@ -1564,8 +1704,21 @@ void generarmapa(sala *sandbox)
 
         printf("\e[1;33m");
         rellenarmapa(sandbox, 20,99,5,'>');
-        
-        gotoxy(51,25); //printf("B");
+
+        //entidades
+        printf("\033[0;31m");
+        rellenarmapa(sandbox,32,50,0,'@');
+        rellenarmapa(sandbox,32,60,0,'@');
+        rellenarmapa(sandbox,8,72,0,'@');
+        rellenarmapa(sandbox,8,15,0,'@');
+        rellenarmapa(sandbox,33,55,0,'@');
+
+        //TESOROS
+        printf("\033[0;33m");
+        rellenarmapa(sandbox,25,28,0,'$');
+        rellenarmapa(sandbox,33,50,0,'$');
+        rellenarmapa(sandbox,26,63,0,'$');
+        rellenarmapa(sandbox,28,1,0,'$');
     }
 
 }
