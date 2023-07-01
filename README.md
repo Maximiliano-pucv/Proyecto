@@ -14,14 +14,14 @@ RECOMENDAACIÓN: AL MOMENTO DE ABRIR EL EJECUTABLE SE RECOMIENDA REDUCIR EL ZOOM
 
    
 3. Las funciones que se ejecutan correctamente y los posibles errores
-4. 
+ 
    TODAS LAS FUNCIONES RELACIONADAS A CREACIÓN DE PERSONAJE SE EJECUTAN CORRECTAMENTE
    
    LAS FUNCIONES QUE PODRÍAN INDICAR UN PROBLEMA SON:
    -Al momento de ingresar al submenú y escoge la opción de reiniciar, es posible que el programa presente fallas y no tenemos una explicación exacta del error.
    
    
-5. Explicación en relación a como se desarrolla la aplicación
+   Explicación en relación a como se desarrolla la aplicación
    Al momento de iniciar la ejecución del programa el jugador deberá utilizar las flechas de arriba, abajo para indicar la acción que desea realizar (iniciar partida o salir de la aplicación) una vez elegida la acción que desea realizar, se presiona el botón escape (esc) para seleccionar dicha acción.
 
    SI EL JUGADOR REALIZA LA ACCIÓN DE INICIAR PARTIDA:
