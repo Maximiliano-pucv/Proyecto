@@ -555,21 +555,6 @@ bool Submenu(List *listaJugadores){
     }
 }
 
-void mostrarStats(List *lista)
-{
-    
-    /*while(true)
-    {
-        gotoxy(104, 12); printf("-------------------------------------");
-        gotoxy(104,13); printf("|-Hp : %s / %s                      |", aux->datos->HP,aux->datos->HPMAX);
-        gotoxy(104,14); printf("|-Atk : %i                          |",aux->datos->ATK);
-        gotoxy(104,15); printf("|-Def : %i                          |",aux->datos->DEF);
-        gotoxy(104,16); printf("|-PH : %i                           |",aux->datos->PH);
-        gotoxy(104,20);printf("-------------------------------------");
-    }*/
-
-}
-
 
 void submenu_Inventario(List *lista){
     printf("\033[0;35m");
