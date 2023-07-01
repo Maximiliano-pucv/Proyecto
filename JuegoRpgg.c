@@ -484,6 +484,7 @@ bool Submenu(List *listaJugadores){
     gotoxy(113,2); printf("------MENU------");
     gotoxy(106,3); printf("O Stats-*-*-*-*-*-*-*-*O Inventario");
     gotoxy(106,4); printf("O Salir-*-*-*-*-*-*-*-*O Reiniciar");
+    gotoxy(106,9); printf("ENTER--Seleccionar");
     coordenadas cursor;
     cursor.x = 106;
     cursor.y = 3;
