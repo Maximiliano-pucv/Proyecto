@@ -884,7 +884,7 @@ bool usar_item(List *lista){
                 gotoxy(pos.x, pos.y); printf(">");
             }
         }
-        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+        if(GetAsyncKeyState(0x28) && pos.y <= 42){
             item = nextList(lista);
             if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
@@ -896,12 +896,12 @@ bool usar_item(List *lista){
         if(GetAsyncKeyState(0x58)){
             if(item != NULL){
                 if(strcmp(item->tipo, "Consumible") == 0){
-                    gotoxy(136, 40); printf("Puedes usarlo");
+                    gotoxy(146, 44); printf("Puedes usarlo");
                     popCurrent(lista);
                     hecho = true;
                 }
                 else{
-                    gotoxy(136, 40); printf("No puedes usarlo");
+                    gotoxy(146, 44); printf("No puedes usarlo");
                 }
             }
             return hecho;
@@ -936,7 +936,7 @@ bool asignar_item(List *lista){
                 gotoxy(pos.x, pos.y); printf(">");
             }
         }
-        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+        if(GetAsyncKeyState(0x28) && pos.y <= 42){
             item = nextList(lista_items);
             if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
@@ -1014,7 +1014,7 @@ bool eliminar_item(List *lista){
                 gotoxy(pos.x, pos.y); printf(">");
             }
         }
-        if(GetAsyncKeyState(0x28) && pos.y <= 36){
+        if(GetAsyncKeyState(0x28) && pos.y <= 42){
             item = nextList(lista);
             if(item != NULL){
                 gotoxy(pos.x, pos.y); printf(" ");
