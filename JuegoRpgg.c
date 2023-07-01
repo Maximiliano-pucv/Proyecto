@@ -1095,7 +1095,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    mainPlayer->pos.y++;
+                    mainPlayer->pos.x--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
@@ -1117,6 +1117,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 {
                     pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
                 }
+                gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.x--;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
             else continue;
 
@@ -1140,11 +1144,11 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    mainPlayer->pos.y++;
+                    mainPlayer->pos.x++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x+1,mainPlayer->pos.y,mainPlayer) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1162,6 +1166,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 {
                     pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
                 }
+                gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.x++;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
 
             else continue;
@@ -1190,7 +1198,7 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y+1,mainPlayer) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1208,6 +1216,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 {
                     pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
                 }
+                gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.y++;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
 
             else continue;
@@ -1231,11 +1243,11 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    mainPlayer->pos.y++;
+                    mainPlayer->pos.y--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
             }
-            else if(validarmov(sandbox,mainPlayer->pos.x-1,mainPlayer->pos.y,mainPlayer) == 3)
+            else if(validarmov(sandbox,mainPlayer->pos.x,mainPlayer->pos.y-1,mainPlayer) == 3)
             {
                 if(strcmp(mainPlayer->clase,"Chef") == 0)
                 {
@@ -1253,6 +1265,10 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 {
                     pushBack(mainPlayer->inventario,seleccionaritem(Mapaitems,30+rand()%10));
                 }
+                gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
+                mainPlayer->pos.y--;
+                gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
 
             else continue;
