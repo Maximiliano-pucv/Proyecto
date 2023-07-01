@@ -275,7 +275,11 @@ int comandoBatalla(Opcion *comandos){
 int Atacar(Info * atacante, Info * atacado, bool defensa){
     int Dano;
     if(defensa == false){
-        Dano = (int)abs((atacante->ATK/2)-atacado->DEF);
+        Dano = atacante->ATK-atacado->DEF;
+        if(Dano<0)
+        {
+            return 0;
+        }
         atacado ->HP -= Dano;
     }else{
         Dano = (int)abs(log((atacante->ATK)/2));
@@ -1053,7 +1057,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.x--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1078,7 +1081,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.x--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1104,7 +1106,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.x++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1129,7 +1130,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.x++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1156,7 +1156,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.y++;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1181,7 +1180,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.y++;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
@@ -1207,7 +1205,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 else
                 {
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                    rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                     mainPlayer->pos.y--;
                     gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
                 }
@@ -1232,7 +1229,6 @@ void faseDElanzamiento(List *listaJugadores,sala *sandbox,HashMap *Mapamonster, 
                 }
                 gotoxy(25,FILAS); printf("HAS OBTENIDO UN ITEM");
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf(" ");
-                rellenarmapa(sandbox,mainPlayer->pos.x,mainPlayer->pos.y,0,' ');
                 mainPlayer->pos.y--;
                 gotoxy(mainPlayer->pos.x,mainPlayer->pos.y); printf("O");
             }
